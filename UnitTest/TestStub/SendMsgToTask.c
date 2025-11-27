@@ -2,10 +2,10 @@
 #include "SendMsgToTask.h"
 #include "message.h"
 
-void SendMsgToTask(Process_t* process, MsgId_t msgId, MsgArg_t arg)
+void SendMsgToTask(Process_t *process, MsgId_t msgId, MsgArg_t arg)
 {
   Msg_SendInstant(process, msgId, arg);
-  Task_Run();
+  DTask_Run();
 }
 //-----------------------------------------------------------------------------------------------------------
 void RunMsgTimer(u16 counts)
@@ -14,6 +14,6 @@ void RunMsgTimer(u16 counts)
   {
     counts--;
     Msg_Run1ms();
-    Task_Run();
+    DTask_Run();
   }
 }

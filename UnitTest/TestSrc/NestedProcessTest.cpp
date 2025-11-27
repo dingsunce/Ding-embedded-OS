@@ -32,7 +32,8 @@ PROCESS_HANDLER(MainProgress, msgId, arg)
   PROCESS_SCHEDULE_BEGIN();
   Process_Start(&SubProgress);
 
-  PROCESS_WAIT_FOR_MSG(msgId == SYS_MSG_PROGRESS_EXITED && arg != NULL && ((ProcessArg_t*)arg)->Process == &SubProgress);
+  PROCESS_WAIT_FOR_MSG(msgId == SYS_MSG_PROGRESS_EXITED && arg != NULL &&
+                       ((ProcessArg_t *)arg)->Process == &SubProgress);
 
   PROCESS_SCHEDULE_END();
 }

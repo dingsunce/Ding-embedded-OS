@@ -3,8 +3,8 @@
 #include "CppUTestExt/MockSupport_c.h"
 
 #include "TestReset.h"
-#include "list.h"
 #include "memb.h"
+#include "s_list.h"
 
 TEST_GROUP(List){TEST_SETUP(){TestOutput::enableCompactFormat();
 }
@@ -22,7 +22,7 @@ TEST_TEARDOWN()
 typedef struct ObjectUpdateEntry
 {
   LIST_HEADER;
-  UINT updateNo;
+  u32 updateNo;
 } ObjectUpdateEntry_t;
 
 LIST(ObjectUpdateList);

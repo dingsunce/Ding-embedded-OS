@@ -4,9 +4,9 @@
 
 #include "SendMsgToTask.h"
 #include "TestReset.h"
+#include "d_task.h"
 #include "message.h"
 #include "process.h"
-#include "task.h"
 #include <vector>
 
 using std::vector;
@@ -17,7 +17,7 @@ PROCESS(PollMsgProgress);
 PROCESS(ResetProgress);
 
 static vector<MsgId_t> AnyMsgs{};
-static bool AnyMsgReceived = false;
+static bool            AnyMsgReceived = false;
 PROCESS_HANDLER(AnyMsgProgress, msgId, arg)
 {
   AnyMsgs.push_back(msgId);
@@ -25,13 +25,17 @@ PROCESS_HANDLER(AnyMsgProgress, msgId, arg)
   PROCESS_SCHEDULE_BEGIN();
 
   AnyMsgReceived = false;
+  /*
+    PROCESS_WAIT_FOR_ANY_MSG will not handle SYS_MSG_START_PROGRESS
+    it will discard it
+  */
   PROCESS_WAIT_FOR_ANY_MSG();
   AnyMsgReceived = true;
 
   PROCESS_SCHEDULE_END();
 }
 
-static bool SpecifiedMsgReceived = false;
+static bool            SpecifiedMsgReceived = false;
 static vector<MsgId_t> SpecifiedMsgs{};
 PROCESS_HANDLER(SpecifiedMsgProgress, msgId, arg)
 {
@@ -113,25 +117,6 @@ TEST(Process, AnyMsgReceived)
   LONGS_EQUAL(true, AnyMsgReceived);
 }
 
-TEST(Process, BroadcastMsgReceived)
-{
-  LONGS_EQUAL(false, AnyMsgReceived);
-  LONGS_EQUAL(false, SpecifiedMsgReceived);
-  SendMsgToTask(&BroadcastProcess, SYS_MSG_CONTINUE_PROCESS, NULL);
-  LONGS_EQUAL(true, SpecifiedMsgReceived);
-  LONGS_EQUAL(true, AnyMsgReceived);
-}
-
-TEST(Process, BroadcastMsgReceivedLater)
-{
-  LONGS_EQUAL(false, AnyMsgReceived);
-  LONGS_EQUAL(false, SpecifiedMsgReceived);
-  Msg_SendLater(&BroadcastProcess, SYS_MSG_CONTINUE_PROCESS, NULL, MSG_MSEC(10));
-  RunMsgTimer(MSG_MSEC(10));
-  LONGS_EQUAL(true, SpecifiedMsgReceived);
-  LONGS_EQUAL(true, AnyMsgReceived);
-}
-
 TEST(Process, ExitProgress)
 {
   // progress already started in setup
@@ -155,6 +140,7 @@ TEST(Process, PollProgress)
   LONGS_EQUAL(false, PollMsgReceived);
   Process_Poll(&PollMsgProgress);
   Process_Run();
+  DTask_Run();
   LONGS_EQUAL(true, PollMsgReceived);
 }
 

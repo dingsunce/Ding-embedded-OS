@@ -9,7 +9,7 @@
 typedef struct UpdateEntry
 {
   SList_t list;
-  UINT updateNo;
+  u32     updateNo;
 } UpdateEntry_t;
 
 SLIST(ObjectUpdateList);
@@ -32,30 +32,30 @@ TEST_TEARDOWN()
 
 static void PushOne(u16 no)
 {
-  UpdateEntry_t* e;
-  e = (UpdateEntry_t*)Memb_Alloc(&ObjectUpdateMem);
+  UpdateEntry_t *e;
+  e = (UpdateEntry_t *)Memb_Alloc(&ObjectUpdateMem);
   e->updateNo = no;
   SList_Push(&ObjectUpdateList, &e->list);
 }
 
-static UpdateEntry_t* AddOne(u16 no)
+static UpdateEntry_t *AddOne(u16 no)
 {
-  UpdateEntry_t* e;
-  e = (UpdateEntry_t*)Memb_Alloc(&ObjectUpdateMem);
+  UpdateEntry_t *e;
+  e = (UpdateEntry_t *)Memb_Alloc(&ObjectUpdateMem);
   e->updateNo = no;
   SList_Add(&ObjectUpdateList, &e->list);
   return e;
 }
 
-UpdateEntry_t* PopOne(void)
+UpdateEntry_t *PopOne(void)
 {
-  SList_t* slist = SList_Pop(&ObjectUpdateList);
+  SList_t *slist = SList_Pop(&ObjectUpdateList);
   return ContainerOf(slist, UpdateEntry_t, list);
 }
 
-UpdateEntry_t* ChopOne(void)
+UpdateEntry_t *ChopOne(void)
 {
-  SList_t* slist = SList_Chop(&ObjectUpdateList);
+  SList_t *slist = SList_Chop(&ObjectUpdateList);
   return ContainerOf(slist, UpdateEntry_t, list);
 }
 
@@ -131,7 +131,7 @@ TEST(SList, Iteration)
 
 TEST(SList, AddRemove)
 {
-  UpdateEntry_t* e = AddOne(1);
+  UpdateEntry_t *e = AddOne(1);
   LONGS_EQUAL(1, SList_Len(&ObjectUpdateList));
   SList_Remove(&ObjectUpdateList, &e->list);
   LONGS_EQUAL(0, SList_Len(&ObjectUpdateList));

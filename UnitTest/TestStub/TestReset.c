@@ -1,8 +1,8 @@
 
 #include "TestReset.h"
-#include "OS.h"
+#include "d_os.h"
 //-----------------------------------------------------------------------------------------------------------
 void TestReset(void)
 {
-  OS_Init();
+  DOS_Init();
 }

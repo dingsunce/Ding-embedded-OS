@@ -5,9 +5,9 @@
 #include "CleanVector.h"
 #include "SendMsgToTask.h"
 #include "TestReset.h"
+#include "d_task.h"
 #include "message.h"
 #include "process.h"
-#include "task.h"
 #include <vector>
 
 using std::vector;

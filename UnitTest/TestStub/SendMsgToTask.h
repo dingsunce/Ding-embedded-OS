@@ -10,9 +10,9 @@ extern "C"
 {
 #endif
 
-#include "task.h"
+#include "d_task.h"
 
-  void SendMsgToTask(Process_t* process, MsgId_t msgId, MsgArg_t arg);
+  void SendMsgToTask(Process_t *process, MsgId_t msgId, MsgArg_t arg);
   void RunMsgTimer(u16 counts);
 
 #ifdef __cplusplus

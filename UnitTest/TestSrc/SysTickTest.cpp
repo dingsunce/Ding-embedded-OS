@@ -24,16 +24,12 @@ TEST_TEARDOWN()
 
 TEST(SysTickTest, GenerateTick)
 {
-  SysTick_Handler();
-  LONGS_EQUAL(1, SysTick_Get200usTicks());
+  SysTick_On();
+  LONGS_EQUAL(1, SysTick_Get1msTicks());
   SysTick_Reset();
-  LONGS_EQUAL(0, SysTick_Get200usTicks());
+  LONGS_EQUAL(0, SysTick_Get1msTicks());
 
-  SysTick_Handler();
-  SysTick_Handler();
-  SysTick_Handler();
-  SysTick_Handler();
-  SysTick_Handler();
+  SysTick_On();
   LONGS_EQUAL(1, sys_now());
   SysTick_Reset();
   LONGS_EQUAL(0, sys_now());

@@ -3,8 +3,8 @@
 #include "CppUTestExt/MockSupport_c.h"
 
 #include "TestReset.h"
-#include "list.h"
 #include "memb.h"
+#include "s_list.h"
 
 #include "process.h"
 
@@ -64,8 +64,8 @@ TEST(DList, PushPop)
   LONGS_EQUAL(2, DList_Len(&ProcessList));
   CHECK_FALSE(DList_IsEmpty(&ProcessList));
 
-  DList_t* l1 = DList_Pop(&ProcessList);
-  DList_t* l2 = DList_Pop(&ProcessList);
+  DList_t *l1 = DList_Pop(&ProcessList);
+  DList_t *l2 = DList_Pop(&ProcessList);
   POINTERS_EQUAL(&Progress2.ProcessList, l1);
   POINTERS_EQUAL(&Progress1.ProcessList, l2);
   POINTERS_EQUAL(&Progress2, ContainerOf(l1, Process_t, ProcessList));
@@ -80,8 +80,8 @@ TEST(DList, AddPop)
   LONGS_EQUAL(2, DList_Len(&ProcessList));
   CHECK_FALSE(DList_IsEmpty(&ProcessList));
 
-  DList_t* l1 = DList_Pop(&ProcessList);
-  DList_t* l2 = DList_Pop(&ProcessList);
+  DList_t *l1 = DList_Pop(&ProcessList);
+  DList_t *l2 = DList_Pop(&ProcessList);
   POINTERS_EQUAL(&Progress1.ProcessList, l1);
   POINTERS_EQUAL(&Progress2.ProcessList, l2);
   POINTERS_EQUAL(&Progress1, ContainerOf(l1, Process_t, ProcessList));

@@ -26,8 +26,10 @@ endif ()
 
 
 include_directories(${CMAKE_SOURCE_DIR})
-include_directories(${CMAKE_SOURCE_DIR}/OS)
+include_directories(${CMAKE_SOURCE_DIR}/DING_OS)
+include_directories(${CMAKE_SOURCE_DIR}/OSAL/non_preemptive_os)
 
-add_subdirectory(${CMAKE_SOURCE_DIR}/OS)
+add_subdirectory(${CMAKE_SOURCE_DIR}/DING_OS)
+add_subdirectory(${CMAKE_SOURCE_DIR}/OSAL/non_preemptive_os)
 add_subdirectory(${CMAKE_SOURCE_DIR}/UnitTest)
 
