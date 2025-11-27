@@ -1,6 +1,6 @@
 
 #include "SysTick.h"
-#include "list.h"
+#include "d_list.h"
 #include "memb.h"
 #include "memory.h"
 #include "message.h"
@@ -57,7 +57,7 @@ PROCESS_HANDLER(TimerProccess, msgId, arg)
 //-----------------------------------------------------------------------------------------------------------
 static Arg_t *CreateArg(u8 status)
 {
-  Arg_t *arg = (Arg_t *)Mem_Malloc(sizeof(Arg_t));
+  Arg_t *arg = (Arg_t *)DMem_Malloc(sizeof(Arg_t));
   if (arg != NULL)
   {
     arg->Status = status;
@@ -179,8 +179,8 @@ void AllocateFromGlobalMemory(void)
 {
   OS_Init();
 
-  Arg_t *arg = (Arg_t *)Mem_Malloc(sizeof(Arg_t));
-  Mem_Free(arg);
+  Arg_t *arg = (Arg_t *)DMem_Malloc(sizeof(Arg_t));
+  DMem_Free(arg);
 }
 
 // example4 memory allocate from memory block
@@ -275,21 +275,27 @@ void UartInterrption(void)
   Process_Poll(&uartProccess) // send SYS_MSG_POLL_PROCESS to uartProccess
 }
 
+void SysTick_Handler(void)
+{
+  SysTick_On();
+}
+
 // main function
 void main(void)
 {
-  OS_Init();
+  DOS_Init();
 
   SysTick_Reset(); // reset the tick to 0;
   // call SysTick_Handler in interuption every 200us
   while (1)
   {
-    if (SysTick_Get200usTicks())
-    {
-      SysTick_Decrease200usTicks();
+    DOS_Run();
 
-      Process_Run();
-      Task_Run();
+    if (SysTick_IsTick1msOn())
+    {
+      SysTick_ResetTick1msOn();
+
+      DOS_Run1ms();
     }
   }
 }
