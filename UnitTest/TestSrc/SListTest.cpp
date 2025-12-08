@@ -47,13 +47,13 @@ static UpdateEntry_t *AddOne(u16 no)
   return e;
 }
 
-UpdateEntry_t *PopOne(void)
+static UpdateEntry_t *PopOne(void)
 {
   SList_t *slist = SList_Pop(&ObjectUpdateList);
   return ContainerOf(slist, UpdateEntry_t, list);
 }
 
-UpdateEntry_t *ChopOne(void)
+static UpdateEntry_t *ChopOne(void)
 {
   SList_t *slist = SList_Chop(&ObjectUpdateList);
   return ContainerOf(slist, UpdateEntry_t, list);

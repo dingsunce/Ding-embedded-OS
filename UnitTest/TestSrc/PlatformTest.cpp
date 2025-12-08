@@ -28,20 +28,19 @@ TEST(Platform, S8ToU8Test)
 {
     s8 value = -3;
     u8 value1 = (u8)value;
-    LONGS_EQUAL(0xfd, value1);
-    BYTES_EQUAL(-3, 0xfd);
-    LONGS_EQUAL(-3, 0xffffffffd);
+    LONGS_EQUAL(253, value1);
+    BYTES_EQUAL(-3, 253);
 }
 
 TEST(Platform, U8ToS8Test)
 {
-    u8 value = 0x83;
+    u8 value = 131;  // 0x83
     s8 value1 = (s8)value;
-    LONGS_EQUAL(0xffffff83, value1);
-    BYTES_EQUAL(0x83, value1);
+    LONGS_EQUAL(-125, value1);
+    BYTES_EQUAL(131, value1);
 
     value = (u8)value1;
-    LONGS_EQUAL(0x83, value);
+    LONGS_EQUAL(131, value);
 }
 
 TEST(Platform, U16Test)

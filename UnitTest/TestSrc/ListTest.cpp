@@ -44,12 +44,12 @@ static void AddOne(u16 no)
   List_Add(ObjectUpdateList, e);
 }
 
-ObjectUpdateEntry_t *PopOne(void)
+static ObjectUpdateEntry_t *PopOne(void)
 {
   return (ObjectUpdateEntry_t *)List_Pop(ObjectUpdateList);
 }
 
-ObjectUpdateEntry_t *ChopOne(void)
+static ObjectUpdateEntry_t *ChopOne(void)
 {
   return (ObjectUpdateEntry_t *)List_Chop(ObjectUpdateList);
 }
