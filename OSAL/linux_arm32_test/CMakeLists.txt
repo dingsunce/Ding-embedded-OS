@@ -3,7 +3,7 @@ find_package(Threads)
 file(GLOB_RECURSE unit_test_src_c *.c)
 file(GLOB_RECURSE unit_test_src_cpp *.cpp)
 
-add_executable(LINUX_TEST main.c ${unit_test_src_c} ${unit_test_src_cpp})
+add_executable(LINUX_ARM32_TEST main.c ${unit_test_src_c} ${unit_test_src_cpp})
 
 target_compile_definitions(DING_OS PUBLIC MEM_DEBUG=1)
 target_compile_definitions(DING_OS PUBLIC MESSAGE_DEBUG=1)
@@ -15,6 +15,6 @@ target_compile_definitions(DING_OS PUBLIC BOOL_DEFINE=1)
 
 target_compile_definitions(DING_OS PUBLIC MEM_ALIGMENT_4BYTES=0)
 
-target_link_libraries(LINUX_TEST PUBLIC DING_OS)
-target_link_libraries(LINUX_TEST PUBLIC OS_AL_LIB)
-target_link_libraries(LINUX_TEST PUBLIC Threads::Threads)
+target_link_libraries(LINUX_ARM32_TEST PUBLIC DING_OS)
+target_link_libraries(LINUX_ARM32_TEST PUBLIC OS_AL_LIB)
+target_link_libraries(LINUX_ARM32_TEST PUBLIC Threads::Threads)

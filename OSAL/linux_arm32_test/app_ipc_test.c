@@ -18,12 +18,12 @@ static uint32_t    mbox_value = 0;
 //-----------------------------------------------------------------------------------------------------------
 static void OneShot_TImer(os_timer_t * timer, void *arg)
 {
-  (void)arg;
+  mbox_value++;
 }
 //-----------------------------------------------------------------------------------------------------------
 static void Cycle_TImer(os_timer_t *timer, void *arg)
 {
-  (void)arg;
+  mbox_value++;
 }
 //-----------------------------------------------------------------------------------------------------------
 static void Ipc_Task1(void *p_arg)
@@ -66,7 +66,6 @@ static void Ipc_Task2(void *p_arg)
 
     os_usleep(1000000);
 
-    mbox_value = 3;
     os_mbox_post(TestIpcMbox, &mbox_value, OS_WAIT_FOREVER);
     
     os_mutex_lock(TestIpcMutex);

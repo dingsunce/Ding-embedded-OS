@@ -23,7 +23,7 @@
 
 #include <sys/syscall.h>
 
-#define TIMER_PRIO 30
+#define TIMER_PRIO 15
 
 #define USECS_PER_SEC (1 * 1000 * 1000)
 #define NSECS_PER_SEC (1 * 1000 * 1000 * 1000)
@@ -518,7 +518,7 @@ os_timer_t *os_timer_create(uint32_t us, void (*fn)(os_timer_t *, void *arg), vo
   timer->oneshot = oneshot;
 
   /* Create timer thread */
-  timer->thread = os_thread_create("os_timer", TIMER_PRIO, 1024, os_timer_thread, timer);
+  timer->thread = os_thread_create("os_timer", TIMER_PRIO, 256, os_timer_thread, timer);
   if (timer->thread == NULL)
   {
     free(timer);
