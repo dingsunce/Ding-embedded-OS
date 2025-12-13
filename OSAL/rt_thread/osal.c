@@ -225,9 +225,9 @@ void os_mbox_destroy(os_mbox_t *mbox)
   rt_mb_delete(mbox);
 }
 //-----------------------------------------------------------------------------------------------------------
-void os_usleep(uint32_t us)
+void os_msleep(uint32_t ms)
 {
-  rt_thread_delay((us / 1000) / TICK_PERIOD_MS);
+  rt_thread_delay(ms / TICK_PERIOD_MS);
 }
 //-----------------------------------------------------------------------------------------------------------
 void os_tick_sleep(os_tick_t tick)
@@ -240,14 +240,14 @@ os_tick_t os_tick_current(void)
   return rt_tick_get();
 }
 //-----------------------------------------------------------------------------------------------------------
-uint32_t os_get_current_time_us(void)
+uint32_t os_ms_current(void)
 {
-  return 1000 * (os_tick_current() / TICK_PERIOD_MS);
+  return os_tick_current() / TICK_PERIOD_MS;
 }
 //-----------------------------------------------------------------------------------------------------------
-os_tick_t os_tick_from_us(uint32_t us)
+os_tick_t os_tick_from_ms(uint32_t ms)
 {
-  return (us / 1000) / TICK_PERIOD_MS;
+  return ms / TICK_PERIOD_MS;
 }
 //-----------------------------------------------------------------------------------------------------------
 static void os_timer_callback(void *parameter)
@@ -258,7 +258,7 @@ static void os_timer_callback(void *parameter)
     timer->fn(timer, timer->arg);
 }
 //-----------------------------------------------------------------------------------------------------------
-os_timer_t *os_timer_create(uint32_t us, void (*fn)(os_timer_t *, void *arg), void *arg,
+os_timer_t *os_timer_create(uint32_t ms, void (*fn)(os_timer_t *, void *arg), void *arg,
                             bool oneshot)
 {
   os_timer_t *timer;
@@ -272,10 +272,10 @@ os_timer_t *os_timer_create(uint32_t us, void (*fn)(os_timer_t *, void *arg), vo
 
   rt_timer_t rt_timer;
   if (oneshot)
-    rt_timer = rt_timer_create("timer", os_timer_callback, timer, os_tick_from_us(us),
+    rt_timer = rt_timer_create("timer", os_timer_callback, timer, os_tick_from_ms(ms),
                                RT_TIMER_FLAG_ONE_SHOT);
   else
-    rt_timer = rt_timer_create("timer", os_timer_callback, timer, os_tick_from_us(us),
+    rt_timer = rt_timer_create("timer", os_timer_callback, timer, os_tick_from_ms(ms),
                                RT_TIMER_FLAG_PERIODIC);
 
   timer->rt_timer = rt_timer;
@@ -283,9 +283,9 @@ os_timer_t *os_timer_create(uint32_t us, void (*fn)(os_timer_t *, void *arg), vo
   return (os_timer_t *)timer;
 }
 //-----------------------------------------------------------------------------------------------------------
-void os_timer_set(os_timer_t *timer, uint32_t us)
+void os_timer_set(os_timer_t *timer, uint32_t ms)
 {
-  timer->rt_timer->timeout_tick = os_tick_from_us(us);
+  timer->rt_timer->timeout_tick = os_tick_from_ms(ms);
 }
 //-----------------------------------------------------------------------------------------------------------
 void os_timer_start(os_timer_t *timer)

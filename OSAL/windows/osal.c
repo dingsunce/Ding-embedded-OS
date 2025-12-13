@@ -4,7 +4,11 @@
  *******************************************************************************/
 #include "osal.h"
 
-#define URESOLUTION 10
+#define MS_PER_SECOND (1000)
+#define NS_PER_MS     (1000 * 1000)
+#define NS_PER_SECOND (1000 * 1000 * 1000)
+
+#define URESOLUTION 1 // 1 ms resolution
 //-----------------------------------------------------------------------------------------------------------
 void os_init(void)
 {
@@ -44,11 +48,6 @@ void os_mutex_destroy(os_mutex_t *mutex)
   CloseHandle(mutex);
 }
 //-----------------------------------------------------------------------------------------------------------
-void os_usleep(uint32_t usec)
-{
-  Sleep(usec / 1000);
-}
-//-----------------------------------------------------------------------------------------------------------
 os_thread_t *os_thread_create(char *name, uint32_t priority, size_t stacksize,
                               void (*entry)(void *arg), void *arg)
 {
@@ -67,45 +66,6 @@ void os_thread_destroy(os_thread_t *thread)
 {
   DWORD dwExitCode = 0;
   TerminateThread(thread, dwExitCode);
-}
-//-----------------------------------------------------------------------------------------------------------
-static uint64_t os_get_frequency_tick(void)
-{
-  static uint64_t frequency;
-  if (frequency == 0)
-  {
-    LARGE_INTEGER performanceFrequency;
-    timeBeginPeriod(URESOLUTION);
-    QueryPerformanceFrequency(&performanceFrequency);
-    frequency = performanceFrequency.QuadPart;
-  }
-  return frequency;
-}
-//-----------------------------------------------------------------------------------------------------------
-uint32_t os_get_current_time_us(void)
-{
-  LARGE_INTEGER currentCount;
-  uint64_t      currentTime;
-  QueryPerformanceCounter(&currentCount);
-  currentTime = 1000000 * currentCount.QuadPart / os_get_frequency_tick();
-  return (uint32_t)(currentTime & UINT32_MAX);
-}
-//-----------------------------------------------------------------------------------------------------------
-os_tick_t os_tick_current(void)
-{
-  LARGE_INTEGER currentCount;
-  QueryPerformanceCounter(&currentCount);
-  return currentCount.QuadPart;
-}
-//-----------------------------------------------------------------------------------------------------------
-os_tick_t os_tick_from_us(uint32_t us)
-{
-  return os_get_frequency_tick() * us / 1000000;
-}
-//-----------------------------------------------------------------------------------------------------------
-void os_tick_sleep(os_tick_t tick)
-{
-  Sleep((DWORD)(1000u * tick / os_get_frequency_tick()));
 }
 //-----------------------------------------------------------------------------------------------------------
 os_sem_t *os_sem_create(size_t count)
@@ -281,6 +241,49 @@ void os_mbox_destroy(os_mbox_t *mbox)
   free(mbox);
 }
 //-----------------------------------------------------------------------------------------------------------
+void os_msleep(uint32_t ms)
+{
+  Sleep(ms);
+}
+//-----------------------------------------------------------------------------------------------------------
+static uint64_t os_get_ticks_per_ms(void)
+{
+  static uint64_t ticksPerMs;
+  if (ticksPerMs == 0)
+  {
+    LARGE_INTEGER performanceFrequency;
+    QueryPerformanceFrequency(&performanceFrequency);
+    // QuadPart is tick number per second
+    ticksPerMs = performanceFrequency.QuadPart / 1000;
+
+    return ticksPerMs;
+  }
+
+  return ticksPerMs;
+}
+//-----------------------------------------------------------------------------------------------------------
+os_tick_t os_tick_current(void)
+{
+  LARGE_INTEGER currentCount;
+  QueryPerformanceCounter(&currentCount);
+  return currentCount.QuadPart;
+}
+//-----------------------------------------------------------------------------------------------------------
+uint32_t os_ms_current(void)
+{
+  return (uint32_t)(os_tick_current() / os_get_ticks_per_ms());
+}
+//-----------------------------------------------------------------------------------------------------------
+os_tick_t os_tick_from_ms(uint32_t ms)
+{
+  return os_get_ticks_per_ms() * ms;
+}
+//-----------------------------------------------------------------------------------------------------------
+void os_tick_sleep(os_tick_t tick)
+{
+  os_msleep(tick / os_get_ticks_per_ms());
+}
+//-----------------------------------------------------------------------------------------------------------
 static VOID CALLBACK timer_callback(UINT uTimerID, UINT uMsg, DWORD_PTR dwUser, DWORD_PTR dw1,
                                     DWORD_PTR dw2)
 {
@@ -290,7 +293,7 @@ static VOID CALLBACK timer_callback(UINT uTimerID, UINT uMsg, DWORD_PTR dwUser, 
     timer->fn(timer, timer->arg);
 }
 //-----------------------------------------------------------------------------------------------------------
-os_timer_t *os_timer_create(uint32_t us, void (*fn)(os_timer_t *, void *arg), void *arg,
+os_timer_t *os_timer_create(uint32_t ms, void (*fn)(os_timer_t *, void *arg), void *arg,
                             bool oneshot)
 {
   os_timer_t *timer;
@@ -299,22 +302,22 @@ os_timer_t *os_timer_create(uint32_t us, void (*fn)(os_timer_t *, void *arg), vo
 
   timer->fn = fn;
   timer->arg = arg;
-  timer->us = us;
+  timer->ms = ms;
   timer->oneshot = oneshot;
 
   return timer;
 }
 //-----------------------------------------------------------------------------------------------------------
-void os_timer_set(os_timer_t *timer, uint32_t us)
+void os_timer_set(os_timer_t *timer, uint32_t ms)
 {
-  timer->us = us;
+  timer->ms = ms;
 }
 //-----------------------------------------------------------------------------------------------------------
 void os_timer_start(os_timer_t *timer)
 {
   timeBeginPeriod(URESOLUTION);
 
-  timer->timerID = timeSetEvent(timer->us / 1000, URESOLUTION, timer_callback, (DWORD_PTR)timer,
+  timer->timerID = timeSetEvent(timer->ms, URESOLUTION, timer_callback, (DWORD_PTR)timer,
                                 (timer->oneshot) ? TIME_ONESHOT : TIME_PERIODIC);
 }
 //-----------------------------------------------------------------------------------------------------------

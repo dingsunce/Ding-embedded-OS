@@ -252,9 +252,9 @@ void os_mbox_destroy(os_mbox_t *mbox)
   os_free(mbox);
 }
 //-----------------------------------------------------------------------------------------------------------
-void os_usleep(uint32_t us)
+void os_msleep(uint32_t ms)
 {
-  OSTimeDly((us / 1000) / TICK_PERIOD_MS, OS_OPT_TIME_DLY, &tick_err);
+  OSTimeDly(ms / TICK_PERIOD_MS, OS_OPT_TIME_DLY, &tick_err);
 }
 //-----------------------------------------------------------------------------------------------------------
 void os_tick_sleep(os_tick_t tick)
@@ -267,17 +267,17 @@ os_tick_t os_tick_current(void)
   return OSTimeGet(&tick_err);
 }
 //-----------------------------------------------------------------------------------------------------------
-uint32_t os_get_current_time_us(void)
+uint32_t os_ms_current(void)
 {
-  return 1000 * (os_tick_current() / TICK_PERIOD_MS);
+  return os_tick_current() / TICK_PERIOD_MS;
 }
 //-----------------------------------------------------------------------------------------------------------
-os_tick_t os_tick_from_us(uint32_t us)
+os_tick_t os_tick_from_ms(uint32_t ms)
 {
-  return (us / 1000) / TICK_PERIOD_MS;
+  return ms / TICK_PERIOD_MS;
 }
 //-----------------------------------------------------------------------------------------------------------
-os_timer_t *os_timer_create(uint32_t us, void (*fn)(os_timer_t *, void *arg), void *arg,
+os_timer_t *os_timer_create(uint32_t ms, void (*fn)(os_timer_t *, void *arg), void *arg,
                             bool oneshot)
 {
   os_timer_t *timer;
@@ -287,9 +287,9 @@ os_timer_t *os_timer_create(uint32_t us, void (*fn)(os_timer_t *, void *arg), vo
     return NULL;
 
   if (oneshot)
-    OSTmrCreate(timer, "timer", os_tick_from_us(us), 0, OS_OPT_TMR_ONE_SHOT, fn, arg, &timer_err);
+    OSTmrCreate(timer, "timer", os_tick_from_ms(ms), 0, OS_OPT_TMR_ONE_SHOT, fn, arg, &timer_err);
   else
-    OSTmrCreate(timer, "timer", os_tick_from_us(us), os_tick_from_us(us), OS_OPT_TMR_PERIODIC, fn,
+    OSTmrCreate(timer, "timer", os_tick_from_ms(ms), os_tick_from_ms(ms), OS_OPT_TMR_PERIODIC, fn,
                 arg, &timer_err);
 
   if (timer_err != OS_ERR_NONE)
@@ -301,9 +301,9 @@ os_timer_t *os_timer_create(uint32_t us, void (*fn)(os_timer_t *, void *arg), vo
   return timer;
 }
 //-----------------------------------------------------------------------------------------------------------
-void os_timer_set(os_timer_t *timer, uint32_t us)
+void os_timer_set(os_timer_t *timer, uint32_t ms)
 {
-  timer->Dly = os_tick_from_us(us);
+  timer->Dly = os_tick_from_ms(ms);
 }
 //-----------------------------------------------------------------------------------------------------------
 void os_timer_start(os_timer_t *timer)

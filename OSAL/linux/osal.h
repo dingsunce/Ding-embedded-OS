@@ -61,7 +61,7 @@ extern "C"
     bool         exit;
     void (*fn)(struct os_timer *, void *arg);
     void    *arg;
-    uint32_t us;
+    uint32_t ms;
     bool     oneshot;
   } os_timer_t;
 
@@ -96,15 +96,15 @@ extern "C"
   bool       os_mbox_post(os_mbox_t *mbox, void *msg, uint32_t ms);
   void       os_mbox_destroy(os_mbox_t *mbox);
 
-  void      os_usleep(uint32_t us);
-  uint32_t  os_get_current_time_us(void);
+  void      os_msleep(uint32_t ms);
+  uint32_t  os_ms_current(void);
   os_tick_t os_tick_current(void);
-  os_tick_t os_tick_from_us(uint32_t us);
+  os_tick_t os_tick_from_ms(uint32_t ms);
   void      os_tick_sleep(os_tick_t tick);
 
-  os_timer_t *os_timer_create(uint32_t us, void (*fn)(os_timer_t *timer, void *arg), void *arg,
+  os_timer_t *os_timer_create(uint32_t ms, void (*fn)(os_timer_t *timer, void *arg), void *arg,
                               bool oneshot);
-  void        os_timer_set(os_timer_t *timer, uint32_t us);
+  void        os_timer_set(os_timer_t *timer, uint32_t ms);
   void        os_timer_start(os_timer_t *timer);
   void        os_timer_stop(os_timer_t *timer);
   void        os_timer_destroy(os_timer_t *timer);

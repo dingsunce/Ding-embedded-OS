@@ -25,8 +25,11 @@
 
 #define TIMER_PRIO 15
 
-#define USECS_PER_SEC (1 * 1000 * 1000)
-#define NSECS_PER_SEC (1 * 1000 * 1000 * 1000)
+#define MS_PER_SECOND (1000)
+#define NS_PER_MS     (1000 * 1000)
+#define NS_PER_SECOND (1000 * 1000 * 1000)
+
+#define TICK_PERIOD_MS 1
 //-----------------------------------------------------------------------------------------------------------
 void os_init(void)
 {
@@ -150,16 +153,16 @@ bool os_sem_wait(os_sem_t *sem, uint32_t ms)
 {
   struct timespec ts;
   int             error = 0;
-  uint64_t        nsec = (uint64_t)ms * 1000 * 1000;
+  uint64_t        nsec = (uint64_t)ms * NS_PER_MS;
 
-  clock_gettime(CLOCK_MONOTONIC, &ts);
-  nsec += ts.tv_nsec;
-  if (nsec > NSECS_PER_SEC)
+  if (ms != OS_WAIT_FOREVER)
   {
-    ts.tv_sec += nsec / NSECS_PER_SEC;
-    nsec %= NSECS_PER_SEC;
+    clock_gettime(CLOCK_MONOTONIC, &ts);
+    nsec += ts.tv_nsec;
+
+    ts.tv_sec += nsec / NS_PER_SECOND;
+    ts.tv_nsec = nsec % NS_PER_SECOND;
   }
-  ts.tv_nsec = nsec;
 
   pthread_mutex_lock(&sem->mutex);
   while (sem->count == 0)
@@ -202,57 +205,6 @@ void os_sem_destroy(os_sem_t *sem)
   free(sem);
 }
 //-----------------------------------------------------------------------------------------------------------
-void os_usleep(uint32_t usec)
-{
-  struct timespec ts;
-  struct timespec remain;
-
-  ts.tv_sec = usec / USECS_PER_SEC;
-  ts.tv_nsec = (usec % USECS_PER_SEC) * 1000;
-  while (clock_nanosleep(CLOCK_MONOTONIC, 0, &ts, &remain) != 0)
-  {
-    ts = remain;
-  }
-}
-//-----------------------------------------------------------------------------------------------------------
-uint32_t os_get_current_time_us(void)
-{
-  struct timespec ts;
-
-  clock_gettime(CLOCK_MONOTONIC, &ts);
-  return ts.tv_sec * 1000 * 1000 + ts.tv_nsec / 1000;
-}
-//-----------------------------------------------------------------------------------------------------------
-os_tick_t os_tick_current(void)
-{
-  struct timespec ts;
-  os_tick_t       tick;
-
-  clock_gettime(CLOCK_MONOTONIC, &ts);
-  tick = ts.tv_sec;
-  tick *= NSECS_PER_SEC;
-  tick += ts.tv_nsec;
-  return tick;
-}
-//-----------------------------------------------------------------------------------------------------------
-os_tick_t os_tick_from_us(uint32_t us)
-{
-  return (os_tick_t)us * 1000;
-}
-//-----------------------------------------------------------------------------------------------------------
-void os_tick_sleep(os_tick_t tick)
-{
-  struct timespec ts;
-  struct timespec remain;
-
-  ts.tv_sec = tick / NSECS_PER_SEC;
-  ts.tv_nsec = tick % NSECS_PER_SEC;
-  while (clock_nanosleep(CLOCK_MONOTONIC, 0, &ts, &remain) != 0)
-  {
-    ts = remain;
-  }
-}
-//-----------------------------------------------------------------------------------------------------------
 os_event_t *os_event_create(void)
 {
   os_event_t         *event;
@@ -278,15 +230,15 @@ bool os_event_wait(os_event_t *event, uint32_t mask, uint32_t *value, uint32_t m
 {
   struct timespec ts;
   int             error = 0;
-  uint64_t        nsec = (uint64_t)ms * 1000;
+  uint64_t        nsec = (uint64_t)ms * NS_PER_MS;
 
   if (ms != OS_WAIT_FOREVER)
   {
     clock_gettime(CLOCK_MONOTONIC, &ts);
     nsec += ts.tv_nsec;
 
-    ts.tv_sec += nsec / NSECS_PER_SEC;
-    ts.tv_nsec = nsec % NSECS_PER_SEC;
+    ts.tv_sec += nsec / NS_PER_SECOND;
+    ts.tv_nsec = nsec % NS_PER_SECOND;
   }
 
   pthread_mutex_lock(&event->mutex);
@@ -367,15 +319,15 @@ bool os_mbox_fetch(os_mbox_t *mbox, void **msg, uint32_t ms)
 {
   struct timespec ts;
   int             error = 0;
-  uint64_t        nsec = (uint64_t)ms * 1000;
+  uint64_t        nsec = (uint64_t)ms * NS_PER_MS;
 
   if (ms != OS_WAIT_FOREVER)
   {
     clock_gettime(CLOCK_MONOTONIC, &ts);
     nsec += ts.tv_nsec;
 
-    ts.tv_sec += nsec / NSECS_PER_SEC;
-    ts.tv_nsec = nsec % NSECS_PER_SEC;
+    ts.tv_sec += nsec / NS_PER_SECOND;
+    ts.tv_nsec = nsec % NS_PER_SECOND;
   }
 
   pthread_mutex_lock(&mbox->mutex);
@@ -415,15 +367,15 @@ bool os_mbox_post(os_mbox_t *mbox, void *msg, uint32_t ms)
 {
   struct timespec ts;
   int             error = 0;
-  uint64_t        nsec = (uint64_t)ms * 1000;
+  uint64_t        nsec = (uint64_t)ms * NS_PER_MS;
 
   if (ms != OS_WAIT_FOREVER)
   {
     clock_gettime(CLOCK_MONOTONIC, &ts);
     nsec += ts.tv_nsec;
 
-    ts.tv_sec += nsec / NSECS_PER_SEC;
-    ts.tv_nsec = nsec % NSECS_PER_SEC;
+    ts.tv_sec += nsec / NS_PER_SECOND;
+    ts.tv_nsec = nsec % NS_PER_SECOND;
   }
 
   pthread_mutex_lock(&mbox->mutex);
@@ -466,6 +418,47 @@ void os_mbox_destroy(os_mbox_t *mbox)
   free(mbox);
 }
 //-----------------------------------------------------------------------------------------------------------
+os_tick_t os_tick_from_ms(uint32_t ms)
+{
+  return ms / TICK_PERIOD_MS;
+}
+//-----------------------------------------------------------------------------------------------------------
+os_tick_t os_ms_from_tick(os_tick_t tick)
+{
+  return tick * TICK_PERIOD_MS;
+}
+//-----------------------------------------------------------------------------------------------------------
+void os_msleep(uint32_t ms)
+{
+  struct timespec ts;
+  struct timespec remain;
+
+  ts.tv_sec = ms / MS_PER_SECOND;
+  ts.tv_nsec = (ms % MS_PER_SECOND) * NS_PER_MS;
+  while (clock_nanosleep(CLOCK_MONOTONIC, 0, &ts, &remain) != 0)
+  {
+    ts = remain;
+  }
+}
+//-----------------------------------------------------------------------------------------------------------
+uint32_t os_ms_current(void)
+{
+  struct timespec ts;
+
+  clock_gettime(CLOCK_MONOTONIC, &ts);
+  return ts.tv_sec * MS_PER_SECOND + ts.tv_nsec / NS_PER_MS;
+}
+//-----------------------------------------------------------------------------------------------------------
+os_tick_t os_tick_current(void)
+{
+  return os_tick_from_ms(os_ms_current());
+}
+//-----------------------------------------------------------------------------------------------------------
+void os_tick_sleep(os_tick_t tick)
+{
+  os_msleep(os_ms_from_tick(tick));
+}
+//-----------------------------------------------------------------------------------------------------------
 static void os_timer_thread(void *arg)
 {
   os_timer_t     *timer = arg;
@@ -480,8 +473,11 @@ static void os_timer_thread(void *arg)
   sigprocmask(SIG_BLOCK, &sigset, NULL);
   sigaddset(&sigset, SIGALRM);
 
-  tmo.tv_sec = 0;
-  tmo.tv_nsec = 1000 * timer->us;
+  // uint64_t  nsec = (uint64_t)timer->us * 1000;
+  // tmo.tv_sec = nsec / NS_PER_SECOND;
+  // tmo.tv_nsec = nsec % NS_PER_SECOND;
+
+  tmo.tv_nsec = 500 * NS_PER_MS;
 
   while (!timer->exit)
   {
@@ -494,7 +490,7 @@ static void os_timer_thread(void *arg)
   }
 }
 //-----------------------------------------------------------------------------------------------------------
-os_timer_t *os_timer_create(uint32_t us, void (*fn)(os_timer_t *, void *arg), void *arg,
+os_timer_t *os_timer_create(uint32_t ms, void (*fn)(os_timer_t *, void *arg), void *arg,
                             bool oneshot)
 {
   os_timer_t     *timer;
@@ -514,7 +510,7 @@ os_timer_t *os_timer_create(uint32_t us, void (*fn)(os_timer_t *, void *arg), vo
   timer->thread_id = 0;
   timer->fn = fn;
   timer->arg = arg;
-  timer->us = us;
+  timer->ms = ms;
   timer->oneshot = oneshot;
 
   /* Create timer thread */
@@ -547,18 +543,17 @@ os_timer_t *os_timer_create(uint32_t us, void (*fn)(os_timer_t *, void *arg), vo
   return timer;
 }
 //-----------------------------------------------------------------------------------------------------------
-void os_timer_set(os_timer_t *timer, uint32_t us)
+void os_timer_set(os_timer_t *timer, uint32_t ms)
 {
-  timer->us = us;
+  timer->ms = ms;
 }
 //-----------------------------------------------------------------------------------------------------------
 void os_timer_start(os_timer_t *timer)
 {
   struct itimerspec its;
 
-  /* Start timer */
-  its.it_value.tv_sec = 0;
-  its.it_value.tv_nsec = 1000 * timer->us;
+  its.it_value.tv_sec = timer->ms / MS_PER_SECOND;
+  its.it_value.tv_nsec = (timer->ms % MS_PER_SECOND) * NS_PER_MS;
   its.it_interval.tv_sec = (timer->oneshot) ? 0 : its.it_value.tv_sec;
   its.it_interval.tv_nsec = (timer->oneshot) ? 0 : its.it_value.tv_nsec;
   timer_settime(timer->timerid, 0, &its, NULL);
@@ -568,7 +563,6 @@ void os_timer_stop(os_timer_t *timer)
 {
   struct itimerspec its;
 
-  /* Stop timer */
   its.it_value.tv_sec = 0;
   its.it_value.tv_nsec = 0;
   its.it_interval.tv_sec = 0;
