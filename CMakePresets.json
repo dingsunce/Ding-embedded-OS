@@ -1,0 +1,88 @@
+﻿{
+  "version": 3,
+  "cmakeMinimumRequired": {
+    "major": 3,
+    "minor": 19,
+    "patch": 0
+  },
+  "configurePresets": [
+    {
+      "name": "windows_unit_test",
+      "displayName": "windows_unit_test",
+      "generator": "Visual Studio 17 2022",
+      "binaryDir": "${sourceDir}/Output/windows_unit_test",
+      "architecture": {
+        "value": "Win32",
+        "strategy": "set"
+      },
+      "toolset": {
+        "value": "host=x86",
+        "strategy": "set"
+      },
+      "cacheVariables": {
+        "DING_OS_TEST_ENVN": "1"
+      }
+    },
+    {
+      "name": "windows_x86_test",
+      "displayName": "windows_x86_test",
+      "generator": "Visual Studio 17 2022",
+      "binaryDir": "${sourceDir}/Output/windows_x86_test",
+      "cacheVariables": {
+        "DING_OS_TEST_ENVN": "2"
+      }
+    },
+    {
+      "name": "linux_unit_test",
+      "displayName": "linux_unit_test",
+      "generator": "Ninja",
+      "binaryDir": "${sourceDir}/Output/linux_unit_test",
+      "cacheVariables": {
+        "DING_OS_TEST_ENVN": "3"
+      }
+    },
+    {
+      "name": "linux_x86_test",
+      "displayName": "linux_x86_test",
+      "generator": "Ninja",
+      "binaryDir": "${sourceDir}/Output/linux_x86_test",
+      "cacheVariables": {
+        "DING_OS_TEST_ENVN": "4"
+      }
+    },
+    {
+      "name": "linux_arm32_test",
+      "displayName": "linux_arm32_test",
+      "generator": "Ninja",
+      "binaryDir": "${sourceDir}/Output/linux_arm32_test",
+      "cacheVariables": {
+        "CMAKE_SYSTEM_PROCESSOR": "arm",
+        "CMAKE_C_COMPILER": "arm-none-linux-gnueabihf-gcc",
+        "CMAKE_CXX_COMPILER": "arm-none-linux-gnueabihf-g++",
+        "DING_OS_TEST_ENVN": "5"
+      }
+    }
+  ],
+  "buildPresets": [
+    {
+      "name": "windows_unit_test",
+      "configurePreset": "windows_unit_test"
+    },
+    {
+      "name": "windows_x86_test",
+      "configurePreset": "windows_x86_test"
+    },
+    {
+      "name": "linux_unit_test",
+      "configurePreset": "linux_unit_test"
+    },
+    {
+      "name": "linux_x86_test",
+      "configurePreset": "linux_x86_test"
+    },
+    {
+      "name": "linux_arm32_test",
+      "configurePreset": "linux_arm32_test"
+    }
+  ]
+}

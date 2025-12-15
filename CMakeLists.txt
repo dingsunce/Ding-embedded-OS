@@ -38,16 +38,14 @@ endif()
 
 set(EXECUTABLE_OUTPUT_PATH ${CMAKE_BINARY_DIR}/bin)
 
-#1 : unit test environment
+#1 : windows unit test environment
 #2 : windows x86 test environment
-#3 : linux x86 test environment
-#4 : linux arm32 test environment
-set(TEST_ENVN 4)
+#3 : linux unit test test environment
+#4 : linux x86 test environment
+#5 : linux arm32 test environment
+#set(DING_OS_TEST_ENVN 1)
 
-if(TEST_ENVN STREQUAL 4) # linux arm32 test environment
-    set(CMAKE_SYSTEM_PROCESSOR arm)
-    set(CMAKE_C_COMPILER arm-none-linux-gnueabihf-gcc)
-    set(CMAKE_CXX_COMPILER arm-none-linux-gnueabihf-g++)
+if(DING_OS_TEST_ENVN STREQUAL 5) # linux arm32 test environment
     # @ONLY only replace @var@ in launch_connect_to_gdbserver.in.json
     configure_file(${CMAKE_SOURCE_DIR}/.vscode/launch_connect_to_gdbserver.in.json ${CMAKE_SOURCE_DIR}/.vscode/launch.json @ONLY)
 else()
@@ -57,44 +55,54 @@ endif()
 include_directories(${CMAKE_SOURCE_DIR})
 include_directories(${CMAKE_SOURCE_DIR}/DING_OS)
 
-if(TEST_ENVN STREQUAL 1)
+if(DING_OS_TEST_ENVN STREQUAL 1)
     include_directories(${CMAKE_SOURCE_DIR}/OSAL/non_preemptive_os)
-    message("unit test Environment")
+    message("windows unit test Environment")
 endif()
 
-if(TEST_ENVN STREQUAL 2)
+if(DING_OS_TEST_ENVN STREQUAL 2)
     include_directories(${CMAKE_SOURCE_DIR}/OSAL/windows)
     message("windows x86 test environment")
 endif()
 
-if(TEST_ENVN STREQUAL 3)
+if(DING_OS_TEST_ENVN STREQUAL 3)
+    include_directories(${CMAKE_SOURCE_DIR}/OSAL/non_preemptive_os)
+    message("linux unit test Environment")
+endif()
+
+if(DING_OS_TEST_ENVN STREQUAL 4)
     include_directories(${CMAKE_SOURCE_DIR}/OSAL/linux)
     message("linux x86 test environment")
 endif()
 
-if(TEST_ENVN STREQUAL 4)
+if(DING_OS_TEST_ENVN STREQUAL 5)
     include_directories(${CMAKE_SOURCE_DIR}/OSAL/linux)
     message("linux arm32 test environment")
 endif()
 
 add_subdirectory(${CMAKE_SOURCE_DIR}/DING_OS)
 
-if(TEST_ENVN STREQUAL 1) # unit test environment
+if(DING_OS_TEST_ENVN STREQUAL 1) # windows unit test environment
     add_subdirectory(${CMAKE_SOURCE_DIR}/OSAL/non_preemptive_os)
     add_subdirectory(${CMAKE_SOURCE_DIR}/UnitTest)
 endif()
 
-if(TEST_ENVN STREQUAL 2) # windows x86 test environment
+if(DING_OS_TEST_ENVN STREQUAL 2) # windows x86 test environment
     add_subdirectory(${CMAKE_SOURCE_DIR}/OSAL/windows)
     add_subdirectory(${CMAKE_SOURCE_DIR}/OSAL_TEST/windows_test)
 endif()
 
-if(TEST_ENVN STREQUAL 3) # linux x86 test environment
+if(DING_OS_TEST_ENVN STREQUAL 3) # linux unit test environment
+    add_subdirectory(${CMAKE_SOURCE_DIR}/OSAL/non_preemptive_os)
+    add_subdirectory(${CMAKE_SOURCE_DIR}/UnitTest)
+endif()
+
+if(DING_OS_TEST_ENVN STREQUAL 4) # linux x86 test environment
     add_subdirectory(${CMAKE_SOURCE_DIR}/OSAL/linux)
     add_subdirectory(${CMAKE_SOURCE_DIR}/OSAL_TEST/linux_x86_test)
 endif()
 
-if(TEST_ENVN STREQUAL 4) # linux arm32 test environment
+if(DING_OS_TEST_ENVN STREQUAL 5) # linux arm32 test environment
     add_subdirectory(${CMAKE_SOURCE_DIR}/OSAL/linux)
     add_subdirectory(${CMAKE_SOURCE_DIR}/OSAL_TEST/linux_arm32_test)
 endif()
