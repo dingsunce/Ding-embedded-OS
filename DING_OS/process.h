@@ -24,7 +24,7 @@ extern "C"
     u8             NeedPoll;
     DList_t        ProcessList;
     DList_t        TimerList;
-    char          *name;
+    const char    *name;
   } Process_t;
 
 #define PROCESS_HANDLER(name, msgId, arg)                                                          \
@@ -70,8 +70,8 @@ extern "C"
   void *CreateProcessArg(Process_t *p);
 
   void Process_InitStructure(Process_t *p, ProcessHandler handler);
-  
-  void Process_InitStruct(Process_t *p, ProcessHandler handler, char *name);
+
+  void Process_InitStruct(Process_t *p, ProcessHandler handler, const char *name);
 
 #ifdef __cplusplus
 }

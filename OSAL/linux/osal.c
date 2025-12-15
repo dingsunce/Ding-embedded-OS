@@ -473,11 +473,8 @@ static void os_timer_thread(void *arg)
   sigprocmask(SIG_BLOCK, &sigset, NULL);
   sigaddset(&sigset, SIGALRM);
 
-  // uint64_t  nsec = (uint64_t)timer->us * 1000;
-  // tmo.tv_sec = nsec / NS_PER_SECOND;
-  // tmo.tv_nsec = nsec % NS_PER_SECOND;
-
-  tmo.tv_nsec = 500 * NS_PER_MS;
+  tmo.tv_sec = timer->ms / MS_PER_SECOND;
+  tmo.tv_nsec = (timer->ms % MS_PER_SECOND) * NS_PER_MS;
 
   while (!timer->exit)
   {

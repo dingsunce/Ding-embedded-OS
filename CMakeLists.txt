@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.15)
+cmake_minimum_required(VERSION 3.19)
 project(DING_OS)
 
 set(CMAKE_CXX_STANDARD 17)
@@ -35,20 +35,19 @@ elseif(CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
 endif()
 
 
+
 set(EXECUTABLE_OUTPUT_PATH ${CMAKE_BINARY_DIR}/bin)
 
 #1 : unit test environment
 #2 : windows x86 test environment
 #3 : linux x86 test environment
 #4 : linux arm32 test environment
-set(TEST_ENVN 2)
+set(TEST_ENVN 4)
 
 if(TEST_ENVN STREQUAL 4) # linux arm32 test environment
     set(CMAKE_SYSTEM_PROCESSOR arm)
     set(CMAKE_C_COMPILER arm-none-linux-gnueabihf-gcc)
     set(CMAKE_CXX_COMPILER arm-none-linux-gnueabihf-g++)
-    set(PROJECT_BINARY_DIR "${CMAKE_BINARY_DIR}")
-    set(TARGET_NAME "bin/LINUX_ARM32_TEST")
     # @ONLY only replace @var@ in launch_connect_to_gdbserver.in.json
     configure_file(${CMAKE_SOURCE_DIR}/.vscode/launch_connect_to_gdbserver.in.json ${CMAKE_SOURCE_DIR}/.vscode/launch.json @ONLY)
 else()

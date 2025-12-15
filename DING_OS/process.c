@@ -67,7 +67,7 @@ void Process_InitStructure(Process_t *p, ProcessHandler handler)
   p->NeedPoll = false;
 }
 //-----------------------------------------------------------------------------------------------------------
-void Process_InitStruct(Process_t *p, ProcessHandler handler, char *name)
+void Process_InitStruct(Process_t *p, ProcessHandler handler, const char *name)
 {
   if (p->Handler != NULL) // already Initialized Process
     return;
