@@ -57,9 +57,21 @@
       "binaryDir": "${sourceDir}/Output/linux_arm32_test",
       "cacheVariables": {
         "CMAKE_SYSTEM_PROCESSOR": "arm",
-        "CMAKE_C_COMPILER": "arm-none-linux-gnueabihf-gcc",
-        "CMAKE_CXX_COMPILER": "arm-none-linux-gnueabihf-g++",
+        "CMAKE_C_COMPILER": "/home/ding/arm-none-linux-gnueabihf-10.3/bin/arm-none-linux-gnueabihf-gcc",
+        "CMAKE_CXX_COMPILER": "/home/ding/arm-none-linux-gnueabihf-10.3/bin/arm-none-linux-gnueabihf-g++",
         "DING_OS_TEST_ENVN": "5"
+      }
+    },
+    {
+      "name": "linux_driver_arm32_test",
+      "displayName": "linux_driver_arm32_test",
+      "generator": "Ninja",
+      "binaryDir": "${sourceDir}/Output/linux_driver_arm32_test",
+      "cacheVariables": {
+        "CMAKE_SYSTEM_PROCESSOR": "arm",
+        "CMAKE_C_COMPILER": "/home/ding/arm-none-linux-gnueabihf-10.3/bin/arm-none-linux-gnueabihf-gcc",
+        "CMAKE_CXX_COMPILER": "/home/ding/arm-none-linux-gnueabihf-10.3/bin/arm-none-linux-gnueabihf-g++",
+        "DING_OS_TEST_ENVN": "6"
       }
     }
   ],
@@ -83,6 +95,10 @@
     {
       "name": "linux_arm32_test",
       "configurePreset": "linux_arm32_test"
+    },
+    {
+      "name": "linux_driver_arm32_test",
+      "configurePreset": "linux_driver_arm32_test"
     }
   ]
 }

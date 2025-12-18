@@ -5,7 +5,7 @@
             "name": "C++ Launch (gdbserver)",
             "type": "cppdbg",
             "request": "launch",
-            "program": "/mnt/d/GitHub/Ding-embedded-OS/Output/linux_arm32_test/",
+            "program": "/mnt/d/GitHub/Ding-embedded-OS/Output/linux_arm32_test/bin/LINUX_ARM32_TEST",
             "args": [],
             "stopAtEntry": false,
             "cwd": "${workspaceFolder}",

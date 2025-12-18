@@ -43,12 +43,23 @@ set(EXECUTABLE_OUTPUT_PATH ${CMAKE_BINARY_DIR}/bin)
 #3 : linux unit test test environment
 #4 : linux x86 test environment
 #5 : linux arm32 test environment
-#set(DING_OS_TEST_ENVN 1)
+#6 : linux driver arm32 test environment
 
 if(DING_OS_TEST_ENVN STREQUAL 5) # linux arm32 test environment
+    set(PROJECT_BINARY_DIR "${CMAKE_BINARY_DIR}") # use it in launch_connect_to_gdbserver
+    set(TARGET_NAME "bin/LINUX_ARM32_TEST") # use it in launch_connect_to_gdbserver
     # @ONLY only replace @var@ in launch_connect_to_gdbserver.in.json
     configure_file(${CMAKE_SOURCE_DIR}/.vscode/launch_connect_to_gdbserver.in.json ${CMAKE_SOURCE_DIR}/.vscode/launch.json @ONLY)
+
+elseif(DING_OS_TEST_ENVN STREQUAL 6) # linux driver arm32 test environment
+
+    set(PROJECT_BINARY_DIR "${CMAKE_BINARY_DIR}") # use it in launch_connect_to_gdbserver
+    set(TARGET_NAME "bin/LINUX_DRIVER_ARM32_TEST") # use it in launch_connect_to_gdbserver
+    # @ONLY only replace @var@ in launch_connect_to_gdbserver.in.json
+    configure_file(${CMAKE_SOURCE_DIR}/.vscode/launch_connect_to_gdbserver.in.json ${CMAKE_SOURCE_DIR}/.vscode/launch.json @ONLY)
+
 else()
+
     configure_file(${CMAKE_SOURCE_DIR}/.vscode/launch_none.in.json ${CMAKE_SOURCE_DIR}/.vscode/launch.json @ONLY)
 endif()
 
@@ -80,6 +91,11 @@ if(DING_OS_TEST_ENVN STREQUAL 5)
     message("linux arm32 test environment")
 endif()
 
+if(DING_OS_TEST_ENVN STREQUAL 6)
+    include_directories(${CMAKE_SOURCE_DIR}/OSAL/non_preemptive_os)
+    message("linux driver arm32 test environment")
+endif()
+
 add_subdirectory(${CMAKE_SOURCE_DIR}/DING_OS)
 
 if(DING_OS_TEST_ENVN STREQUAL 1) # windows unit test environment
@@ -105,5 +121,10 @@ endif()
 if(DING_OS_TEST_ENVN STREQUAL 5) # linux arm32 test environment
     add_subdirectory(${CMAKE_SOURCE_DIR}/OSAL/linux)
     add_subdirectory(${CMAKE_SOURCE_DIR}/OSAL_TEST/linux_arm32_test)
+endif()
+
+if(DING_OS_TEST_ENVN STREQUAL 6) # linux driver arm32 test environment
+    add_subdirectory(${CMAKE_SOURCE_DIR}/OSAL/non_preemptive_os)
+    add_subdirectory(${CMAKE_SOURCE_DIR}/OSAL_TEST/linux_driver_arm32_test)
 endif()
 

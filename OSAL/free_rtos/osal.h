@@ -11,16 +11,25 @@ extern "C"
 {
 #endif
 
-#include <stdarg.h>
-#include <stdbool.h>
-#include <stddef.h>
-#include <stdint.h>
-
 #include <FreeRTOS.h>
 #include <event_groups.h>
 #include <queue.h>
 #include <semphr.h>
+#include <stdarg.h>
+#include <stdbool.h>
+#include <stddef.h>
+#include <stdint.h>
+#include <string.h>
 #include <timers.h>
+
+  typedef unsigned long long s64;
+  typedef int32_t            s32;
+  typedef int16_t            s16;
+  typedef int8_t             s8;
+  typedef long long          u64;
+  typedef uint32_t           u32;
+  typedef uint16_t           u16;
+  typedef uint8_t            u8;
 
 // 0 is lowest priority ......
 #define OS_INVERTED_PRIORITY 1

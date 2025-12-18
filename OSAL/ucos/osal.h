@@ -11,12 +11,21 @@ extern "C"
 {
 #endif
 
+#include <os.h>
 #include <stdarg.h>
 #include <stdbool.h>
 #include <stddef.h>
 #include <stdint.h>
+#include <string.h>
 
-#include <os.h>
+  typedef unsigned long long s64;
+  typedef int32_t            s32;
+  typedef int16_t            s16;
+  typedef int8_t             s8;
+  typedef long long          u64;
+  typedef uint32_t           u32;
+  typedef uint16_t           u16;
+  typedef uint8_t            u8;
 
 // 0 is highest priority ......
 #define OS_INVERTED_PRIORITY 0

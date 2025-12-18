@@ -9,13 +9,12 @@
 /* #include "options.h" */
 
 #include <limits.h>
+#include <pthread.h>
 #include <signal.h>
 #include <stdarg.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
-
-#include <pthread.h>
 
 #include <assert.h>
 #include <errno.h>
