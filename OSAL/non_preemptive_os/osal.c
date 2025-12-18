@@ -16,7 +16,7 @@ void os_start(void)
 {
 }
 //-----------------------------------------------------------------------------------------------------------
-void *os_malloc(size_t size)
+void *os_malloc(u32 size)
 {
   return DMem_Malloc((u16)size);
 }
@@ -26,8 +26,8 @@ void os_free(void *ptr)
   DMem_Free(ptr);
 }
 //-----------------------------------------------------------------------------------------------------------
-os_thread_t *os_thread_create(char *name, uint32_t priority, size_t stacksize,
-                              void (*entry)(void *arg), void *arg)
+os_thread_t *os_thread_create(char *name, u16 priority, u16 stacksize, void (*entry)(void *arg),
+                              void *arg)
 {
   return NULL;
 }
@@ -53,11 +53,11 @@ void os_mutex_destroy(os_mutex_t *mutex)
 {
 }
 //-----------------------------------------------------------------------------------------------------------
-void os_msleep(uint32_t ms)
+void os_msleep(u32 ms)
 {
 }
 //-----------------------------------------------------------------------------------------------------------
-uint32_t os_ms_current(void)
+u32 os_ms_current(void)
 {
   return 0;
 }
@@ -67,7 +67,7 @@ os_tick_t os_tick_current(void)
   return 0;
 }
 //-----------------------------------------------------------------------------------------------------------
-os_tick_t os_tick_from_ms(uint32_t ms)
+os_tick_t os_tick_from_ms(u32 ms)
 {
   return ms;
 }
@@ -76,12 +76,12 @@ void os_tick_sleep(os_tick_t tick)
 {
 }
 //-----------------------------------------------------------------------------------------------------------
-os_sem_t *os_sem_create(size_t count)
+os_sem_t *os_sem_create(u16 count)
 {
   return NULL;
 }
 //-----------------------------------------------------------------------------------------------------------
-bool os_sem_wait(os_sem_t *sem, uint32_t ms)
+bool os_sem_wait(os_sem_t *sem, u32 ms)
 {
   /* Timed out */
   return true;
@@ -100,16 +100,16 @@ os_event_t *os_event_create(void)
   return NULL;
 }
 //-----------------------------------------------------------------------------------------------------------
-bool os_event_wait(os_event_t *event, uint32_t mask, uint32_t *value, uint32_t ms)
+bool os_event_wait(os_event_t *event, u32 mask, u32 *value, u32 ms)
 {
   return true;
 }
 //-----------------------------------------------------------------------------------------------------------
-void os_event_set(os_event_t *event, uint32_t value)
+void os_event_set(os_event_t *event, u32 value)
 {
 }
 //-----------------------------------------------------------------------------------------------------------
-void os_event_clr(os_event_t *event, uint32_t value)
+void os_event_clr(os_event_t *event, u32 value)
 {
 }
 //-----------------------------------------------------------------------------------------------------------
@@ -117,17 +117,17 @@ void os_event_destroy(os_event_t *event)
 {
 }
 //-----------------------------------------------------------------------------------------------------------
-os_mbox_t *os_mbox_create(size_t size)
+os_mbox_t *os_mbox_create(u32 size)
 {
   return NULL;
 }
 //-----------------------------------------------------------------------------------------------------------
-bool os_mbox_fetch(os_mbox_t *mbox, void **msg, uint32_t ms)
+bool os_mbox_fetch(os_mbox_t *mbox, void **msg, u32 ms)
 {
   return true;
 }
 //-----------------------------------------------------------------------------------------------------------
-bool os_mbox_post(os_mbox_t *mbox, void *msg, uint32_t ms)
+bool os_mbox_post(os_mbox_t *mbox, void *msg, u32 ms)
 {
   return true;
 }
@@ -136,13 +136,12 @@ void os_mbox_destroy(os_mbox_t *mbox)
 {
 }
 //-----------------------------------------------------------------------------------------------------------
-os_timer_t *os_timer_create(uint32_t ms, void (*fn)(os_timer_t *, void *arg), void *arg,
-                            bool oneshot)
+os_timer_t *os_timer_create(u32 ms, void (*fn)(os_timer_t *, void *arg), void *arg, bool oneshot)
 {
   return NULL;
 }
 //-----------------------------------------------------------------------------------------------------------
-void os_timer_set(os_timer_t *timer, uint32_t ms)
+void os_timer_set(os_timer_t *timer, u32 ms)
 {
 }
 //-----------------------------------------------------------------------------------------------------------

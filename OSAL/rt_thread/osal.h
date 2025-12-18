@@ -18,7 +18,7 @@ extern "C"
 #include <stddef.h>
 #include <stdint.h>
 #include <string.h>
-  
+
   typedef unsigned long long s64;
   typedef int32_t            s32;
   typedef int16_t            s16;
@@ -48,14 +48,14 @@ extern "C"
     void *arg;
   } os_timer_t;
 
-  void *os_malloc(size_t size);
+  void *os_malloc(u32 size);
   void  os_free(void *ptr);
 
   void os_init(void);
   void os_start(void);
 
-  os_thread_t *os_thread_create(char *name, uint32_t priority, size_t stacksize,
-                                void (*entry)(void *arg), void *arg);
+  os_thread_t *os_thread_create(char *name, u16 priority, u16 stacksize, void (*entry)(void *arg),
+                                void *arg);
   void         os_thread_destroy(os_thread_t *thread);
 
   os_mutex_t *os_mutex_create(void);
@@ -63,31 +63,31 @@ extern "C"
   void        os_mutex_unlock(os_mutex_t *mutex);
   void        os_mutex_destroy(os_mutex_t *mutex);
 
-  os_sem_t *os_sem_create(size_t count);
-  bool      os_sem_wait(os_sem_t *sem, uint32_t ms);
+  os_sem_t *os_sem_create(u16 count);
+  bool      os_sem_wait(os_sem_t *sem, u32 ms);
   void      os_sem_signal(os_sem_t *sem);
   void      os_sem_destroy(os_sem_t *sem);
 
   os_event_t *os_event_create(void);
-  bool        os_event_wait(os_event_t *event, uint32_t mask, uint32_t *value, uint32_t ms);
-  void        os_event_set(os_event_t *event, uint32_t value);
-  void        os_event_clr(os_event_t *event, uint32_t value);
+  bool        os_event_wait(os_event_t *event, u32 mask, u32 *value, u32 ms);
+  void        os_event_set(os_event_t *event, u32 value);
+  void        os_event_clr(os_event_t *event, u32 value);
   void        os_event_destroy(os_event_t *event);
 
-  os_mbox_t *os_mbox_create(size_t size);
-  bool       os_mbox_fetch(os_mbox_t *mbox, void **msg, uint32_t ms);
-  bool       os_mbox_post(os_mbox_t *mbox, void *msg, uint32_t ms);
+  os_mbox_t *os_mbox_create(u32 size);
+  bool       os_mbox_fetch(os_mbox_t *mbox, void **msg, u32 ms);
+  bool       os_mbox_post(os_mbox_t *mbox, void *msg, u32 ms);
   void       os_mbox_destroy(os_mbox_t *mbox);
 
-  void      os_msleep(uint32_t ms);
-  uint32_t  os_ms_current(void);
+  void      os_msleep(u32 ms);
+  u32       os_ms_current(void);
   os_tick_t os_tick_current(void);
-  os_tick_t os_tick_from_ms(uint32_t ms);
+  os_tick_t os_tick_from_ms(u32 ms);
   void      os_tick_sleep(os_tick_t tick);
 
-  os_timer_t *os_timer_create(uint32_t ms, void (*fn)(os_timer_t *timer, void *arg), void *arg,
+  os_timer_t *os_timer_create(u32 ms, void (*fn)(os_timer_t *timer, void *arg), void *arg,
                               bool oneshot);
-  void        os_timer_set(os_timer_t *timer, uint32_t ms);
+  void        os_timer_set(os_timer_t *timer, u32 ms);
   void        os_timer_start(os_timer_t *timer);
   void        os_timer_stop(os_timer_t *timer);
   void        os_timer_destroy(os_timer_t *timer);

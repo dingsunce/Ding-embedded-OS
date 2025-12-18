@@ -18,7 +18,7 @@ void os_start(void)
 {
 }
 //-----------------------------------------------------------------------------------------------------------
-void *os_malloc(size_t size)
+void *os_malloc(u32 size)
 {
   return malloc(size);
 }
@@ -48,8 +48,8 @@ void os_mutex_destroy(os_mutex_t *mutex)
   CloseHandle(mutex);
 }
 //-----------------------------------------------------------------------------------------------------------
-os_thread_t *os_thread_create(char *name, uint32_t priority, size_t stacksize,
-                              void (*entry)(void *arg), void *arg)
+os_thread_t *os_thread_create(char *name, u16 priority, u16 stacksize, void (*entry)(void *arg),
+                              void *arg)
 {
   HANDLE handle;
   handle = CreateThread(NULL, 0, (LPTHREAD_START_ROUTINE)entry, (LPVOID)arg, 0, NULL);
@@ -68,7 +68,7 @@ void os_thread_destroy(os_thread_t *thread)
   TerminateThread(thread, dwExitCode);
 }
 //-----------------------------------------------------------------------------------------------------------
-os_sem_t *os_sem_create(size_t count)
+os_sem_t *os_sem_create(u16 count)
 {
   os_sem_t *sem;
 
@@ -81,7 +81,7 @@ os_sem_t *os_sem_create(size_t count)
   return sem;
 }
 //-----------------------------------------------------------------------------------------------------------
-bool os_sem_wait(os_sem_t *sem, uint32_t ms)
+bool os_sem_wait(os_sem_t *sem, u32 ms)
 {
   BOOL success = TRUE;
 
@@ -128,7 +128,7 @@ os_event_t *os_event_create(void)
   return event;
 }
 //-----------------------------------------------------------------------------------------------------------
-bool os_event_wait(os_event_t *event, uint32_t mask, uint32_t *value, uint32_t ms)
+bool os_event_wait(os_event_t *event, u32 mask, u32 *value, u32 ms)
 {
   BOOL success = TRUE;
 
@@ -145,7 +145,7 @@ bool os_event_wait(os_event_t *event, uint32_t mask, uint32_t *value, uint32_t m
   return !success;
 }
 //-----------------------------------------------------------------------------------------------------------
-void os_event_set(os_event_t *event, uint32_t value)
+void os_event_set(os_event_t *event, u32 value)
 {
   EnterCriticalSection(&event->lock);
   event->flags |= value;
@@ -153,7 +153,7 @@ void os_event_set(os_event_t *event, uint32_t value)
   WakeAllConditionVariable(&event->condition);
 }
 //-----------------------------------------------------------------------------------------------------------
-void os_event_clr(os_event_t *event, uint32_t value)
+void os_event_clr(os_event_t *event, u32 value)
 {
   EnterCriticalSection(&event->lock);
   event->flags &= ~value;
@@ -166,7 +166,7 @@ void os_event_destroy(os_event_t *event)
   free(event);
 }
 //-----------------------------------------------------------------------------------------------------------
-os_mbox_t *os_mbox_create(size_t size)
+os_mbox_t *os_mbox_create(u32 size)
 {
   os_mbox_t *mbox;
 
@@ -183,7 +183,7 @@ os_mbox_t *os_mbox_create(size_t size)
   return mbox;
 }
 //-----------------------------------------------------------------------------------------------------------
-bool os_mbox_fetch(os_mbox_t *mbox, void **msg, uint32_t ms)
+bool os_mbox_fetch(os_mbox_t *mbox, void **msg, u32 ms)
 {
   BOOL success = TRUE;
 
@@ -209,7 +209,7 @@ timeout:
   return !success;
 }
 //-----------------------------------------------------------------------------------------------------------
-bool os_mbox_post(os_mbox_t *mbox, void *msg, uint32_t ms)
+bool os_mbox_post(os_mbox_t *mbox, void *msg, u32 ms)
 {
   BOOL success = TRUE;
 
@@ -241,7 +241,7 @@ void os_mbox_destroy(os_mbox_t *mbox)
   free(mbox);
 }
 //-----------------------------------------------------------------------------------------------------------
-void os_msleep(uint32_t ms)
+void os_msleep(u32 ms)
 {
   Sleep(ms);
 }
@@ -269,12 +269,12 @@ os_tick_t os_tick_current(void)
   return currentCount.QuadPart;
 }
 //-----------------------------------------------------------------------------------------------------------
-uint32_t os_ms_current(void)
+u32 os_ms_current(void)
 {
-  return (uint32_t)(os_tick_current() / os_get_ticks_per_ms());
+  return (u32)(os_tick_current() / os_get_ticks_per_ms());
 }
 //-----------------------------------------------------------------------------------------------------------
-os_tick_t os_tick_from_ms(uint32_t ms)
+os_tick_t os_tick_from_ms(u32 ms)
 {
   return os_get_ticks_per_ms() * ms;
 }
@@ -293,8 +293,7 @@ static VOID CALLBACK timer_callback(UINT uTimerID, UINT uMsg, DWORD_PTR dwUser, 
     timer->fn(timer, timer->arg);
 }
 //-----------------------------------------------------------------------------------------------------------
-os_timer_t *os_timer_create(uint32_t ms, void (*fn)(os_timer_t *, void *arg), void *arg,
-                            bool oneshot)
+os_timer_t *os_timer_create(u32 ms, void (*fn)(os_timer_t *, void *arg), void *arg, bool oneshot)
 {
   os_timer_t *timer;
 
@@ -308,7 +307,7 @@ os_timer_t *os_timer_create(uint32_t ms, void (*fn)(os_timer_t *, void *arg), vo
   return timer;
 }
 //-----------------------------------------------------------------------------------------------------------
-void os_timer_set(os_timer_t *timer, uint32_t ms)
+void os_timer_set(os_timer_t *timer, u32 ms)
 {
   timer->ms = ms;
 }

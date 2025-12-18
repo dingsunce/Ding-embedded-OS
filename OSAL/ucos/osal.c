@@ -30,7 +30,7 @@ void os_start(void)
   OSStart(&os_err);
 }
 //-----------------------------------------------------------------------------------------------------------
-void *os_malloc(size_t size)
+void *os_malloc(u32 size)
 {
   return malloc(size);
 }
@@ -40,8 +40,8 @@ void os_free(void *ptr)
   free(ptr);
 }
 //-----------------------------------------------------------------------------------------------------------
-os_thread_t *os_thread_create(char *name, uint32_t priority, size_t stacksize,
-                              void (*entry)(void *arg), void *arg)
+os_thread_t *os_thread_create(char *name, u16 priority, u16 stacksize, void (*entry)(void *arg),
+                              void *arg)
 {
   OS_TCB *thread = os_malloc(sizeof(OS_TCB));
   if (thread == NULL)
@@ -106,7 +106,7 @@ void os_mutex_destroy(os_mutex_t *mutex)
   os_free(mutex);
 }
 //-----------------------------------------------------------------------------------------------------------
-os_sem_t *os_sem_create(size_t count)
+os_sem_t *os_sem_create(u16 count)
 {
   os_sem_t *sem = os_malloc(sizeof(os_sem_t));
   if (sem == NULL)
@@ -122,7 +122,7 @@ os_sem_t *os_sem_create(size_t count)
   return sem;
 }
 //-----------------------------------------------------------------------------------------------------------
-bool os_sem_wait(os_sem_t *sem, uint32_t ms)
+bool os_sem_wait(os_sem_t *sem, u32 ms)
 {
   CPU_TS time_stamp;
 
@@ -165,7 +165,7 @@ os_event_t *os_event_create(void)
   return event;
 }
 //-----------------------------------------------------------------------------------------------------------
-bool os_event_wait(os_event_t *event, uint32_t mask, uint32_t *value, uint32_t ms)
+bool os_event_wait(os_event_t *event, u32 mask, u32 *value, u32 ms)
 {
   CPU_TS time_stamp;
 
@@ -184,12 +184,12 @@ bool os_event_wait(os_event_t *event, uint32_t mask, uint32_t *value, uint32_t m
   return true;
 }
 //-----------------------------------------------------------------------------------------------------------
-void os_event_set(os_event_t *event, uint32_t value)
+void os_event_set(os_event_t *event, u32 value)
 {
   OSFlagPost(event, value, OS_OPT_POST_FLAG_SET, &event_err);
 }
 //-----------------------------------------------------------------------------------------------------------
-void os_event_clr(os_event_t *event, uint32_t value)
+void os_event_clr(os_event_t *event, u32 value)
 {
   OSFlagPost(event, value, OS_OPT_POST_FLAG_CLR, &event_err);
 }
@@ -201,7 +201,7 @@ void os_event_destroy(os_event_t *event)
   os_free(event);
 }
 //-----------------------------------------------------------------------------------------------------------
-os_mbox_t *os_mbox_create(size_t size)
+os_mbox_t *os_mbox_create(u32 size)
 {
   os_mbox_t *mbox = os_malloc(sizeof(os_mbox_t));
   if (mbox == NULL)
@@ -218,7 +218,7 @@ os_mbox_t *os_mbox_create(size_t size)
   return mbox;
 }
 //-----------------------------------------------------------------------------------------------------------
-bool os_mbox_fetch(os_mbox_t *mbox, void **msg, uint32_t ms)
+bool os_mbox_fetch(os_mbox_t *mbox, void **msg, u32 ms)
 {
   OS_MSG_SIZE msg_size;
   CPU_TS      time_stamp;
@@ -235,7 +235,7 @@ bool os_mbox_fetch(os_mbox_t *mbox, void **msg, uint32_t ms)
   return true;
 }
 //-----------------------------------------------------------------------------------------------------------
-bool os_mbox_post(os_mbox_t *mbox, void *msg, uint32_t ms)
+bool os_mbox_post(os_mbox_t *mbox, void *msg, u32 ms)
 {
   OSQPost(mbox, msg, 1, OS_OPT_POST_FIFO, &mbox_err);
 
@@ -252,7 +252,7 @@ void os_mbox_destroy(os_mbox_t *mbox)
   os_free(mbox);
 }
 //-----------------------------------------------------------------------------------------------------------
-void os_msleep(uint32_t ms)
+void os_msleep(u32 ms)
 {
   OSTimeDly(ms / TICK_PERIOD_MS, OS_OPT_TIME_DLY, &tick_err);
 }
@@ -267,18 +267,17 @@ os_tick_t os_tick_current(void)
   return OSTimeGet(&tick_err);
 }
 //-----------------------------------------------------------------------------------------------------------
-uint32_t os_ms_current(void)
+u32 os_ms_current(void)
 {
   return os_tick_current() / TICK_PERIOD_MS;
 }
 //-----------------------------------------------------------------------------------------------------------
-os_tick_t os_tick_from_ms(uint32_t ms)
+os_tick_t os_tick_from_ms(u32 ms)
 {
   return ms / TICK_PERIOD_MS;
 }
 //-----------------------------------------------------------------------------------------------------------
-os_timer_t *os_timer_create(uint32_t ms, void (*fn)(os_timer_t *, void *arg), void *arg,
-                            bool oneshot)
+os_timer_t *os_timer_create(u32 ms, void (*fn)(os_timer_t *, void *arg), void *arg, bool oneshot)
 {
   os_timer_t *timer;
 
@@ -301,7 +300,7 @@ os_timer_t *os_timer_create(uint32_t ms, void (*fn)(os_timer_t *, void *arg), vo
   return timer;
 }
 //-----------------------------------------------------------------------------------------------------------
-void os_timer_set(os_timer_t *timer, uint32_t ms)
+void os_timer_set(os_timer_t *timer, u32 ms)
 {
   timer->Dly = os_tick_from_ms(ms);
 }

@@ -38,7 +38,7 @@ void os_start(void)
 {
 }
 //-----------------------------------------------------------------------------------------------------------
-void *os_malloc(size_t size)
+void *os_malloc(u32 size)
 {
   return malloc(size);
 }
@@ -48,8 +48,8 @@ void os_free(void *ptr)
   free(ptr);
 }
 //-----------------------------------------------------------------------------------------------------------
-os_thread_t *os_thread_create(char *name, uint32_t priority, size_t stacksize,
-                              void (*entry)(void *arg), void *arg)
+os_thread_t *os_thread_create(char *name, u16 priority, u16 stacksize, void (*entry)(void *arg),
+                              void *arg)
 {
   int            result;
   pthread_t     *thread;
@@ -127,7 +127,7 @@ void os_mutex_destroy(os_mutex_t *_mutex)
   free(mutex);
 }
 //-----------------------------------------------------------------------------------------------------------
-os_sem_t *os_sem_create(size_t count)
+os_sem_t *os_sem_create(u8 count)
 {
   os_sem_t           *sem;
   pthread_mutexattr_t mattr;
@@ -148,7 +148,7 @@ os_sem_t *os_sem_create(size_t count)
   return sem;
 }
 //-----------------------------------------------------------------------------------------------------------
-bool os_sem_wait(os_sem_t *sem, uint32_t ms)
+bool os_sem_wait(os_sem_t *sem, u32 ms)
 {
   struct timespec ts;
   int             error = 0;
@@ -225,7 +225,7 @@ os_event_t *os_event_create(void)
   return event;
 }
 //-----------------------------------------------------------------------------------------------------------
-bool os_event_wait(os_event_t *event, uint32_t mask, uint32_t *value, uint32_t ms)
+bool os_event_wait(os_event_t *event, u32 mask, u32 *value, u32 ms)
 {
   struct timespec ts;
   int             error = 0;
@@ -266,7 +266,7 @@ timeout:
   return (error != 0);
 }
 //-----------------------------------------------------------------------------------------------------------
-void os_event_set(os_event_t *event, uint32_t value)
+void os_event_set(os_event_t *event, u32 value)
 {
   pthread_mutex_lock(&event->mutex);
   event->flags |= value;
@@ -274,7 +274,7 @@ void os_event_set(os_event_t *event, uint32_t value)
   pthread_cond_signal(&event->cond);
 }
 //-----------------------------------------------------------------------------------------------------------
-void os_event_clr(os_event_t *event, uint32_t value)
+void os_event_clr(os_event_t *event, u32 value)
 {
   pthread_mutex_lock(&event->mutex);
   event->flags &= ~value;
@@ -289,7 +289,7 @@ void os_event_destroy(os_event_t *event)
   free(event);
 }
 //-----------------------------------------------------------------------------------------------------------
-os_mbox_t *os_mbox_create(size_t size)
+os_mbox_t *os_mbox_create(u32 size)
 {
   os_mbox_t          *mbox;
   pthread_mutexattr_t mattr;
@@ -314,7 +314,7 @@ os_mbox_t *os_mbox_create(size_t size)
   return mbox;
 }
 //-----------------------------------------------------------------------------------------------------------
-bool os_mbox_fetch(os_mbox_t *mbox, void **msg, uint32_t ms)
+bool os_mbox_fetch(os_mbox_t *mbox, void **msg, u32 ms)
 {
   struct timespec ts;
   int             error = 0;
@@ -362,7 +362,7 @@ timeout:
   return (error != 0);
 }
 //-----------------------------------------------------------------------------------------------------------
-bool os_mbox_post(os_mbox_t *mbox, void *msg, uint32_t ms)
+bool os_mbox_post(os_mbox_t *mbox, void *msg, u32 ms)
 {
   struct timespec ts;
   int             error = 0;
@@ -417,7 +417,7 @@ void os_mbox_destroy(os_mbox_t *mbox)
   free(mbox);
 }
 //-----------------------------------------------------------------------------------------------------------
-os_tick_t os_tick_from_ms(uint32_t ms)
+os_tick_t os_tick_from_ms(u32 ms)
 {
   return ms / TICK_PERIOD_MS;
 }
@@ -427,7 +427,7 @@ os_tick_t os_ms_from_tick(os_tick_t tick)
   return tick * TICK_PERIOD_MS;
 }
 //-----------------------------------------------------------------------------------------------------------
-void os_msleep(uint32_t ms)
+void os_msleep(u32 ms)
 {
   struct timespec ts;
   struct timespec remain;
@@ -440,7 +440,7 @@ void os_msleep(uint32_t ms)
   }
 }
 //-----------------------------------------------------------------------------------------------------------
-uint32_t os_ms_current(void)
+u32 os_ms_current(void)
 {
   struct timespec ts;
 
@@ -486,8 +486,7 @@ static void os_timer_thread(void *arg)
   }
 }
 //-----------------------------------------------------------------------------------------------------------
-os_timer_t *os_timer_create(uint32_t ms, void (*fn)(os_timer_t *, void *arg), void *arg,
-                            bool oneshot)
+os_timer_t *os_timer_create(u32 ms, void (*fn)(os_timer_t *, void *arg), void *arg, bool oneshot)
 {
   os_timer_t     *timer;
   struct sigevent sev;
@@ -539,7 +538,7 @@ os_timer_t *os_timer_create(uint32_t ms, void (*fn)(os_timer_t *, void *arg), vo
   return timer;
 }
 //-----------------------------------------------------------------------------------------------------------
-void os_timer_set(os_timer_t *timer, uint32_t ms)
+void os_timer_set(os_timer_t *timer, u32 ms)
 {
   timer->ms = ms;
 }

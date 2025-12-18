@@ -82,7 +82,7 @@ void os_start(void)
   rt_system_scheduler_start();
 }
 //-----------------------------------------------------------------------------------------------------------
-void *os_malloc(size_t size)
+void *os_malloc(u32 size)
 {
   return rt_malloc(size);
 }
@@ -92,8 +92,8 @@ void os_free(void *ptr)
   rt_free(ptr);
 }
 //-----------------------------------------------------------------------------------------------------------
-os_thread_t *os_thread_create(char *name, uint32_t priority, size_t stacksize,
-                              void (*entry)(void *arg), void *arg)
+os_thread_t *os_thread_create(char *name, u16 priority, u16 stacksize, void (*entry)(void *arg),
+                              void *arg)
 {
   os_thread_t *thread =
       rt_thread_create(name, entry, arg, stacksize * sizeof(rt_uint32_t), priority, 20);
@@ -128,13 +128,13 @@ void os_mutex_destroy(os_mutex_t *mutex)
   rt_mutex_delete((rt_mutex_t)mutex);
 }
 //-----------------------------------------------------------------------------------------------------------
-os_sem_t *os_sem_create(size_t count)
+os_sem_t *os_sem_create(u16 count)
 {
   rt_sem_t sem = rt_sem_create("semaphore", count, RT_IPC_FLAG_FIFO);
   return (os_sem_t *)sem;
 }
 //-----------------------------------------------------------------------------------------------------------
-bool os_sem_wait(os_sem_t *sem, uint32_t ms)
+bool os_sem_wait(os_sem_t *sem, u32 ms)
 {
   if (ms == OS_WAIT_FOREVER)
     err = rt_sem_take((rt_sem_t)sem, RT_WAITING_FOREVER);
@@ -163,7 +163,7 @@ os_event_t *os_event_create(void)
   return (os_event_t *)event;
 }
 //-----------------------------------------------------------------------------------------------------------
-bool os_event_wait(os_event_t *event, uint32_t mask, uint32_t *value, uint32_t ms)
+bool os_event_wait(os_event_t *event, u32 mask, u32 *value, u32 ms)
 {
   if (ms == OS_WAIT_FOREVER)
     err = rt_event_recv((rt_event_t)event, mask, RT_EVENT_FLAG_OR, RT_WAITING_FOREVER, value);
@@ -178,12 +178,12 @@ bool os_event_wait(os_event_t *event, uint32_t mask, uint32_t *value, uint32_t m
   return true;
 }
 //-----------------------------------------------------------------------------------------------------------
-void os_event_set(os_event_t *event, uint32_t value)
+void os_event_set(os_event_t *event, u32 value)
 {
   rt_event_send((rt_event_t)event, value);
 }
 //-----------------------------------------------------------------------------------------------------------
-void os_event_clr(os_event_t *event, uint32_t value)
+void os_event_clr(os_event_t *event, u32 value)
 {
 }
 //-----------------------------------------------------------------------------------------------------------
@@ -192,12 +192,12 @@ void os_event_destroy(os_event_t *event)
   rt_event_delete(event);
 }
 //-----------------------------------------------------------------------------------------------------------
-os_mbox_t *os_mbox_create(size_t size)
+os_mbox_t *os_mbox_create(u32 size)
 {
   return rt_mb_create("mbox", size, RT_IPC_FLAG_FIFO);
 }
 //-----------------------------------------------------------------------------------------------------------
-bool os_mbox_fetch(os_mbox_t *mbox, void **msg, uint32_t ms)
+bool os_mbox_fetch(os_mbox_t *mbox, void **msg, u32 ms)
 {
   if (ms == OS_WAIT_FOREVER)
     err = rt_mb_recv(mbox, (rt_ubase_t *)msg, RT_WAITING_FOREVER);
@@ -210,7 +210,7 @@ bool os_mbox_fetch(os_mbox_t *mbox, void **msg, uint32_t ms)
   return true;
 }
 //-----------------------------------------------------------------------------------------------------------
-bool os_mbox_post(os_mbox_t *mbox, void *msg, uint32_t ms)
+bool os_mbox_post(os_mbox_t *mbox, void *msg, u32 ms)
 {
   rt_err_t err = rt_mb_send(mbox, (rt_ubase_t)msg);
 
@@ -225,7 +225,7 @@ void os_mbox_destroy(os_mbox_t *mbox)
   rt_mb_delete(mbox);
 }
 //-----------------------------------------------------------------------------------------------------------
-void os_msleep(uint32_t ms)
+void os_msleep(u32 ms)
 {
   rt_thread_delay(ms / TICK_PERIOD_MS);
 }
@@ -240,12 +240,12 @@ os_tick_t os_tick_current(void)
   return rt_tick_get();
 }
 //-----------------------------------------------------------------------------------------------------------
-uint32_t os_ms_current(void)
+u32 os_ms_current(void)
 {
   return os_tick_current() / TICK_PERIOD_MS;
 }
 //-----------------------------------------------------------------------------------------------------------
-os_tick_t os_tick_from_ms(uint32_t ms)
+os_tick_t os_tick_from_ms(u32 ms)
 {
   return ms / TICK_PERIOD_MS;
 }
@@ -258,8 +258,7 @@ static void os_timer_callback(void *parameter)
     timer->fn(timer, timer->arg);
 }
 //-----------------------------------------------------------------------------------------------------------
-os_timer_t *os_timer_create(uint32_t ms, void (*fn)(os_timer_t *, void *arg), void *arg,
-                            bool oneshot)
+os_timer_t *os_timer_create(u32 ms, void (*fn)(os_timer_t *, void *arg), void *arg, bool oneshot)
 {
   os_timer_t *timer;
 
@@ -283,7 +282,7 @@ os_timer_t *os_timer_create(uint32_t ms, void (*fn)(os_timer_t *, void *arg), vo
   return (os_timer_t *)timer;
 }
 //-----------------------------------------------------------------------------------------------------------
-void os_timer_set(os_timer_t *timer, uint32_t ms)
+void os_timer_set(os_timer_t *timer, u32 ms)
 {
   timer->rt_timer->timeout_tick = os_tick_from_ms(ms);
 }
