@@ -46,6 +46,8 @@ set(EXECUTABLE_OUTPUT_PATH ${CMAKE_BINARY_DIR}/bin)
 #6 : linux driver arm32 test environment
 
 if(DING_OS_TEST_ENVN STREQUAL 5) # linux arm32 test environment
+
+    # when debugging it will connect to remote gdb_server on development board
     set(PROJECT_BINARY_DIR "${CMAKE_BINARY_DIR}") # use it in launch_connect_to_gdbserver
     set(TARGET_NAME "bin/LINUX_ARM32_TEST") # use it in launch_connect_to_gdbserver
     # @ONLY only replace @var@ in launch_connect_to_gdbserver.in.json
@@ -53,6 +55,7 @@ if(DING_OS_TEST_ENVN STREQUAL 5) # linux arm32 test environment
 
 else()
 
+    # local debugging
     configure_file(${CMAKE_SOURCE_DIR}/.vscode/launch_none.in.json ${CMAKE_SOURCE_DIR}/.vscode/launch.json @ONLY)
 endif()
 
@@ -90,6 +93,7 @@ if(DING_OS_TEST_ENVN STREQUAL 5)
 endif()
 
 if(DING_OS_TEST_ENVN STREQUAL 6)
+    # cmake works as a bridge, makefile in linux_driver_arm32_test/build will do all build job
     message("linux driver arm32 test environment")
 endif()
 
@@ -125,6 +129,7 @@ if(DING_OS_TEST_ENVN STREQUAL 5) # linux arm32 test environment
 endif()
 
 if(DING_OS_TEST_ENVN STREQUAL 6) # linux driver arm32 test environment
+    # cmake works as a bridge, makefile in linux_driver_arm32_test/build will do all build job
     add_subdirectory(${CMAKE_SOURCE_DIR}/OSAL_TEST/linux_driver_arm32_test)
 endif()
 

@@ -4,6 +4,7 @@ file(GLOB_RECURSE src_c *.c ../app_ipc_test.c ../app_msg_test.c)
 file(GLOB_RECURSE src_cpp *.cpp)
 
 add_executable(LINUX_ARM32_TEST ../main.c ${src_c} ${src_cpp})
+# Threads timer function needs real-time library (-lrt)
 target_link_libraries(LINUX_ARM32_TEST PRIVATE rt)
 
 target_compile_definitions(DING_OS PUBLIC MEM_DEBUG=1)
