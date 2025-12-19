@@ -33,7 +33,7 @@ bool SysTick_IsTick1msOn(void)
   return Tick1msOn;
 }
 //-----------------------------------------------------------------------------------------------------------
-void SysTick_ResetTick1msOn()
+void SysTick_ResetTick1msOn(void)
 {
   Tick1msOn = false;
 }

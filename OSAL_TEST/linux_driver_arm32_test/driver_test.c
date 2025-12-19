@@ -1,22 +1,11 @@
 
-#include "./include/d_os.h"
+#include "d_os.h"
 #include <linux/delay.h>
 #include <linux/gpio.h>
 #include <linux/init.h>
 #include <linux/kernel.h>
 #include <linux/module.h>
 #include <linux/types.h>
-
-/***************************************************************
-Copyright © ALIENTEK Co., Ltd. 1998-2029. All rights reserved.
-文件名		: chrdevbase.c
-作者	  	: 正点原子
-版本	   	: V1.0
-描述	   	: chrdevbase驱动文件。
-其他	   	: 无
-论坛 	   	: www.openedv.com
-日志	   	: 初版V1.0 2020/12/26 正点原子创建
-***************************************************************/
 
 #define CHRDEVBASE_MAJOR 200          /* 主设备号 */
 #define CHRDEVBASE_NAME  "chrdevbase" /* 设备名     */
@@ -129,6 +118,9 @@ static int __init chrdevbase_init(void)
   {
     printk("chrdevbase driver register failed\r\n");
   }
+
+  DOS_Init();
+
   printk("chrdevbase init!\r\n");
   return 0;
 }

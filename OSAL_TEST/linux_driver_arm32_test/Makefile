@@ -1,5 +1,0 @@
-
-obj-m = chrdevbase.o
-
-
-

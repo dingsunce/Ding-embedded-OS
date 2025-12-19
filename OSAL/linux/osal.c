@@ -127,7 +127,7 @@ void os_mutex_destroy(os_mutex_t *_mutex)
   free(mutex);
 }
 //-----------------------------------------------------------------------------------------------------------
-os_sem_t *os_sem_create(u8 count)
+os_sem_t *os_sem_create(u16 count)
 {
   os_sem_t           *sem;
   pthread_mutexattr_t mattr;

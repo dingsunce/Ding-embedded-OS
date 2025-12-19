@@ -12,6 +12,10 @@ extern "C"
 
 #include "osal.h"
 
+#ifndef BOOL_DEFINE
+#define BOOL_DEFINE 0
+#endif
+
 #if (BOOL_DEFINE == 0)
   typedef enum
   {
