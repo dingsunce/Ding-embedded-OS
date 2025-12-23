@@ -4,7 +4,9 @@
 #include "d_os.h"
 #include "osal.h"
 
-static void App_TaskStart(void *p_arg)
+static os_thread_t *TaskStartThread;
+
+static os_return_t App_TaskStart(void *p_arg)
 {
   (void)p_arg;
 
@@ -19,11 +21,13 @@ static void App_TaskStart(void *p_arg)
 
   app_pic_test_start();
 
-  while (1)
+  while (!os_thread_should_stop(TaskStartThread))
   {
     /* Task body, always written as an infinite loop.           */
     os_msleep(1000);
   }
+
+  OS_RETURN;
 }
 
 static void onems_timer(os_timer_t *timer, void *arg)
@@ -34,7 +38,7 @@ static void onems_timer(os_timer_t *timer, void *arg)
 int main(int argc, char **argv)
 {
   os_init();
-  os_thread_create("os_task", 3, 256, App_TaskStart, NULL);
+  TaskStartThread = os_thread_create("os_task", 3, 256, App_TaskStart, NULL);
   os_start(); // start first thread
 
   os_timer_t *timer = os_timer_create(1, onems_timer, NULL, false);

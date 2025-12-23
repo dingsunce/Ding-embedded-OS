@@ -92,8 +92,7 @@ void os_free(void *ptr)
   rt_free(ptr);
 }
 //-----------------------------------------------------------------------------------------------------------
-os_thread_t *os_thread_create(char *name, u16 priority, u16 stacksize, void (*entry)(void *arg),
-                              void *arg)
+os_thread_t *os_thread_create(char *name, u16 priority, u16 stacksize, os_entry_t entry, void *arg)
 {
   os_thread_t *thread =
       rt_thread_create(name, entry, arg, stacksize * sizeof(rt_uint32_t), priority, 20);
@@ -105,6 +104,11 @@ os_thread_t *os_thread_create(char *name, u16 priority, u16 stacksize, void (*en
 void os_thread_destroy(os_thread_t *thread)
 {
   rt_thread_delete(thread);
+}
+//-----------------------------------------------------------------------------------------------------------
+bool os_thread_should_stop(os_thread_t *thread)
+{
+  return false;
 }
 //-----------------------------------------------------------------------------------------------------------
 os_mutex_t *os_mutex_create(void)

@@ -30,8 +30,7 @@ void os_free(void *ptr)
   vPortFree(ptr);
 }
 //-----------------------------------------------------------------------------------------------------------
-os_thread_t *os_thread_create(char *name, u16 priority, u16 stacksize, void (*entry)(void *arg),
-                              void *arg)
+os_thread_t *os_thread_create(char *name, u16 priority, u16 stacksize, os_entry_t entry, void *arg)
 {
   TaskHandle_t xHandle = NULL;
 
@@ -45,6 +44,11 @@ os_thread_t *os_thread_create(char *name, u16 priority, u16 stacksize, void (*en
 void os_thread_destroy(os_thread_t *thread)
 {
   vTaskDelete((TaskHandle_t)thread);
+}
+//-----------------------------------------------------------------------------------------------------------
+bool os_thread_should_stop(os_thread_t *thread)
+{
+  return false;
 }
 //-----------------------------------------------------------------------------------------------------------
 os_mutex_t *os_mutex_create(void)
@@ -125,7 +129,8 @@ bool os_event_wait(os_event_t *event, u32 mask, u32 *value, u32 ms)
   *value = xEventGroupWaitBits((EventGroupHandle_t)event, mask, pdFALSE, pdFALSE, TM_TO_TICK(ms));
 
   *value &= mask;
-  return *value == 0;
+
+  return *value != 0;
 }
 //-----------------------------------------------------------------------------------------------------------
 void os_event_set(os_event_t *event, u32 value)
@@ -163,7 +168,7 @@ bool os_mbox_fetch(os_mbox_t *mbox, void **msg, u32 ms)
     portEND_SWITCHING_ISR(xHigherPriorityTaskWoken);
   }
 
-  return success != pdTRUE;
+  return success == pdTRUE;
 }
 //-----------------------------------------------------------------------------------------------------------
 bool os_mbox_post(os_mbox_t *mbox, void *msg, u32 ms)
@@ -180,7 +185,7 @@ bool os_mbox_post(os_mbox_t *mbox, void *msg, u32 ms)
     portEND_SWITCHING_ISR(xHigherPriorityTaskWoken);
   }
 
-  return success != pdTRUE;
+  return success == pdTRUE;
 }
 //-----------------------------------------------------------------------------------------------------------
 void os_mbox_destroy(os_mbox_t *mbox)

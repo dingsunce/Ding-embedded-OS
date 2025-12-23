@@ -28,6 +28,30 @@ void os_free(void *ptr)
   free(ptr);
 }
 //-----------------------------------------------------------------------------------------------------------
+os_thread_t *os_thread_create(char *name, u16 priority, u16 stacksize, os_entry_t entry, void *arg)
+{
+  HANDLE handle;
+  handle = CreateThread(NULL, 0, (LPTHREAD_START_ROUTINE)entry, (LPVOID)arg, 0, NULL);
+
+  if (priority < 5)
+    SetThreadPriority(handle, THREAD_PRIORITY_BELOW_NORMAL);
+  else if (priority >= 15)
+    SetThreadPriority(handle, THREAD_PRIORITY_TIME_CRITICAL);
+
+  return handle;
+}
+//-----------------------------------------------------------------------------------------------------------
+void os_thread_destroy(os_thread_t *thread)
+{
+  DWORD dwExitCode = 0;
+  TerminateThread(thread, dwExitCode);
+}
+//-----------------------------------------------------------------------------------------------------------
+bool os_thread_should_stop(os_thread_t *thread)
+{
+  return false;
+}
+//-----------------------------------------------------------------------------------------------------------
 os_mutex_t *os_mutex_create(void)
 {
   return CreateMutex(NULL, FALSE, NULL);
@@ -48,31 +72,11 @@ void os_mutex_destroy(os_mutex_t *mutex)
   CloseHandle(mutex);
 }
 //-----------------------------------------------------------------------------------------------------------
-os_thread_t *os_thread_create(char *name, u16 priority, u16 stacksize, void (*entry)(void *arg),
-                              void *arg)
-{
-  HANDLE handle;
-  handle = CreateThread(NULL, 0, (LPTHREAD_START_ROUTINE)entry, (LPVOID)arg, 0, NULL);
-
-  if (priority < 5)
-    SetThreadPriority(handle, THREAD_PRIORITY_BELOW_NORMAL);
-  else if (priority >= 15)
-    SetThreadPriority(handle, THREAD_PRIORITY_TIME_CRITICAL);
-
-  return handle;
-}
-//-----------------------------------------------------------------------------------------------------------
-void os_thread_destroy(os_thread_t *thread)
-{
-  DWORD dwExitCode = 0;
-  TerminateThread(thread, dwExitCode);
-}
-//-----------------------------------------------------------------------------------------------------------
 os_sem_t *os_sem_create(u16 count)
 {
   os_sem_t *sem;
 
-  sem = (os_sem_t *)malloc(sizeof(*sem));
+  sem = (os_sem_t *)os_malloc(sizeof(*sem));
 
   InitializeConditionVariable(&sem->condition);
   InitializeCriticalSection(&sem->lock);
@@ -88,7 +92,6 @@ bool os_sem_wait(os_sem_t *sem, u32 ms)
   EnterCriticalSection(&sem->lock);
   while (sem->count == 0)
   {
-    /* FIXME - decrease timeout if woken early */
     success = SleepConditionVariableCS(&sem->condition, &sem->lock, ms);
     if (!success && GetLastError() == ERROR_TIMEOUT)
       goto timeout;
@@ -98,7 +101,7 @@ bool os_sem_wait(os_sem_t *sem, u32 ms)
 
 timeout:
   LeaveCriticalSection(&sem->lock);
-  return !success;
+  return success;
 }
 //-----------------------------------------------------------------------------------------------------------
 void os_sem_signal(os_sem_t *sem)
@@ -111,15 +114,16 @@ void os_sem_signal(os_sem_t *sem)
 //-----------------------------------------------------------------------------------------------------------
 void os_sem_destroy(os_sem_t *sem)
 {
-  EnterCriticalSection(&sem->lock);
-  free(sem);
+  WakeAllConditionVariable(&sem->condition);
+
+  os_free(sem);
 }
 //-----------------------------------------------------------------------------------------------------------
 os_event_t *os_event_create(void)
 {
   os_event_t *event;
 
-  event = (os_event_t *)malloc(sizeof(*event));
+  event = (os_event_t *)os_malloc(sizeof(*event));
 
   InitializeConditionVariable(&event->condition);
   InitializeCriticalSection(&event->lock);
@@ -135,14 +139,15 @@ bool os_event_wait(os_event_t *event, u32 mask, u32 *value, u32 ms)
   EnterCriticalSection(&event->lock);
   while ((event->flags & mask) == 0)
   {
-    /* FIXME - decrease timeout if woken early */
     success = SleepConditionVariableCS(&event->condition, &event->lock, ms);
     if (!success && GetLastError() == ERROR_TIMEOUT)
       break;
   }
+
   *value = event->flags & mask;
   LeaveCriticalSection(&event->lock);
-  return !success;
+
+  return success;
 }
 //-----------------------------------------------------------------------------------------------------------
 void os_event_set(os_event_t *event, u32 value)
@@ -162,15 +167,16 @@ void os_event_clr(os_event_t *event, u32 value)
 //-----------------------------------------------------------------------------------------------------------
 void os_event_destroy(os_event_t *event)
 {
-  EnterCriticalSection(&event->lock);
-  free(event);
+  WakeAllConditionVariable(&event->condition);
+
+  os_free(event);
 }
 //-----------------------------------------------------------------------------------------------------------
 os_mbox_t *os_mbox_create(u32 size)
 {
   os_mbox_t *mbox;
 
-  mbox = (os_mbox_t *)malloc(sizeof(*mbox) + size * sizeof(void *));
+  mbox = (os_mbox_t *)os_malloc(sizeof(*mbox) + size * sizeof(void *));
 
   InitializeConditionVariable(&mbox->condition);
   InitializeCriticalSection(&mbox->lock);
@@ -190,7 +196,6 @@ bool os_mbox_fetch(os_mbox_t *mbox, void **msg, u32 ms)
   EnterCriticalSection(&mbox->lock);
   while (mbox->count == 0)
   {
-    /* FIXME - decrease timeout if woken early */
     success = SleepConditionVariableCS(&mbox->condition, &mbox->lock, ms);
     if (!success && GetLastError() == ERROR_TIMEOUT)
       goto timeout;
@@ -206,7 +211,7 @@ timeout:
   LeaveCriticalSection(&mbox->lock);
   WakeAllConditionVariable(&mbox->condition);
 
-  return !success;
+  return success;
 }
 //-----------------------------------------------------------------------------------------------------------
 bool os_mbox_post(os_mbox_t *mbox, void *msg, u32 ms)
@@ -216,7 +221,6 @@ bool os_mbox_post(os_mbox_t *mbox, void *msg, u32 ms)
   EnterCriticalSection(&mbox->lock);
   while (mbox->count == mbox->size)
   {
-    /* FIXME - decrease timeout if woken early */
     success = SleepConditionVariableCS(&mbox->condition, &mbox->lock, ms);
     if (!success && GetLastError() == ERROR_TIMEOUT)
       goto timeout;
@@ -232,13 +236,14 @@ timeout:
   LeaveCriticalSection(&mbox->lock);
   WakeAllConditionVariable(&mbox->condition);
 
-  return !success;
+  return success;
 }
 //-----------------------------------------------------------------------------------------------------------
 void os_mbox_destroy(os_mbox_t *mbox)
 {
-  EnterCriticalSection(&mbox->lock);
-  free(mbox);
+  WakeAllConditionVariable(&mbox->condition);
+
+  os_free(mbox);
 }
 //-----------------------------------------------------------------------------------------------------------
 void os_msleep(u32 ms)
@@ -266,6 +271,7 @@ os_tick_t os_tick_current(void)
 {
   LARGE_INTEGER currentCount;
   QueryPerformanceCounter(&currentCount);
+
   return currentCount.QuadPart;
 }
 //-----------------------------------------------------------------------------------------------------------
@@ -297,7 +303,7 @@ os_timer_t *os_timer_create(u32 ms, void (*fn)(os_timer_t *, void *arg), void *a
 {
   os_timer_t *timer;
 
-  timer = (os_timer_t *)malloc(sizeof(*timer));
+  timer = (os_timer_t *)os_malloc(sizeof(*timer));
 
   timer->fn = fn;
   timer->arg = arg;
@@ -329,5 +335,5 @@ void os_timer_stop(os_timer_t *timer)
 //-----------------------------------------------------------------------------------------------------------
 void os_timer_destroy(os_timer_t *timer)
 {
-  free(timer);
+  os_free(timer);
 }

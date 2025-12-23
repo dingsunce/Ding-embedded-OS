@@ -43,6 +43,12 @@ extern "C"
   typedef QueueHandle_t      os_mbox_t;
   typedef TickType_t         os_tick_t;
 
+  typedef void os_return_t;
+  typedef void (*os_entry_t)(void *arg);
+#define OS_RETURN                                                                                  \
+  {                                                                                                \
+  }
+
   typedef struct os_timer
   {
     TimerHandle_t handle;
@@ -57,9 +63,10 @@ extern "C"
   void os_init(void);
   void os_start(void);
 
-  os_thread_t *os_thread_create(char *name, u16 priority, u16 stacksize, void (*entry)(void *arg),
+  os_thread_t *os_thread_create(char *name, u16 priority, u16 stacksize, os_entry_t entry,
                                 void *arg);
   void         os_thread_destroy(os_thread_t *thread);
+  bool         os_thread_should_stop(os_thread_t *thread);
 
   os_mutex_t *os_mutex_create(void);
   void        os_mutex_lock(os_mutex_t *mutex);

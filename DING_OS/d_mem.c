@@ -99,6 +99,11 @@ void DMem_Init(void)
   MemSem = os_sem_create(1);
 }
 //-----------------------------------------------------------------------------------------------------------
+void DMem_Exit(void)
+{
+  os_sem_destroy(MemSem);
+}
+//-----------------------------------------------------------------------------------------------------------
 static void DMem_SplitBlock(MemHdr_t *hdr, u16 blockSize)
 {
   u16 redundant = (u16)(hdr->Len - blockSize);

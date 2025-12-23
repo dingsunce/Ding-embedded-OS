@@ -5,12 +5,14 @@
 #include "app_ipc_test.h"
 #include "d_os.h"
 
-static os_sem_t   *TestIpcSem;
-static os_mutex_t *TestIpcMutex;
-static os_event_t *TestIpcEvent;
-static os_mbox_t  *TestIpcMbox;
-static os_timer_t *TestOneShotTimer;
-static os_timer_t *TestCycleTimer;
+static os_sem_t    *TestIpcSem;
+static os_mutex_t  *TestIpcMutex;
+static os_event_t  *TestIpcEvent;
+static os_mbox_t   *TestIpcMbox;
+static os_timer_t  *TestOneShotTimer;
+static os_timer_t  *TestCycleTimer;
+static os_thread_t *TaskThread1;
+static os_thread_t *TaskThread2;
 
 static void    *mbox_msg = NULL;
 static uint32_t event_value = 0;
@@ -26,11 +28,11 @@ static void Cycle_TImer(os_timer_t *timer, void *arg)
   mbox_value++;
 }
 //-----------------------------------------------------------------------------------------------------------
-static void Ipc_Task1(void *p_arg)
+static os_return_t Ipc_Task1(void *p_arg)
 {
   (void)p_arg;
 
-  while (1)
+  while (!os_thread_should_stop(TaskThread1))
   {
     os_sem_wait(TestIpcSem, OS_WAIT_FOREVER);
 
@@ -48,13 +50,15 @@ static void Ipc_Task1(void *p_arg)
 
     os_msleep(1000);
   }
+
+  OS_RETURN;
 }
 //-----------------------------------------------------------------------------------------------------------
-static void Ipc_Task2(void *p_arg)
+static os_return_t Ipc_Task2(void *p_arg)
 {
   (void)p_arg;
 
-  while (1)
+  while (!os_thread_should_stop(TaskThread2))
   {
     os_msleep(1000);
 
@@ -74,6 +78,8 @@ static void Ipc_Task2(void *p_arg)
 
     os_mutex_unlock(TestIpcMutex);
   }
+
+  OS_RETURN;
 }
 //-----------------------------------------------------------------------------------------------------------
 void app_pic_test_start(void)
@@ -85,8 +91,8 @@ void app_pic_test_start(void)
   TestOneShotTimer = os_timer_create(3000, OneShot_TImer, NULL, true);
   TestCycleTimer = os_timer_create(3000, Cycle_TImer, NULL, false);
 
-  os_thread_create("ipc_test_task1", 5, 256, Ipc_Task1, NULL);
-  os_thread_create("ipc_test_task2", 6, 256, Ipc_Task2, NULL);
+  TaskThread1 = os_thread_create("ipc_test_task1", 5, 256, Ipc_Task1, NULL);
+  TaskThread2 = os_thread_create("ipc_test_task2", 6, 256, Ipc_Task2, NULL);
 
   os_timer_start(TestOneShotTimer);
   os_timer_start(TestCycleTimer);

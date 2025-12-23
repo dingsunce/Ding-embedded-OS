@@ -11,8 +11,13 @@ extern "C"
 {
 #endif
 
-// use type u32, u16... defined in linux/types.h
+  // use type u32, u16... defined in linux/types.h
+
+#include <linux/kthread.h>
+#include <linux/semaphore.h>
+#include <linux/slab.h>
 #include <linux/string.h>
+#include <linux/timer.h>
 #include <linux/types.h>
 
 // 0 is highest priority ......
@@ -20,13 +25,44 @@ extern "C"
 
 #define OS_WAIT_FOREVER 0xFFFFFFFF
 
-  typedef u32 os_mutex_t;
-  typedef u32 os_sem_t;
-  typedef u32 os_thread_t;
-  typedef u32 os_event_t;
-  typedef u32 os_mbox_t;
-  typedef u32 os_timer_t;
-  typedef u32 os_tick_t;
+  typedef struct mutex       os_mutex_t;
+  typedef struct semaphore   os_sem_t;
+  typedef struct task_struct os_thread_t;
+  typedef u32                os_tick_t;
+
+  typedef int os_return_t;
+  typedef int (*os_entry_t)(void *arg);
+#define OS_RETURN                                                                                  \
+  {                                                                                                \
+    return 0;                                                                                      \
+  }
+
+  typedef struct os_mbox
+  {
+    os_sem_t   condition;
+    os_mutex_t lock;
+    size_t     r;
+    size_t     w;
+    size_t     count;
+    size_t     size;
+    void      *msg[];
+  } os_mbox_t;
+
+  typedef struct os_event
+  {
+    os_sem_t   condition;
+    os_mutex_t lock;
+    u32        flags;
+  } os_event_t;
+
+  typedef struct os_timer
+  {
+    struct timer_list kernel_timer;
+    void (*fn)(struct os_timer *, void *arg);
+    void *arg;
+    u32   ms;
+    bool  oneshot;
+  } os_timer_t;
 
   void *os_malloc(u32 size);
   void  os_free(void *ptr);
@@ -34,9 +70,10 @@ extern "C"
   void os_init(void);
   void os_start(void);
 
-  os_thread_t *os_thread_create(char *name, u16 priority, u16 stacksize, void (*entry)(void *arg),
+  os_thread_t *os_thread_create(char *name, u16 priority, u16 stacksize, os_entry_t entry,
                                 void *arg);
   void         os_thread_destroy(os_thread_t *thread);
+  bool         os_thread_should_stop(os_thread_t *thread);
 
   os_mutex_t *os_mutex_create(void);
   void        os_mutex_lock(os_mutex_t *mutex);

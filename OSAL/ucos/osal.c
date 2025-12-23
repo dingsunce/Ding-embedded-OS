@@ -40,8 +40,7 @@ void os_free(void *ptr)
   free(ptr);
 }
 //-----------------------------------------------------------------------------------------------------------
-os_thread_t *os_thread_create(char *name, u16 priority, u16 stacksize, void (*entry)(void *arg),
-                              void *arg)
+os_thread_t *os_thread_create(char *name, u16 priority, u16 stacksize, os_entry_t entry, void *arg)
 {
   OS_TCB *thread = os_malloc(sizeof(OS_TCB));
   if (thread == NULL)
@@ -70,6 +69,11 @@ os_thread_t *os_thread_create(char *name, u16 priority, u16 stacksize, void (*en
 void os_thread_destroy(os_thread_t *thread)
 {
   OSTaskDel(thread, &os_err);
+}
+//-----------------------------------------------------------------------------------------------------------
+bool os_thread_should_stop(os_thread_t *thread)
+{
+  return false;
 }
 //-----------------------------------------------------------------------------------------------------------
 os_mutex_t *os_mutex_create(void)

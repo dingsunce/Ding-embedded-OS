@@ -226,7 +226,7 @@ TEST(Message, IsMessageInProcess)
 
 TEST(Message, DoNotHandleMessageWhenProcessIsIdle)
 {
-  Process_Exit(&MessageProgress);
+  Process_DoExit(&MessageProgress);
   Msg_SendInstant(&MessageProgress, SYS_MSG_TEST_PROCESS, NULL);
   CHECK_FALSE(DTask_IsMsgInTask(&MessageProgress, SYS_MSG_TEST_PROCESS));
 
