@@ -51,7 +51,7 @@ static os_return_t Ipc_Task1(void *p_arg)
     os_msleep(1000);
   }
 
-  OS_RETURN;
+  OS_RETURN(TaskThread1);
 }
 //-----------------------------------------------------------------------------------------------------------
 static os_return_t Ipc_Task2(void *p_arg)
@@ -79,7 +79,7 @@ static os_return_t Ipc_Task2(void *p_arg)
     os_mutex_unlock(TestIpcMutex);
   }
 
-  OS_RETURN;
+  OS_RETURN(TaskThread2);
 }
 //-----------------------------------------------------------------------------------------------------------
 void app_pic_test_start(void)

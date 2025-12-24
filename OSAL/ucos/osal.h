@@ -42,11 +42,11 @@ extern "C"
 
   typedef void os_return_t;
   typedef void (*os_entry_t)(void *arg);
-#define OS_RETURN                                                                                  \
+#define OS_RETURN(thread)                                                                          \
   {                                                                                                \
   }
 
-  void *os_malloc(u32 size);
+  void *os_malloc(u16 size);
   void  os_free(void *ptr);
 
   void os_init(void);

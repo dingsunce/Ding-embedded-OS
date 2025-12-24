@@ -16,7 +16,7 @@ void os_start(void)
 {
 }
 //-----------------------------------------------------------------------------------------------------------
-void *os_malloc(u32 size)
+void *os_malloc(u16 size)
 {
   return DMem_Malloc((u16)size);
 }

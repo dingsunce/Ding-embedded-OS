@@ -20,7 +20,7 @@ void os_start(void)
   vTaskStartScheduler();
 }
 //-----------------------------------------------------------------------------------------------------------
-void *os_malloc(u32 size)
+void *os_malloc(u16 size)
 {
   return pvPortMalloc(size);
 }

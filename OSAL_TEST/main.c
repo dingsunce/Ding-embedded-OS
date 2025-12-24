@@ -27,7 +27,7 @@ static os_return_t App_TaskStart(void *p_arg)
     os_msleep(1000);
   }
 
-  OS_RETURN;
+  OS_RETURN(TaskStartThread);
 }
 
 static void onems_timer(os_timer_t *timer, void *arg)

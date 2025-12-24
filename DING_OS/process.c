@@ -29,7 +29,7 @@ static os_return_t Process_Thread(void *arg)
     Process_Run();
   }
 
-  OS_RETURN;
+  OS_RETURN(ProcessThread);
 }
 //-----------------------------------------------------------------------------------------------------------
 void Process_Init(void)

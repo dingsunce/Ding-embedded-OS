@@ -12,18 +12,6 @@ extern "C"
 
 #include "osal.h"
 
-#ifndef BOOL_DEFINE
-#define BOOL_DEFINE 0
-#endif
-
-#if (BOOL_DEFINE == 0)
-  typedef enum
-  {
-    FALSE = 0,
-    TRUE = !FALSE
-  } BOOL;
-#endif
-
 #ifndef NULL
 #define NULL 0
 #endif

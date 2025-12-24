@@ -6,6 +6,7 @@
 #define _GNU_SOURCE /* For pthread_setname_mp() */
 
 #include "osal.h"
+#include "d_mem.h"
 /* #include "options.h" */
 
 #include <limits.h>
@@ -32,20 +33,24 @@
 //-----------------------------------------------------------------------------------------------------------
 void os_init(void)
 {
+  // pthread_cancel() will cancel the thread immediately
+  pthread_setcanceltype(PTHREAD_CANCEL_ASYNCHRONOUS, NULL);
+
+  DMem_Init();
 }
 //-----------------------------------------------------------------------------------------------------------
 void os_start(void)
 {
 }
 //-----------------------------------------------------------------------------------------------------------
-void *os_malloc(u32 size)
+void *os_malloc(u16 size)
 {
-  return malloc(size);
+  return DMem_Malloc(size);
 }
 //-----------------------------------------------------------------------------------------------------------
 void os_free(void *ptr)
 {
-  free(ptr);
+  DMem_Free(ptr);
 }
 //-----------------------------------------------------------------------------------------------------------
 os_thread_t *os_thread_create(char *name, u16 priority, u16 stacksize, os_entry_t entry, void *arg)
@@ -80,14 +85,15 @@ os_thread_t *os_thread_create(char *name, u16 priority, u16 stacksize, os_entry_
 //-----------------------------------------------------------------------------------------------------------
 void os_thread_destroy(os_thread_t *thread)
 {
+  // The pthread_cancel() function sends a cancelation request to the thread thread
   pthread_cancel((pthread_t)thread);
-  pthread_join((pthread_t)thread, NULL);
-
-  os_free(thread);
 }
 //-----------------------------------------------------------------------------------------------------------
 bool os_thread_should_stop(os_thread_t *thread)
 {
+  // pthread_testcancel() creates a cancelation point within the calling thread
+  pthread_testcancel();
+
   return false;
 }
 //-----------------------------------------------------------------------------------------------------------

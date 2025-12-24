@@ -70,14 +70,16 @@ extern "C"
     bool  oneshot;
   } os_timer_t;
 
+  void *os_malloc(u16 size);
+  void  os_free(void *ptr);
+
   typedef void os_return_t;
   typedef void (*os_entry_t)(void *arg);
-#define OS_RETURN                                                                                  \
-  {                                                                                                \
-  }
 
-  void *os_malloc(u32 size);
-  void  os_free(void *ptr);
+#define OS_RETURN(thread)                                                                          \
+  {                                                                                                \
+    os_free(thread);                                                                               \
+  }
 
   void os_init(void);
   void os_start(void);

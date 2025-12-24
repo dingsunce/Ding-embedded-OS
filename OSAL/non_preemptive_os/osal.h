@@ -45,7 +45,7 @@ extern "C"
   {                                                                                                \
   }
 
-  void *os_malloc(u32 size);
+  void *os_malloc(u16 size);
   void  os_free(void *ptr);
 
   void os_init(void);

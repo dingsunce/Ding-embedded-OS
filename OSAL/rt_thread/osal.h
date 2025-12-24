@@ -50,11 +50,11 @@ extern "C"
 
   typedef void os_return_t;
   typedef void (*os_entry_t)(void *arg);
-#define OS_RETURN                                                                                  \
+#define OS_RETURN(thread)                                                                          \
   {                                                                                                \
   }
 
-  void *os_malloc(u32 size);
+  void *os_malloc(u16 size);
   void  os_free(void *ptr);
 
   void os_init(void);
@@ -66,22 +66,26 @@ extern "C"
   bool         os_thread_should_stop(os_thread_t *thread);
 
   os_mutex_t *os_mutex_create(void);
+  void        os_mutex_init(os_mutex_t *mutex);
   void        os_mutex_lock(os_mutex_t *mutex);
   void        os_mutex_unlock(os_mutex_t *mutex);
   void        os_mutex_destroy(os_mutex_t *mutex);
 
   os_sem_t *os_sem_create(u16 count);
+  void      os_sem_init(os_sem_t *sem, u16 count);
   bool      os_sem_wait(os_sem_t *sem, u32 ms);
   void      os_sem_signal(os_sem_t *sem);
   void      os_sem_destroy(os_sem_t *sem);
 
   os_event_t *os_event_create(void);
+  void        os_event_init(os_event_t *event);
   bool        os_event_wait(os_event_t *event, u32 mask, u32 *value, u32 ms);
   void        os_event_set(os_event_t *event, u32 value);
   void        os_event_clr(os_event_t *event, u32 value);
   void        os_event_destroy(os_event_t *event);
 
   os_mbox_t *os_mbox_create(u32 size);
+  void       os_mbox_init(os_mbox_t *mbox);
   bool       os_mbox_fetch(os_mbox_t *mbox, void **msg, u32 ms);
   bool       os_mbox_post(os_mbox_t *mbox, void *msg, u32 ms);
   void       os_mbox_destroy(os_mbox_t *mbox);
@@ -94,10 +98,12 @@ extern "C"
 
   os_timer_t *os_timer_create(u32 ms, void (*fn)(os_timer_t *timer, void *arg), void *arg,
                               bool oneshot);
-  void        os_timer_set(os_timer_t *timer, u32 ms);
-  void        os_timer_start(os_timer_t *timer);
-  void        os_timer_stop(os_timer_t *timer);
-  void        os_timer_destroy(os_timer_t *timer);
+  void os_timer_init(os_timer_t *timer, u32 ms, void (*fn)(os_timer_t *, void *arg), void *arg,
+                     bool oneshot);
+  void os_timer_set(os_timer_t *timer, u32 ms);
+  void os_timer_start(os_timer_t *timer);
+  void os_timer_stop(os_timer_t *timer);
+  void os_timer_destroy(os_timer_t *timer);
 
 #ifdef __cplusplus
 }

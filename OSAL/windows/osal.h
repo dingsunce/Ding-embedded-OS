@@ -32,9 +32,14 @@ extern "C"
 
 #define OS_WAIT_FOREVER INFINITE
 
-  typedef HANDLE           os_thread_t;
   typedef CRITICAL_SECTION os_mutex_t;
   typedef uint64_t         os_tick_t;
+
+  typedef struct os_thread
+  {
+    HANDLE handle;
+    BOOL   should_stop;
+  } os_thread_t;
 
   typedef struct os_sem
   {
@@ -72,11 +77,12 @@ extern "C"
 
   typedef void os_return_t;
   typedef void (*os_entry_t)(void *arg);
-#define OS_RETURN                                                                                  \
+#define OS_RETURN(thread)                                                                          \
   {                                                                                                \
+    os_free(thread);                                                                               \
   }
 
-  void *os_malloc(u32 size);
+  void *os_malloc(u16 size);
   void  os_free(void *ptr);
 
   void os_init(void);

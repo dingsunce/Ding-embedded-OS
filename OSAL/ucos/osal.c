@@ -4,6 +4,7 @@
  *******************************************************************************/
 
 #include "osal.h"
+#include "d_mem.h"
 #include "lib_math.h"
 #include <stdlib.h>
 
@@ -23,6 +24,8 @@ void os_init(void)
   CPU_Init();
   Mem_Init();
   Math_Init();
+
+  DMem_Init();
 }
 //-----------------------------------------------------------------------------------------------------------
 void os_start(void)
@@ -30,14 +33,14 @@ void os_start(void)
   OSStart(&os_err);
 }
 //-----------------------------------------------------------------------------------------------------------
-void *os_malloc(u32 size)
+void *os_malloc(u16 size)
 {
-  return malloc(size);
+  return DMem_Malloc(size);
 }
 //-----------------------------------------------------------------------------------------------------------
 void os_free(void *ptr)
 {
-  free(ptr);
+  DMem_Free(ptr);
 }
 //-----------------------------------------------------------------------------------------------------------
 os_thread_t *os_thread_create(char *name, u16 priority, u16 stacksize, os_entry_t entry, void *arg)
@@ -69,6 +72,7 @@ os_thread_t *os_thread_create(char *name, u16 priority, u16 stacksize, os_entry_
 void os_thread_destroy(os_thread_t *thread)
 {
   OSTaskDel(thread, &os_err);
+  os_free(thread);
 }
 //-----------------------------------------------------------------------------------------------------------
 bool os_thread_should_stop(os_thread_t *thread)

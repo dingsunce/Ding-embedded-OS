@@ -53,7 +53,7 @@ static os_return_t Msg_Thread(void *arg)
     Msg_Run1ms();
   }
 
-  OS_RETURN;
+  OS_RETURN(MsgThread);
 }
 //-----------------------------------------------------------------------------------------------------------
 static void InitTimerTable(void)

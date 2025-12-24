@@ -82,7 +82,7 @@ void os_start(void)
   rt_system_scheduler_start();
 }
 //-----------------------------------------------------------------------------------------------------------
-void *os_malloc(u32 size)
+void *os_malloc(u16 size)
 {
   return rt_malloc(size);
 }

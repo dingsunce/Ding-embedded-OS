@@ -3,6 +3,7 @@
  * $Author: sunce.ding
  *******************************************************************************/
 #include "osal.h"
+#include "d_mem.h"
 
 #define MS_PER_SECOND (1000)
 #define NS_PER_MS     (1000 * 1000)
@@ -12,44 +13,55 @@
 //-----------------------------------------------------------------------------------------------------------
 void os_init(void)
 {
+  DMem_Init();
 }
 //-----------------------------------------------------------------------------------------------------------
 void os_start(void)
 {
 }
 //-----------------------------------------------------------------------------------------------------------
-void *os_malloc(u32 size)
+void *os_malloc(u16 size)
 {
-  return malloc(size);
+  return DMem_Malloc(size);
 }
 //-----------------------------------------------------------------------------------------------------------
 void os_free(void *ptr)
 {
-  free(ptr);
+  DMem_Free(ptr);
 }
 //-----------------------------------------------------------------------------------------------------------
 os_thread_t *os_thread_create(char *name, u16 priority, u16 stacksize, os_entry_t entry, void *arg)
 {
-  HANDLE handle;
-  handle = CreateThread(NULL, 0, (LPTHREAD_START_ROUTINE)entry, (LPVOID)arg, 0, NULL);
+  os_thread_t *thread = os_malloc(sizeof(*thread));
+  if (thread == NULL)
+    return NULL;
+
+  HANDLE handle = CreateThread(NULL, 0, (LPTHREAD_START_ROUTINE)entry, (LPVOID)arg, 0, NULL);
+  if (handle == NULL)
+  {
+    os_free(thread);
+    return NULL;
+  }
+
+  thread->handle = handle;
+  thread->should_stop = FALSE;
 
   if (priority < 5)
     SetThreadPriority(handle, THREAD_PRIORITY_BELOW_NORMAL);
   else if (priority >= 15)
     SetThreadPriority(handle, THREAD_PRIORITY_TIME_CRITICAL);
 
-  return handle;
+  return thread;
 }
 //-----------------------------------------------------------------------------------------------------------
 void os_thread_destroy(os_thread_t *thread)
 {
-  DWORD dwExitCode = 0;
-  TerminateThread(thread, dwExitCode);
+  thread->should_stop = TRUE;
 }
 //-----------------------------------------------------------------------------------------------------------
 bool os_thread_should_stop(os_thread_t *thread)
 {
-  return false;
+  return thread->should_stop;
 }
 //-----------------------------------------------------------------------------------------------------------
 os_mutex_t *os_mutex_create(void)

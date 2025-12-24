@@ -42,7 +42,7 @@ static os_return_t DTask_Thread(void *arg)
     DTask_RunAll();
   }
 
-  OS_RETURN;
+  OS_RETURN(TaskThread);
 }
 //-----------------------------------------------------------------------------------------------------------
 void DTask_Init(void)

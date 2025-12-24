@@ -109,7 +109,7 @@ endif()
 if(DING_OS_TEST_ENVN STREQUAL 2) # windows x86 test environment
     add_subdirectory(${CMAKE_SOURCE_DIR}/DING_OS)
     add_subdirectory(${CMAKE_SOURCE_DIR}/OSAL/windows)
-    add_subdirectory(${CMAKE_SOURCE_DIR}/OSAL_TEST/windows_test)
+    add_subdirectory(${CMAKE_SOURCE_DIR}/OSAL_TEST/windows_x86_test)
 endif()
 
 if(DING_OS_TEST_ENVN STREQUAL 3) # linux unit test environment
