@@ -18,12 +18,13 @@ static void    *mbox_msg = NULL;
 static uint32_t event_value = 0;
 static uint32_t mbox_value = 0;
 //-----------------------------------------------------------------------------------------------------------
-static void OneShot_TImer(os_timer_t *timer, void *arg)
+static void OneShot_Timer(os_timer_t *timer, void *arg)
 {
-  mbox_value++;
+  os_thread_destroy(TaskThread1);
+  os_thread_destroy(TaskThread2);
 }
 //-----------------------------------------------------------------------------------------------------------
-static void Cycle_TImer(os_timer_t *timer, void *arg)
+static void Cycle_Timer(os_timer_t *timer, void *arg)
 {
   mbox_value++;
 }
@@ -88,8 +89,8 @@ void app_pic_test_start(void)
   TestIpcMutex = os_mutex_create();
   TestIpcEvent = os_event_create();
   TestIpcMbox = os_mbox_create(3);
-  TestOneShotTimer = os_timer_create(3000, OneShot_TImer, NULL, true);
-  TestCycleTimer = os_timer_create(3000, Cycle_TImer, NULL, false);
+  TestOneShotTimer = os_timer_create(20000, OneShot_Timer, NULL, true);
+  TestCycleTimer = os_timer_create(3000, Cycle_Timer, NULL, false);
 
   TaskThread1 = os_thread_create("ipc_test_task1", 5, 256, Ipc_Task1, NULL);
   TaskThread2 = os_thread_create("ipc_test_task2", 6, 256, Ipc_Task2, NULL);

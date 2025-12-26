@@ -50,7 +50,7 @@ static os_return_t Msg_Thread(void *arg)
   {
     os_sem_wait(MsgPendingSem, OS_WAIT_FOREVER);
 
-    Msg_Run1ms();
+    Msg_RunOneTick();
   }
 
   OS_RETURN(MsgThread);
@@ -94,7 +94,7 @@ void Msg_PostSem(void)
     os_sem_signal(MsgPendingSem);
 }
 //-----------------------------------------------------------------------------------------------------------
-void Msg_Run1ms(void)
+void Msg_RunOneTick(void)
 {
   TimerTick++;
 
@@ -221,12 +221,15 @@ static OsErr_t Msg_Send(Process_t *process, MsgId_t msgId, MsgArg_t arg, u32 del
   if (delay == 0)
     return Msg_SendInstant(process, msgId, arg);
 
+  if (delay < OS_TICK_PERIOD_MS)
+    delay = OS_TICK_PERIOD_MS;
+
   timer = AllocateTimer();
   if (timer != NULL)
   {
     timer->MsgId = msgId;
-    timer->TimePeriod = period;
-    timer->TimeMatch = TimerTick + delay;
+    timer->TimePeriod = period / OS_TICK_PERIOD_MS;
+    timer->TimeMatch = TimerTick + delay / OS_TICK_PERIOD_MS;
     timer->Arg = arg;
     timer->Process = process;
 

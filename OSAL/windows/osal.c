@@ -9,7 +9,7 @@
 #define NS_PER_MS     (1000 * 1000)
 #define NS_PER_SECOND (1000 * 1000 * 1000)
 
-#define URESOLUTION 1 // 1 ms resolution
+#define URESOLUTION OS_TICK_PERIOD_MS // 1 ms resolution
 //-----------------------------------------------------------------------------------------------------------
 void os_init(void)
 {

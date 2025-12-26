@@ -7,6 +7,8 @@
 #include "d_mem.h"
 #include <linux/delay.h>
 #include <linux/jiffies.h>
+#include <linux/sched.h>
+#include <uapi/linux/sched/types.h>
 //-----------------------------------------------------------------------------------------------------------
 void os_init(void)
 {
@@ -32,6 +34,14 @@ os_thread_t *os_thread_create(char *name, u16 priority, u16 stacksize, os_entry_
   struct task_struct *thread = kthread_run(entry, arg, name);
   if (IS_ERR(thread))
     return NULL;
+
+  struct sched_attr attr = {
+      .size = sizeof(struct sched_attr),
+      .sched_policy = SCHED_FIFO,
+      .sched_priority = priority,
+  };
+
+  sched_setattr_nocheck(thread, &attr);
 
   return thread;
 }

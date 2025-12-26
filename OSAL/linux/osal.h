@@ -27,14 +27,23 @@ extern "C"
   typedef uint16_t           u16;
   typedef uint8_t            u8;
 
+#ifndef OS_TICK_PERIOD_MS
+#define OS_TICK_PERIOD_MS 10
+#endif
+
 // 0 lowest priority ......
 #define OS_INVERTED_PRIORITY 1
 
 #define OS_WAIT_FOREVER 0xFFFFFFFF
 
-  typedef pthread_t       os_thread_t;
   typedef pthread_mutex_t os_mutex_t;
   typedef uint64_t        os_tick_t;
+
+  typedef struct os_thread
+  {
+    pthread_t pthread;
+    bool      should_stop;
+  } os_thread_t;
 
   typedef struct os_sem
   {

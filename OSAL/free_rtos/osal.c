@@ -7,7 +7,7 @@
 
 #include <stdlib.h>
 
-#define TM_TO_TICK(ms) ((ms == OS_WAIT_FOREVER) ? portMAX_DELAY : (ms) / portTICK_PERIOD_MS)
+#define TM_TO_TICK(ms) ((ms == OS_WAIT_FOREVER) ? portMAX_DELAY : (ms) / OS_TICK_PERIOD_MS)
 
 static BaseType_t xHigherPriorityTaskWoken;
 //-----------------------------------------------------------------------------------------------------------

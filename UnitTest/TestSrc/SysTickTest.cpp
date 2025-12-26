@@ -25,9 +25,9 @@ TEST_TEARDOWN()
 TEST(SysTickTest, GenerateTick)
 {
   SysTick_On();
-  LONGS_EQUAL(1, SysTick_Get1msTicks());
+  LONGS_EQUAL(1, SysTick_GetCurTicks());
   SysTick_Reset();
-  LONGS_EQUAL(0, SysTick_Get1msTicks());
+  LONGS_EQUAL(0, SysTick_GetCurTicks());
 
   SysTick_On();
   LONGS_EQUAL(1, sys_now());

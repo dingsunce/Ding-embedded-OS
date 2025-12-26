@@ -20,8 +20,12 @@ extern "C"
 #include <linux/timer.h>
 #include <linux/types.h>
 
+#ifndef OS_TICK_PERIOD_MS
+#define OS_TICK_PERIOD_MS 10
+#endif
+
 // 0 is highest priority ......
-#define OS_INVERTED_PRIORITY 0
+#define OS_INVERTED_PRIORITY 1
 
 #define OS_WAIT_FOREVER 0xFFFFFFFF
 

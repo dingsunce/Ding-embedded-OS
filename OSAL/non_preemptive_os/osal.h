@@ -26,6 +26,8 @@ extern "C"
   typedef uint16_t           u16;
   typedef uint8_t            u8;
 
+#define OS_TICK_PERIOD_MS 1
+
 // 0 is highest priority ......
 #define OS_INVERTED_PRIORITY 0
 
@@ -41,7 +43,7 @@ extern "C"
 
   typedef void os_return_t;
   typedef void (*os_entry_t)(void *arg);
-#define OS_RETURN                                                                                  \
+#define OS_RETURN(thread)                                                                          \
   {                                                                                                \
   }
 

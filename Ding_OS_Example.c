@@ -70,7 +70,8 @@ void TimerProccessInit(void)
 {
   Process_Start(&TimerProccess);
 
-  Msg_SendCycle(&TimerProccess, TIMER_CYCLE, MSG_NO_ARG, 15); // send message cyclically(15 ms period)
+  Msg_SendCycle(&TimerProccess, TIMER_CYCLE, MSG_NO_ARG,
+                15); // send message cyclically(15 ms period)
   Msg_SendLater(&TimerProccess, TIMER_LATER, MSG_NO_ARG, 15); // send message 15 ms later
   Msg_SendInstant(&TimerProccess, TIMER_NOW, MSG_NO_ARG);     // send message Now
   Msg_SendInstant(&TimerProccess, TIMER_NOW, MSG_NO_ARG);     // send message Now with argument
@@ -117,7 +118,8 @@ static u8 DetectProcessHandler(Process_t *process, MsgId_t msgId, MsgArg_t arg)
   OccupyMovementState:
     // EnterOccupyMovementState(ins);
 
-    PROCESS_WAIT_FOR_MSG(msgId == MS_MSG_MOTION_DETECTED || msgId == MS_MSG_NO_MOVEMENT_TIME_EXPIRE);
+    PROCESS_WAIT_FOR_MSG(msgId == MS_MSG_MOTION_DETECTED ||
+                         msgId == MS_MSG_NO_MOVEMENT_TIME_EXPIRE);
 
     if (msgId == MS_MSG_MOTION_DETECTED)
     {
@@ -291,11 +293,11 @@ void main(void)
   {
     DOS_Run();
 
-    if (SysTick_IsTick1msOn())
+    if (SysTick_IsTickOn())
     {
-      SysTick_ResetTick1msOn();
+      SysTick_ResetTickOn();
 
-      DOS_Run1ms();
+      DOS_RunOneTick();
     }
   }
 }

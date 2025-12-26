@@ -13,7 +13,7 @@ void RunMsgTimer(u16 counts)
   while (counts)
   {
     counts--;
-    Msg_Run1ms();
+    Msg_RunOneTick();
     DTask_Run();
   }
 }

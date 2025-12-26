@@ -41,7 +41,7 @@ int main(int argc, char **argv)
   TaskStartThread = os_thread_create("os_task", 3, 256, App_TaskStart, NULL);
   os_start(); // start first thread
 
-  os_timer_t *timer = os_timer_create(1, onems_timer, NULL, false);
+  os_timer_t *timer = os_timer_create(OS_TICK_PERIOD_MS, onems_timer, NULL, false);
   os_timer_start(timer);
 
   while (1)

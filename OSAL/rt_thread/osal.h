@@ -28,6 +28,8 @@ extern "C"
   typedef uint16_t           u16;
   typedef uint8_t            u8;
 
+#define OS_TICK_PERIOD_MS (1000 / RT_TICK_PER_SECOND)
+
 // 0 is highest priority ......
 #define OS_INVERTED_PRIORITY 0
 
