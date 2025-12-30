@@ -67,6 +67,11 @@ os_thread_t *os_thread_create(char *name, u16 priority, u16 stacksize, os_entry_
   pthread_attr_setschedpolicy(&attr, SCHED_FIFO);
   pthread_attr_setschedparam(&attr, &param);
 
+  /*
+    In Linux, returning from main() or calling exit() terminates the entire process, which
+    immediately destroys all threads created by pthread_create, regardless of whether they have
+    finished their work.
+  */
   result = pthread_create(&thread->pthread, &attr, (void *)entry, arg);
   if (result != 0)
   {
@@ -82,6 +87,9 @@ os_thread_t *os_thread_create(char *name, u16 priority, u16 stacksize, os_entry_
 void os_thread_destroy(os_thread_t *thread)
 {
   thread->should_stop = true;
+
+  // Detach the thread. Resources will be reclaimed automatically upon termination.
+  pthread_detach(thread->pthread);
 }
 //-----------------------------------------------------------------------------------------------------------
 bool os_thread_should_stop(os_thread_t *thread)

@@ -23,7 +23,7 @@ static os_return_t App_TaskStart(void *p_arg)
 
   while (!os_thread_should_stop(TaskStartThread))
   {
-    /* Task body, always written as an infinite loop.           */
+    // Task body, always written as an infinite loop
     os_msleep(1000);
   }
 

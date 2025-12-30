@@ -44,10 +44,10 @@ void Process_Init(void)
 //-----------------------------------------------------------------------------------------------------------
 void Process_Exit(void)
 {
+  os_thread_destroy(ProcessThread);
+
   os_sem_destroy(ProcessPendingSem);
   os_sem_destroy(ProcessListSem);
-
-  os_thread_destroy(ProcessThread);
 }
 //-----------------------------------------------------------------------------------------------------------
 void Process_InitStructure(Process_t *p, ProcessHandler handler)

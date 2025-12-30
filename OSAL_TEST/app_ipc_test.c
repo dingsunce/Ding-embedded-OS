@@ -22,6 +22,8 @@ static void OneShot_Timer(os_timer_t *timer, void *arg)
 {
   os_thread_destroy(TaskThread1);
   os_thread_destroy(TaskThread2);
+
+  // OS_PRINT("IPC Test: Destory TaskThread1, TaskThread2\n");
 }
 //-----------------------------------------------------------------------------------------------------------
 static void Cycle_Timer(os_timer_t *timer, void *arg)
@@ -42,6 +44,8 @@ static os_return_t Ipc_Task1(void *p_arg)
     os_mbox_fetch(TestIpcMbox, &mbox_msg, OS_WAIT_FOREVER);
 
     event_value = *(uint32_t *)mbox_msg;
+
+    OS_PRINT("IPC Test: Mbox value=%d\n", event_value);
 
     os_mutex_lock(TestIpcMutex);
 

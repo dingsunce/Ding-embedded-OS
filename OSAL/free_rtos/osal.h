@@ -19,6 +19,7 @@ extern "C"
 #include <stdbool.h>
 #include <stddef.h>
 #include <stdint.h>
+#include <stdio.h>
 #include <string.h>
 #include <timers.h>
 
@@ -37,6 +38,8 @@ extern "C"
 #define OS_INVERTED_PRIORITY 1
 
 #define OS_WAIT_FOREVER 0xFFFFFFFF
+
+#define OS_PRINT printf
 
   typedef SemaphoreHandle_t  os_mutex_t;
   typedef TaskHandle_t       os_thread_t;

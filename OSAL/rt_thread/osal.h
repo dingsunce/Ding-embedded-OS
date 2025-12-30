@@ -17,6 +17,7 @@ extern "C"
 #include <stdbool.h>
 #include <stddef.h>
 #include <stdint.h>
+#include <stdio.h>
 #include <string.h>
 
   typedef unsigned long long s64;
@@ -34,6 +35,8 @@ extern "C"
 #define OS_INVERTED_PRIORITY 0
 
 #define OS_WAIT_FOREVER 0xFFFFFFFF
+
+#define OS_PRINT printf
 
   typedef struct rt_mutex_t     os_mutex_t;
   typedef struct rt_thread      os_thread_t;

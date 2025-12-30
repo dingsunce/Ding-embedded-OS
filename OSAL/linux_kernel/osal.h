@@ -29,6 +29,8 @@ extern "C"
 
 #define OS_WAIT_FOREVER 0xFFFFFFFF
 
+#define OS_PRINT printk
+
   typedef struct mutex       os_mutex_t;
   typedef struct semaphore   os_sem_t;
   typedef struct task_struct os_thread_t;
@@ -59,14 +61,32 @@ extern "C"
     u32        flags;
   } os_event_t;
 
+#ifndef LINUX_HIGH_RESOLUTION_TIMER
+#define LINUX_HIGH_RESOLUTION_TIMER 1
+#endif
+
+#if (LINUX_HIGH_RESOLUTION_TIMER == 1)
   typedef struct os_timer
   {
-    struct timer_list kernel_timer;
+    struct hrtimer kernel_timer;
     void (*fn)(struct os_timer *, void *arg);
     void *arg;
     u32   ms;
     bool  oneshot;
   } os_timer_t;
+
+#else
+
+typedef struct os_timer
+{
+  struct timer_list kernel_timer;
+  void (*fn)(struct os_timer *, void *arg);
+  void *arg;
+  u32   ms;
+  bool  oneshot;
+} os_timer_t;
+
+#endif
 
   void *os_malloc(u16 size);
   void  os_free(void *ptr);

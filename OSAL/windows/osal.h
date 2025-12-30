@@ -15,6 +15,7 @@ extern "C"
 #include <stdbool.h>
 #include <stddef.h>
 #include <stdint.h>
+#include <stdio.h>
 #include <string.h>
 #include <windows.h>
 
@@ -33,6 +34,8 @@ extern "C"
 #define OS_INVERTED_PRIORITY 1
 
 #define OS_WAIT_FOREVER INFINITE
+
+#define OS_PRINT printf
 
   typedef CRITICAL_SECTION os_mutex_t;
   typedef uint64_t         os_tick_t;

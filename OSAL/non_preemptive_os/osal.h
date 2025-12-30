@@ -15,6 +15,7 @@ extern "C"
 #include <stdbool.h>
 #include <stddef.h>
 #include <stdint.h>
+#include <stdio.h>
 #include <string.h>
 
   typedef unsigned long long s64;
@@ -32,6 +33,8 @@ extern "C"
 #define OS_INVERTED_PRIORITY 0
 
 #define OS_WAIT_FOREVER 0xFFFFFFFF
+
+#define OS_PRINT printf
 
   typedef u32 os_mutex_t;
   typedef u32 os_sem_t;

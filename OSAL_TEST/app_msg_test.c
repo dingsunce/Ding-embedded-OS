@@ -70,6 +70,8 @@ PROCESS_HANDLER(FunctionProcess, msgId, arg)
     {
       FunctionCycleOn = true;
       FunctionCycleOn = FunctionCycleOn;
+
+      OS_PRINT("MSG Test: 3s cycle timer trggered\n");
     }
   }
 
