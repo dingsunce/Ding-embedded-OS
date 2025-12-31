@@ -26,6 +26,9 @@ static os_return_t Process_Thread(void *arg)
   {
     os_sem_wait(ProcessPendingSem, OS_WAIT_FOREVER);
 
+    if (os_thread_should_stop(ProcessThread))
+      break;
+
     Process_Run();
   }
 
@@ -35,19 +38,21 @@ static os_return_t Process_Thread(void *arg)
 void Process_Init(void)
 {
   // prevent reiniting the process
-  Process_DoExitAll();
+  Process_ExitAll();
 
   ProcessPendingSem = os_sem_create(0);
   ProcessListSem = os_sem_create(1);
   ProcessThread = os_thread_create("os_process", D_OS_PROCESS_PRIO, 256, Process_Thread, NULL);
+  if (ProcessThread)
+    OS_PRINT("ProcessThread Start\n");
 }
 //-----------------------------------------------------------------------------------------------------------
-void Process_Exit(void)
+void DProcess_Exit(void)
 {
   os_thread_destroy(ProcessThread);
 
-  os_sem_destroy(ProcessPendingSem);
-  os_sem_destroy(ProcessListSem);
+  // os_sem_destroy(ProcessPendingSem);
+  // os_sem_destroy(ProcessListSem);
 }
 //-----------------------------------------------------------------------------------------------------------
 void Process_InitStructure(Process_t *p, ProcessHandler handler)
@@ -103,7 +108,7 @@ void Process_Start(Process_t *p)
 //-----------------------------------------------------------------------------------------------------------
 void Process_ReStart(Process_t *p)
 {
-  Process_DoExit(p);
+  Process_Exit(p);
   PT_INIT(&p->Pt);
   Process_Start(p);
 }
@@ -114,11 +119,11 @@ void Process_HandleMsg(Process_t *p, MsgId_t msg, MsgArg_t data)
   {
     u8 ret = p->Handler(p, msg, data);
     if (ret == PT_EXITED || ret == PT_ENDED)
-      Process_DoExit(p);
+      Process_Exit(p);
   }
 }
 //-----------------------------------------------------------------------------------------------------------
-void Process_DoExit(Process_t *p)
+void Process_Exit(Process_t *p)
 {
   if (Process_IsRunning(p))
   {
@@ -132,14 +137,14 @@ void Process_DoExit(Process_t *p)
   }
 }
 //-----------------------------------------------------------------------------------------------------------
-void Process_DoExitAll(void)
+void Process_ExitAll(void)
 {
   DList_t *tmp = MyProcessList.next;
   while (tmp != &MyProcessList)
   {
     Process_t *p = ContainerOf(tmp, Process_t, ProcessList);
     tmp = tmp->next;
-    Process_DoExit(p);
+    Process_Exit(p);
   }
 
   DList_Init(&MyProcessList);

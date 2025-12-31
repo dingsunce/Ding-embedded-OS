@@ -30,7 +30,7 @@ static os_return_t App_TaskStart(void *p_arg)
   OS_RETURN(TaskStartThread);
 }
 
-static void onems_timer(os_timer_t *timer, void *arg)
+static void one_tick_timer(os_timer_t *timer, void *arg)
 {
   SysTick_On();
 }
@@ -41,7 +41,7 @@ int main(int argc, char **argv)
   TaskStartThread = os_thread_create("os_task", 3, 256, App_TaskStart, NULL);
   os_start(); // start first thread
 
-  os_timer_t *timer = os_timer_create(OS_TICK_PERIOD_MS, onems_timer, NULL, false);
+  os_timer_t *timer = os_timer_create(OS_TICK_PERIOD_MS, one_tick_timer, NULL, false);
   os_timer_start(timer);
 
   while (1)

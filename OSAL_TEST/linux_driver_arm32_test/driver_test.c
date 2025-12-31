@@ -1,4 +1,7 @@
 
+#include "SysTick.h"
+#include "app_ipc_test.h"
+#include "app_msg_test.h"
 #include "d_os.h"
 #include <linux/delay.h>
 #include <linux/gpio.h>
@@ -59,6 +62,13 @@ static struct file_operations chrdevbase_fops = {
     .release = chrdevbase_release,
 };
 
+static void one_tick_timer(os_timer_t *timer, void *arg)
+{
+  SysTick_On();
+}
+
+static os_timer_t *One_Tick_Timer;
+
 static int __init chrdevbase_init(void)
 {
   int retvalue = 0;
@@ -67,15 +77,30 @@ static int __init chrdevbase_init(void)
   if (retvalue < 0)
     printk("chrdev driver register failed\r\n");
 
+  os_init();
+
   DOS_Init();
 
+  app_msg_test_start();
+
+  One_Tick_Timer = os_timer_create(OS_TICK_PERIOD_MS, one_tick_timer, NULL, false);
+  os_timer_start(One_Tick_Timer);
+
+  // app_pic_test_start();
+
   printk("chrdev init!\r\n");
+
   return 0;
 }
 
 static void __exit chrdevbase_exit(void)
 {
-  DOS_Exit();
+  os_timer_stop(One_Tick_Timer);
+
+  // app_pic_test_stop();
+
+  // DOS_Exit();
+
   unregister_chrdev(CHRDEVBASE_MAJOR, CHRDEVBASE_NAME);
 
   printk("chrdev exit!\r\n");

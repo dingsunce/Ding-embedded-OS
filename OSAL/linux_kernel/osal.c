@@ -265,7 +265,7 @@ void os_tick_sleep(os_tick_t tick)
 {
   msleep(jiffies_to_msecs(tick));
 }
-#ifdef LINUX_HIGH_RESOLUTION_TIMER
+#if (LINUX_HIGH_RESOLUTION_TIMER == 1)
 //-----------------------------------------------------------------------------------------------------------
 static enum hrtimer_restart expired(struct hrtimer *t)
 {
@@ -273,10 +273,12 @@ static enum hrtimer_restart expired(struct hrtimer *t)
   if (timer->fn)
     timer->fn(timer, timer->arg);
 
-  if (!timer->oneshot)
-    return HRTIMER_RESTART;
+  if (timer->oneshot)
+    return HRTIMER_NORESTART;
 
-  return HRTIMER_NORESTART;
+  hrtimer_forward_now(&timer->kernel_timer, ms_to_ktime(timer->ms));
+
+  return HRTIMER_RESTART;
 }
 //-----------------------------------------------------------------------------------------------------------
 os_timer_t *os_timer_create(u32 ms, void (*fn)(os_timer_t *, void *arg), void *arg, bool oneshot)
@@ -290,7 +292,7 @@ os_timer_t *os_timer_create(u32 ms, void (*fn)(os_timer_t *, void *arg), void *a
   timer->ms = ms;
   timer->oneshot = oneshot;
 
-  hrtimer_init(&timer->kernel_timer, CLOCK_MONOTONIC, HRTIMER_MODE_REL);
+  hrtimer_init(&timer->kernel_timer, CLOCK_MONOTONIC, HRTIMER_MODE_REL_SOFT);
   timer->kernel_timer.function = &expired;
 
   return timer;
@@ -303,7 +305,7 @@ void os_timer_set(os_timer_t *timer, u32 ms)
 //-----------------------------------------------------------------------------------------------------------
 void os_timer_start(os_timer_t *timer)
 {
-  hrtimer_start(&timer->kernel_timer, ms_to_ktime(timer->ms), HRTIMER_MODE_REL);
+  hrtimer_start(&timer->kernel_timer, ms_to_ktime(timer->ms), HRTIMER_MODE_REL_SOFT);
 }
 //-----------------------------------------------------------------------------------------------------------
 void os_timer_stop(os_timer_t *timer)

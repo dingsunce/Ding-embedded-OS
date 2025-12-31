@@ -28,6 +28,7 @@ extern "C"
   typedef uint16_t           u16;
   typedef uint8_t            u8;
 
+// linux app can not get a steady 1ms resolution timer, set 10ms as default
 #ifndef OS_TICK_PERIOD_MS
 #define OS_TICK_PERIOD_MS 10
 #endif

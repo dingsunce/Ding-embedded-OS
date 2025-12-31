@@ -46,10 +46,23 @@ os_thread_t *os_thread_create(char *name, u16 priority, u16 stacksize, os_entry_
   thread->handle = handle;
   thread->should_stop = FALSE;
 
-  if (priority < 5)
-    SetThreadPriority(handle, THREAD_PRIORITY_BELOW_NORMAL);
-  else if (priority >= 15)
-    SetThreadPriority(handle, THREAD_PRIORITY_TIME_CRITICAL);
+  /*
+    NORMAL_PRIORITY_CLASS
+
+    THREAD_PRIORITY_IDLE	1
+    THREAD_PRIORITY_LOWEST	6
+    THREAD_PRIORITY_BELOW_NORMAL	7
+    THREAD_PRIORITY_NORMAL	8
+    THREAD_PRIORITY_ABOVE_NORMAL	9
+    THREAD_PRIORITY_HIGHEST	10
+    THREAD_PRIORITY_TIME_CRITICAL	15
+  */
+  if (priority < 6)
+    priority = THREAD_PRIORITY_LOWEST;
+  else if (priority > 10)
+    priority = THREAD_PRIORITY_TIME_CRITICAL;
+
+  SetThreadPriority(handle, priority);
 
   return thread;
 }

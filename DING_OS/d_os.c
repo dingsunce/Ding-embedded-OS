@@ -39,7 +39,7 @@ void DOS_Run(void)
 void DOS_Exit(void)
 {
   DTask_Exit();
-  Process_Exit();
+  DProcess_Exit();
   Msg_Exit();
   DMem_Exit();
 }

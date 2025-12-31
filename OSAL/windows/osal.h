@@ -33,6 +33,9 @@ extern "C"
 // 0 is lowest priority ......
 #define OS_INVERTED_PRIORITY 1
 
+// THREAD_PRIORITY_BELOW_NORMAL	7
+#define D_OS_PRIO 7
+
 #define OS_WAIT_FOREVER INFINITE
 
 #define OS_PRINT printf

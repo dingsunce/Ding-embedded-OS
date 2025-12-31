@@ -50,6 +50,9 @@ static os_return_t Msg_Thread(void *arg)
   {
     os_sem_wait(MsgPendingSem, OS_WAIT_FOREVER);
 
+    if (os_thread_should_stop(MsgThread))
+      break;
+
     Msg_RunOneTick();
   }
 
@@ -74,6 +77,9 @@ void Msg_Init(void)
   MsgListSem = os_sem_create(1);
   MsgThread = os_thread_create("os_msg", D_OS_MSG_PRIO, 256, Msg_Thread, NULL);
 
+  if (MsgThread)
+    OS_PRINT("MsgThread Start\n");
+
   MsgRunning = true;
 }
 //-----------------------------------------------------------------------------------------------------------
@@ -83,8 +89,8 @@ void Msg_Exit(void)
 
   os_thread_destroy(MsgThread);
 
-  os_sem_destroy(MsgPendingSem);
-  os_sem_destroy(MsgListSem);
+  // os_sem_destroy(MsgPendingSem);
+  // os_sem_destroy(MsgListSem);
 }
 //-----------------------------------------------------------------------------------------------------------
 void Msg_PostSem(void)

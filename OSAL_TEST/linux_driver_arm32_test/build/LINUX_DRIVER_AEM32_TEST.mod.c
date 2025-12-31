@@ -30,6 +30,7 @@ __used __section("__versions") = {
 	{ 0x723dfb7b, "module_layout" },
 	{ 0x6bc3fbc0, "__unregister_chrdev" },
 	{ 0xf9a482f9, "msleep" },
+	{ 0xc0025372, "hrtimer_forward" },
 	{ 0xbe1b7efd, "hrtimer_cancel" },
 	{ 0xf7802486, "__aeabi_uidivmod" },
 	{ 0xf1ceac2b, "__register_chrdev" },

@@ -67,7 +67,7 @@ PROCESS_HANDLER(ResetProgress, msgId, arg)
   PROCESS_SCHEDULE_BEGIN();
 
   PROCESS_WAIT_FOR_MSG(msgId == SYS_MSG_CONTINUE_PROCESS);
-  Process_DoExit(&ResetProgress);
+  Process_Exit(&ResetProgress);
 
   PROCESS_SCHEDULE_END();
 }
@@ -120,7 +120,7 @@ TEST(Process, AnyMsgReceived)
 TEST(Process, ExitProgress)
 {
   // progress already started in setup
-  Process_DoExit(&SpecifiedMsgProgress);
+  Process_Exit(&SpecifiedMsgProgress);
   LONGS_EQUAL(false, Process_IsRunning(&SpecifiedMsgProgress));
 
   LONGS_EQUAL(false, SpecifiedMsgReceived);
@@ -130,7 +130,7 @@ TEST(Process, ExitProgress)
 
 TEST(Process, PollIdleProgress)
 {
-  Process_DoExit(&PollMsgProgress);
+  Process_Exit(&PollMsgProgress);
   Process_Poll(&PollMsgProgress);
   LONGS_EQUAL(false, PollMsgProgress.NeedPoll);
 }
@@ -171,7 +171,7 @@ TEST(Process, ReStartProgress)
 TEST(Process, ClearAllPendingMsg_WhenExitProgress)
 {
   Msg_SendLater(&AnyMsgProgress, SYS_MSG_CONTINUE_PROCESS, NULL, MSG_MSEC(10));
-  Process_DoExit(&AnyMsgProgress);
+  Process_Exit(&AnyMsgProgress);
   AnyMsgs.clear();
 
   // do not receive SYS_MSG_CONTINUE_PROCESS when restart the progress

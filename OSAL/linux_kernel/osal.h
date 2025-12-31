@@ -11,7 +11,7 @@ extern "C"
 {
 #endif
 
-  // use type u32, u16... defined in linux/types.h
+  // data type u64 u32, u16... defined in linux/types.h
 
 #include <linux/kthread.h>
 #include <linux/semaphore.h>
@@ -20,8 +20,23 @@ extern "C"
 #include <linux/timer.h>
 #include <linux/types.h>
 
+#ifndef LINUX_HIGH_RESOLUTION_TIMER
+#define LINUX_HIGH_RESOLUTION_TIMER 1
+#endif
+
+#if (LINUX_HIGH_RESOLUTION_TIMER == 1)
+
+#ifndef OS_TICK_PERIOD_MS
+#define OS_TICK_PERIOD_MS 1
+#endif
+
+#else
+
+// defaut CONFIG_HZ is 100, set CONFIG_HZ 1000 to achieve 1ms resolution
 #ifndef OS_TICK_PERIOD_MS
 #define OS_TICK_PERIOD_MS 10
+#endif
+
 #endif
 
 // 0 is highest priority ......
@@ -60,10 +75,6 @@ extern "C"
     os_mutex_t lock;
     u32        flags;
   } os_event_t;
-
-#ifndef LINUX_HIGH_RESOLUTION_TIMER
-#define LINUX_HIGH_RESOLUTION_TIMER 1
-#endif
 
 #if (LINUX_HIGH_RESOLUTION_TIMER == 1)
   typedef struct os_timer
