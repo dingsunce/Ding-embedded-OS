@@ -2,7 +2,7 @@
 #include "SendMsgToTask.h"
 #include "d_message.h"
 
-void SendMsgToTask(Process_t *process, MsgId_t msgId, MsgArg_t arg)
+void SendMsgToTask(DProcess_t *process, DMsgId_t msgId, DMsgArg_t arg)
 {
   DMsg_SendInstant(process, msgId, arg);
   DTask_Run();

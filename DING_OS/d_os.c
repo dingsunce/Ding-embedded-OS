@@ -12,7 +12,7 @@ void DOS_Init(void)
 {
   DTick_Init();
   DMem_Init();
-  Process_Init();
+  DProcess_Init();
   DMsg_Init();
   DTask_Init();
 }
@@ -32,7 +32,7 @@ void DOS_Run(void)
     call DOS_Run in main while loop as quickly as possible ,
     if we did not embed DOS in a preemptive os like rt-thread
   */
-  Process_Run();
+  DProcess_Run();
   DTask_Run();
 }
 //-----------------------------------------------------------------------------------------------------------

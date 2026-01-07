@@ -12,7 +12,7 @@ extern "C"
 
 #include "d_task.h"
 
-  void SendMsgToTask(Process_t *process, MsgId_t msgId, MsgArg_t arg);
+  void SendMsgToTask(DProcess_t *process, DMsgId_t msgId, DMsgArg_t arg);
   void RunMsgTimer(u16 counts);
 
 #ifdef __cplusplus

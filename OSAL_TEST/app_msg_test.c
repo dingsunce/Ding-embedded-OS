@@ -5,7 +5,7 @@
 #include "app_msg_test.h"
 #include "d_message.h"
 #include "d_os.h"
-#include "process.h"
+#include "d_process.h"
 
 #define TIMER_INSTANT 0
 #define TIMER_LATER   1
@@ -27,7 +27,7 @@ PROCESS_HANDLER(TimerProcess, msgId, arg)
 
     if (msgId == TIMER_INSTANT)
     {
-      Process_Poll(&FunctionProcess);
+      DProcess_Poll(&FunctionProcess);
     }
     else if (msgId == TIMER_LATER)
     {
@@ -80,8 +80,8 @@ PROCESS_HANDLER(FunctionProcess, msgId, arg)
 //-----------------------------------------------------------------------------------------------------------
 void app_msg_test_start(void)
 {
-  Process_Start(&TimerProcess);
-  Process_Start(&FunctionProcess);
+  DProcess_Start(&TimerProcess);
+  DProcess_Start(&FunctionProcess);
 
   DMsg_SendInstant(&TimerProcess, TIMER_INSTANT, NULL);
   DMsg_SendLater(&TimerProcess, TIMER_LATER, NULL, 10);

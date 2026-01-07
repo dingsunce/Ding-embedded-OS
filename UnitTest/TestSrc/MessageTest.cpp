@@ -14,7 +14,7 @@ using std::vector;
 
 PROCESS(MessageProgress);
 
-static vector<MsgId_t> Msgs{};
+static vector<DMsgId_t> Msgs{};
 PROCESS_HANDLER(MessageProgress, msgId, arg)
 {
   PROCESS_SCHEDULE_BEGIN();
@@ -29,7 +29,7 @@ PROCESS_HANDLER(MessageProgress, msgId, arg)
   PROCESS_SCHEDULE_END();
 }
 
-TEST_GROUP(Message){TEST_SETUP(){Process_Start(&MessageProgress);
+TEST_GROUP(Message){TEST_SETUP(){DProcess_Start(&MessageProgress);
 TestOutput::enableCompactFormat();
 }
 
@@ -226,7 +226,7 @@ TEST(Message, IsMessageInProcess)
 
 TEST(Message, DoNotHandleMessageWhenProcessIsIdle)
 {
-  Process_Exit(&MessageProgress);
+  DProcess_ExitProc(&MessageProgress);
   DMsg_SendInstant(&MessageProgress, SYS_MSG_TEST_PROCESS, NULL);
   CHECK_FALSE(DTask_IsMsgInTask(&MessageProgress, SYS_MSG_TEST_PROCESS));
 

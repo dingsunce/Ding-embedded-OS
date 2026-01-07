@@ -5,8 +5,8 @@
 #include "SendMsgToTask.h"
 #include "TestReset.h"
 #include "d_message.h"
+#include "d_process.h"
 #include "d_task.h"
-#include "process.h"
 #include <vector>
 
 using std::vector;
@@ -16,8 +16,8 @@ PROCESS(SpecifiedMsgProgress);
 PROCESS(PollMsgProgress);
 PROCESS(ResetProgress);
 
-static vector<MsgId_t> AnyMsgs{};
-static bool            AnyMsgReceived = false;
+static vector<DMsgId_t> AnyMsgs{};
+static bool             AnyMsgReceived = false;
 PROCESS_HANDLER(AnyMsgProgress, msgId, arg)
 {
   AnyMsgs.push_back(msgId);
@@ -35,8 +35,8 @@ PROCESS_HANDLER(AnyMsgProgress, msgId, arg)
   PROCESS_SCHEDULE_END();
 }
 
-static bool            SpecifiedMsgReceived = false;
-static vector<MsgId_t> SpecifiedMsgs{};
+static bool             SpecifiedMsgReceived = false;
+static vector<DMsgId_t> SpecifiedMsgs{};
 PROCESS_HANDLER(SpecifiedMsgProgress, msgId, arg)
 {
   SpecifiedMsgs.push_back(msgId);
@@ -67,15 +67,15 @@ PROCESS_HANDLER(ResetProgress, msgId, arg)
   PROCESS_SCHEDULE_BEGIN();
 
   PROCESS_WAIT_FOR_MSG(msgId == SYS_MSG_CONTINUE_PROCESS);
-  Process_Exit(&ResetProgress);
+  DProcess_ExitProc(&ResetProgress);
 
   PROCESS_SCHEDULE_END();
 }
 
-TEST_GROUP(Process){TEST_SETUP(){Process_Start(&AnyMsgProgress);
-Process_Start(&SpecifiedMsgProgress);
-Process_Start(&PollMsgProgress);
-Process_Start(&ResetProgress);
+TEST_GROUP(Process){TEST_SETUP(){DProcess_Start(&AnyMsgProgress);
+DProcess_Start(&SpecifiedMsgProgress);
+DProcess_Start(&PollMsgProgress);
+DProcess_Start(&ResetProgress);
 
 TestOutput::enableCompactFormat();
 }
@@ -99,7 +99,7 @@ TEST_TEARDOWN()
 TEST(Process, ProcessHandleMsg)
 {
   LONGS_EQUAL(false, SpecifiedMsgReceived);
-  Process_HandleMsg(&SpecifiedMsgProgress, SYS_MSG_CONTINUE_PROCESS, NULL);
+  DProcess_HandleMsg(&SpecifiedMsgProgress, SYS_MSG_CONTINUE_PROCESS, NULL);
   LONGS_EQUAL(true, SpecifiedMsgReceived);
 }
 
@@ -120,8 +120,8 @@ TEST(Process, AnyMsgReceived)
 TEST(Process, ExitProgress)
 {
   // process already started in setup
-  Process_Exit(&SpecifiedMsgProgress);
-  LONGS_EQUAL(false, Process_IsRunning(&SpecifiedMsgProgress));
+  DProcess_ExitProc(&SpecifiedMsgProgress);
+  LONGS_EQUAL(false, DProcess_IsRunning(&SpecifiedMsgProgress));
 
   LONGS_EQUAL(false, SpecifiedMsgReceived);
   SendMsgToTask(&SpecifiedMsgProgress, SYS_MSG_CONTINUE_PROCESS, NULL);
@@ -130,16 +130,16 @@ TEST(Process, ExitProgress)
 
 TEST(Process, PollIdleProgress)
 {
-  Process_Exit(&PollMsgProgress);
-  Process_Poll(&PollMsgProgress);
+  DProcess_ExitProc(&PollMsgProgress);
+  DProcess_Poll(&PollMsgProgress);
   LONGS_EQUAL(false, PollMsgProgress.NeedPoll);
 }
 
 TEST(Process, PollProgress)
 {
   LONGS_EQUAL(false, PollMsgReceived);
-  Process_Poll(&PollMsgProgress);
-  Process_Run();
+  DProcess_Poll(&PollMsgProgress);
+  DProcess_Run();
   DTask_Run();
   LONGS_EQUAL(true, PollMsgReceived);
 }
@@ -153,8 +153,8 @@ TEST(Process, StartProgress)
 
 TEST(Process, StartProgressMultipleTimes)
 {
-  Process_Start(&AnyMsgProgress);
-  Process_Start(&AnyMsgProgress);
+  DProcess_Start(&AnyMsgProgress);
+  DProcess_Start(&AnyMsgProgress);
   LONGS_EQUAL(1, AnyMsgs.size());
   LONGS_EQUAL(SYS_MSG_START_PROGRESS, AnyMsgs[0]);
 }
@@ -162,7 +162,7 @@ TEST(Process, StartProgressMultipleTimes)
 TEST(Process, ReStartProgress)
 {
   // process already started in setup
-  Process_ReStart(&AnyMsgProgress);
+  DProcess_ReStart(&AnyMsgProgress);
   LONGS_EQUAL(2, AnyMsgs.size());
   LONGS_EQUAL(SYS_MSG_START_PROGRESS, AnyMsgs[0]);
   LONGS_EQUAL(SYS_MSG_START_PROGRESS, AnyMsgs[1]);
@@ -171,11 +171,11 @@ TEST(Process, ReStartProgress)
 TEST(Process, ClearAllPendingMsg_WhenExitProgress)
 {
   DMsg_SendLater(&AnyMsgProgress, SYS_MSG_CONTINUE_PROCESS, NULL, MSG_MSEC(10));
-  Process_Exit(&AnyMsgProgress);
+  DProcess_ExitProc(&AnyMsgProgress);
   AnyMsgs.clear();
 
   // do not receive SYS_MSG_CONTINUE_PROCESS when restart the progress
-  Process_Start(&AnyMsgProgress);
+  DProcess_Start(&AnyMsgProgress);
   RunMsgTimer(MSG_MSEC(10));
   LONGS_EQUAL(1, AnyMsgs.size());
   LONGS_EQUAL(SYS_MSG_START_PROGRESS, AnyMsgs[0]);
@@ -183,16 +183,16 @@ TEST(Process, ClearAllPendingMsg_WhenExitProgress)
 
 TEST(Process, ExitAllProcessWhenInit)
 {
-  Process_Init();
-  LONGS_EQUAL(false, Process_IsRunning(&AnyMsgProgress));
-  LONGS_EQUAL(false, Process_IsRunning(&SpecifiedMsgProgress));
-  LONGS_EQUAL(false, Process_IsRunning(&PollMsgProgress));
+  DProcess_Init();
+  LONGS_EQUAL(false, DProcess_IsRunning(&AnyMsgProgress));
+  LONGS_EQUAL(false, DProcess_IsRunning(&SpecifiedMsgProgress));
+  LONGS_EQUAL(false, DProcess_IsRunning(&PollMsgProgress));
 }
 
 TEST(Process, ExitProcessInHandler)
 {
   SendMsgToTask(&ResetProgress, SYS_MSG_CONTINUE_PROCESS, NULL);
-  LONGS_EQUAL(false, Process_IsRunning(&ResetProgress));
+  LONGS_EQUAL(false, DProcess_IsRunning(&ResetProgress));
 
   DMsg_SendLater(&ResetProgress, SYS_MSG_CONTINUE_PROCESS, NULL, MSG_MSEC(10));
   CHECK_FALSE(DMsg_IsMsgInProcess(&ResetProgress, SYS_MSG_CONTINUE_PROCESS));
@@ -200,7 +200,7 @@ TEST(Process, ExitProcessInHandler)
 
 TEST(Process, StartUnInitiliazedProcess)
 {
-  static Process_t Test;
-  Process_Start(&Test);
-  LONGS_EQUAL(false, Process_IsRunning(&Test));
+  static DProcess_t Test;
+  DProcess_Start(&Test);
+  LONGS_EQUAL(false, DProcess_IsRunning(&Test));
 }

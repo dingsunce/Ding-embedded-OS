@@ -6,7 +6,7 @@
 #include "SendMsgToTask.h"
 #include "TestReset.h"
 #include "d_message.h"
-#include "process.h"
+#include "d_process.h"
 #include <vector>
 
 using std::vector;
@@ -14,7 +14,7 @@ using std::vector;
 PROCESS(MainProgress);
 PROCESS(SubProgress);
 
-static vector<MsgId_t> SubMsgs{};
+static vector<DMsgId_t> SubMsgs{};
 PROCESS_HANDLER(SubProgress, msgId, arg)
 {
   PROCESS_SCHEDULE_BEGIN();
@@ -22,7 +22,7 @@ PROCESS_HANDLER(SubProgress, msgId, arg)
   SubMsgs.push_back(msgId);
   PROCESS_WAIT_FOR_MSG(msgId == SYS_MSG_EXIT_PROCESS);
 
-  SendMsgToTask(&MainProgress, SYS_MSG_PROGRESS_EXITED, CreateProcessArg(&SubProgress));
+  SendMsgToTask(&MainProgress, SYS_MSG_PROGRESS_EXITED, DProcess_CreateArg(&SubProgress));
 
   PROCESS_SCHEDULE_END();
 }
@@ -30,10 +30,10 @@ PROCESS_HANDLER(SubProgress, msgId, arg)
 PROCESS_HANDLER(MainProgress, msgId, arg)
 {
   PROCESS_SCHEDULE_BEGIN();
-  Process_Start(&SubProgress);
+  DProcess_Start(&SubProgress);
 
   PROCESS_WAIT_FOR_MSG(msgId == SYS_MSG_PROGRESS_EXITED && arg != NULL &&
-                       ((ProcessArg_t *)arg)->Process == &SubProgress);
+                       ((DProcessArg_t *)arg)->Process == &SubProgress);
 
   PROCESS_SCHEDULE_END();
 }
@@ -54,15 +54,15 @@ TEST_TEARDOWN()
 
 TEST(ProcessNested, StartSubProcessFromMainProgress)
 {
-  Process_Start(&MainProgress);
+  DProcess_Start(&MainProgress);
   LONGS_EQUAL(1, SubMsgs.size());
   LONGS_EQUAL(SYS_MSG_START_PROGRESS, SubMsgs[0]);
 }
 
 TEST(ProcessNested, WaitingForEndOfSubProcess)
 {
-  Process_Start(&MainProgress);
-  LONGS_EQUAL(true, Process_IsRunning(&MainProgress));
+  DProcess_Start(&MainProgress);
+  LONGS_EQUAL(true, DProcess_IsRunning(&MainProgress));
   SendMsgToTask(&SubProgress, SYS_MSG_EXIT_PROCESS, NULL);
-  LONGS_EQUAL(false, Process_IsRunning(&MainProgress));
+  LONGS_EQUAL(false, DProcess_IsRunning(&MainProgress));
 }

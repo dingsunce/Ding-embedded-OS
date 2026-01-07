@@ -12,13 +12,13 @@
 
 typedef struct MsgTimer
 {
-  u16        MsgId;
-  u32        TimePeriod;
-  u32        TimeMatch;
-  MsgArg_t   Arg;
-  Process_t *Process;
-  DList_t    ListInTimerTable;
-  DList_t    ListInProcess;
+  u16         MsgId;
+  u32         TimePeriod;
+  u32         TimeMatch;
+  DMsgArg_t   Arg;
+  DProcess_t *Process;
+  DList_t     ListInTimerTable;
+  DList_t     ListInProcess;
 } MsgTimer_t;
 
 typedef struct MsgTableItem
@@ -215,11 +215,11 @@ static void InsertToTimerTable(MsgTimer_t *timer)
   DList_InsertBefore(ListInsert, &timer->ListInTimerTable);
 }
 //-----------------------------------------------------------------------------------------------------------
-static OsErr_t Msg_Send(Process_t *process, MsgId_t msgId, MsgArg_t arg, u32 delay, u32 period)
+static OsErr_t Msg_Send(DProcess_t *process, DMsgId_t msgId, DMsgArg_t arg, u32 delay, u32 period)
 {
   MsgTimer_t *timer = NULL;
 
-  if (process == NULL || (!Process_IsRunning(process)))
+  if (process == NULL || (!DProcess_IsRunning(process)))
   {
     if (arg != NULL)
       DMem_Free(arg);
@@ -257,31 +257,31 @@ static OsErr_t Msg_Send(Process_t *process, MsgId_t msgId, MsgArg_t arg, u32 del
   return OS_ERR_ALLOC;
 }
 //-----------------------------------------------------------------------------------------------------------
-OsErr_t DMsg_SendLater(Process_t *process, MsgId_t msgId, MsgArg_t arg, u32 delay)
+OsErr_t DMsg_SendLater(DProcess_t *process, DMsgId_t msgId, DMsgArg_t arg, u32 delay)
 {
   return Msg_Send(process, msgId, arg, delay, 0);
 }
 //-----------------------------------------------------------------------------------------------------------
-OsErr_t DMsg_ReSendLater(Process_t *process, MsgId_t msgId, MsgArg_t arg, u32 delay)
+OsErr_t DMsg_ReSendLater(DProcess_t *process, DMsgId_t msgId, DMsgArg_t arg, u32 delay)
 {
   DMsg_CancelAll(process, msgId);
   return Msg_Send(process, msgId, arg, delay, 0);
 }
 //-----------------------------------------------------------------------------------------------------------
-OsErr_t DMsg_SendCycle(Process_t *process, MsgId_t msgId, MsgArg_t arg, u32 period)
+OsErr_t DMsg_SendCycle(DProcess_t *process, DMsgId_t msgId, DMsgArg_t arg, u32 period)
 {
   return Msg_Send(process, msgId, arg, period, period);
 }
 //-----------------------------------------------------------------------------------------------------------
-OsErr_t DMsg_ReSendCycle(Process_t *process, MsgId_t msgId, MsgArg_t arg, u32 period)
+OsErr_t DMsg_ReSendCycle(DProcess_t *process, DMsgId_t msgId, DMsgArg_t arg, u32 period)
 {
   DMsg_CancelAll(process, msgId);
   return Msg_Send(process, msgId, arg, period, period);
 }
 //-----------------------------------------------------------------------------------------------------------
-OsErr_t DMsg_SendInstant(Process_t *process, MsgId_t msgId, MsgArg_t arg)
+OsErr_t DMsg_SendInstant(DProcess_t *process, DMsgId_t msgId, DMsgArg_t arg)
 {
-  if (process == NULL || (!Process_IsRunning(process)))
+  if (process == NULL || (!DProcess_IsRunning(process)))
   {
     if (arg != NULL)
       DMem_Free(arg);
@@ -292,7 +292,7 @@ OsErr_t DMsg_SendInstant(Process_t *process, MsgId_t msgId, MsgArg_t arg)
   return DTask_Store(process, msgId, arg);
 }
 //-----------------------------------------------------------------------------------------------------------
-void DMsg_CancelFirst(Process_t *process, MsgId_t msgId)
+void DMsg_CancelFirst(DProcess_t *process, DMsgId_t msgId)
 {
   if (process == NULL)
     return;
@@ -317,12 +317,12 @@ void DMsg_CancelFirst(Process_t *process, MsgId_t msgId)
   os_sem_signal(MsgListSem);
 }
 //-----------------------------------------------------------------------------------------------------------
-void DMsg_Cancel(Process_t *process, MsgId_t msgId)
+void DMsg_Cancel(DProcess_t *process, DMsgId_t msgId)
 {
   DMsg_CancelAll(process, msgId);
 }
 //-----------------------------------------------------------------------------------------------------------
-void DMsg_CancelAll(Process_t *process, MsgId_t msgId)
+void DMsg_CancelAll(DProcess_t *process, DMsgId_t msgId)
 {
   if (process == NULL)
     return;
@@ -349,7 +349,7 @@ void DMsg_CancelAll(Process_t *process, MsgId_t msgId)
   DTask_CancelMsg(process, msgId);
 }
 //-----------------------------------------------------------------------------------------------------------
-void DMsg_Flush(Process_t *process)
+void DMsg_Flush(DProcess_t *process)
 {
   if (process == NULL)
     return;
@@ -384,7 +384,7 @@ static void Msg_FreeTimer(MsgTimer_t *timer, bool freeArg)
   FreeTimer(timer);
 }
 //-----------------------------------------------------------------------------------------------------------
-u32 DMsg_GetRemainTime(Process_t *process, MsgId_t msgId)
+u32 DMsg_GetRemainTime(DProcess_t *process, DMsgId_t msgId)
 {
   if (process == NULL)
     return 0;
@@ -402,7 +402,7 @@ u32 DMsg_GetRemainTime(Process_t *process, MsgId_t msgId)
   return 0;
 }
 //-----------------------------------------------------------------------------------------------------------
-bool DMsg_IsMsgInProcess(Process_t *process, MsgId_t msgId)
+bool DMsg_IsMsgInProcess(DProcess_t *process, DMsgId_t msgId)
 {
   if (process == NULL)
     return false;

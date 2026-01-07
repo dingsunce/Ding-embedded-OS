@@ -2,9 +2,9 @@
 #include "d_list.h"
 #include "d_memb.h"
 #include "d_message.h"
+#include "d_process.h"
 #include "d_tick.h"
 #include "memory.h"
-#include "process.h"
 #include <stdlib.h>
 
 // example1 : static process  create a process in PROCESS() macro
@@ -68,7 +68,7 @@ static Arg_t *CreateArg(u8 status)
 //-----------------------------------------------------------------------------------------------------------
 void TimerProccessInit(void)
 {
-  Process_Start(&TimerProccess);
+  DProcess_Start(&TimerProccess);
 
   DMsg_SendCycle(&TimerProccess, TIMER_CYCLE, MSG_NO_ARG,
                  15); // send message cyclically(15 ms period)
@@ -84,8 +84,8 @@ void TimerProccessInit(void)
 typedef struct
 {
 
-  Process_t DetectProcess;
-  Process_t EventProcess;
+  DProcess_t DetectProcess;
+  DProcess_t EventProcess;
 
 } ProcessInStructure;
 
@@ -100,7 +100,7 @@ typedef enum MsMsg
 } MsMsg_t;
 
 //-----------------------------------------------------------------------------------------------------------
-static u8 DetectProcessHandler(Process_t *process, MsgId_t msgId, MsgArg_t arg)
+static u8 DetectProcessHandler(DProcess_t *process, DMsgId_t msgId, DMsgArg_t arg)
 {
   ProcessInStructure *ins = ContainerOf(process, ProcessInStructure, DetectProcess);
   PROCESS_SCHEDULE_BEGIN()
@@ -149,7 +149,7 @@ static u8 DetectProcessHandler(Process_t *process, MsgId_t msgId, MsgArg_t arg)
   PROCESS_SCHEDULE_END()
 }
 //-----------------------------------------------------------------------------------------------------------
-static u8 EventProcessHandler(Process_t *process, MsgId_t msgId, MsgArg_t arg)
+static u8 EventProcessHandler(DProcess_t *process, DMsgId_t msgId, DMsgArg_t arg)
 {
   ProcessInStructure *ins = ContainerOf(process, ProcessInStructure, EventProcess);
   PROCESS_SCHEDULE_BEGIN()
@@ -168,11 +168,11 @@ static u8 EventProcessHandler(Process_t *process, MsgId_t msgId, MsgArg_t arg)
 //-----------------------------------------------------------------------------------------------------------
 void ProcessInStructure_Init(ProcessInStructure *ins)
 {
-  Process_InitStruct(&ins->DetectProcess, DetectProcessHandler, "MotionSensorDetect");
-  Process_InitStruct(&ins->EventProcess, EventProcessHandler, "MotionSensorEvent");
+  DProcess_InitStruct(&ins->DetectProcess, DetectProcessHandler, "MotionSensorDetect");
+  DProcess_InitStruct(&ins->EventProcess, EventProcessHandler, "MotionSensorEvent");
 
-  Process_Start(&ins->DetectProcess);
-  Process_Start(&ins->EventProcess);
+  DProcess_Start(&ins->DetectProcess);
+  DProcess_Start(&ins->EventProcess);
   DMsg_SendInstant(&ins->DetectProcess, MS_MSG_START_DETECT, MSG_NO_ARG);
 }
 
@@ -255,7 +255,7 @@ void MemoryBlockAndListInStructure(BusT *bus)
 }
 
 // example7 os api in interruption
-// do not use any os api in interrupt except void Process_Poll(Process_t *p);
+// do not use any os api in interrupt except void DProcess_Poll(DProcess_t *p);
 // example:
 PROCESS(uartProccess);
 //-----------------------------------------------------------------------------------------------------------
@@ -274,7 +274,7 @@ PROCESS_HANDLER(uartProccess, msgId, arg)
 
 void UartInterrption(void)
 {
-  Process_Poll(&uartProccess) // send SYS_MSG_POLL_PROCESS to uartProccess
+  DProcess_Poll(&uartProccess) // send SYS_MSG_POLL_PROCESS to uartProccess
 }
 
 void SysTick_Handler(void)

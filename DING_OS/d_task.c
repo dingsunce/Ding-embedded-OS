@@ -6,17 +6,17 @@
 #include "d_mem.h"
 #include "d_memb.h"
 #include "d_message.h"
+#include "d_process.h"
 #include "osal.h"
-#include "process.h"
 #include "s_list.h"
 
 // The task queue.
 typedef struct TaskItems
 {
   LIST_HEADER;
-  Process_t *Process;
-  MsgId_t    MsgId;
-  MsgArg_t   Arg;
+  DProcess_t *Process;
+  DMsgId_t    MsgId;
+  DMsgArg_t   Arg;
 } TaskItem_t;
 
 LIST(TaskElementList);
@@ -92,7 +92,7 @@ static TaskItem_t *AllocateElement(void)
   return e;
 }
 //-----------------------------------------------------------------------------------------------------------
-OsErr_t DTask_Store(Process_t *process, MsgId_t msgId, MsgArg_t arg)
+OsErr_t DTask_Store(DProcess_t *process, DMsgId_t msgId, DMsgArg_t arg)
 {
   TaskItem_t *e = AllocateElement();
   if (e != NULL)
@@ -131,7 +131,7 @@ void DTask_Run(void)
   if (e != NULL)
   {
     if (e->Process != NULL && e->MsgId != SYS_MSG_NONE)
-      Process_HandleMsg(e->Process, e->MsgId, e->Arg);
+      DProcess_HandleMsg(e->Process, e->MsgId, e->Arg);
 
     if (e->Arg != NULL)
       DMem_Free(e->Arg);
@@ -149,7 +149,7 @@ void DTask_RunAll(void)
   while (e != NULL)
   {
     if (e->Process != NULL && e->MsgId != SYS_MSG_NONE)
-      Process_HandleMsg(e->Process, e->MsgId, e->Arg);
+      DProcess_HandleMsg(e->Process, e->MsgId, e->Arg);
 
     if (e->Arg != NULL)
       DMem_Free(e->Arg);
@@ -162,7 +162,7 @@ void DTask_RunAll(void)
   }
 }
 //-----------------------------------------------------------------------------------------------------------
-void DTask_CancelMsg(Process_t *process, MsgId_t msgId)
+void DTask_CancelMsg(DProcess_t *process, DMsgId_t msgId)
 {
   TaskItem_t *e;
   for (e = (TaskItem_t *)List_Head(TaskElementList); e != NULL; e = (TaskItem_t *)List_ItemNext(e))
@@ -172,7 +172,7 @@ void DTask_CancelMsg(Process_t *process, MsgId_t msgId)
   }
 }
 //-----------------------------------------------------------------------------------------------------------
-bool DTask_IsMsgInTask(Process_t *process, MsgId_t msgId)
+bool DTask_IsMsgInTask(DProcess_t *process, DMsgId_t msgId)
 {
   TaskItem_t *e;
   for (e = (TaskItem_t *)List_Head(TaskElementList); e != NULL; e = (TaskItem_t *)List_ItemNext(e))
@@ -184,7 +184,7 @@ bool DTask_IsMsgInTask(Process_t *process, MsgId_t msgId)
   return false;
 }
 //-----------------------------------------------------------------------------------------------------------
-void DTask_FlushMsg(Process_t *process)
+void DTask_FlushMsg(DProcess_t *process)
 {
   TaskItem_t *e;
   for (e = (TaskItem_t *)List_Head(TaskElementList); e != NULL; e = (TaskItem_t *)List_ItemNext(e))

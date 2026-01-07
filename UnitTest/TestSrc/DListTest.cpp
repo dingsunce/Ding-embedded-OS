@@ -6,7 +6,7 @@
 #include "d_memb.h"
 #include "s_list.h"
 
-#include "process.h"
+#include "d_process.h"
 
 PROCESS(Progress1);
 PROCESS(Progress2);
@@ -68,8 +68,8 @@ TEST(DList, PushPop)
   DList_t *l2 = DList_Pop(&ProcessList);
   POINTERS_EQUAL(&Progress2.ProcessList, l1);
   POINTERS_EQUAL(&Progress1.ProcessList, l2);
-  POINTERS_EQUAL(&Progress2, ContainerOf(l1, Process_t, ProcessList));
-  POINTERS_EQUAL(&Progress1, ContainerOf(l2, Process_t, ProcessList));
+  POINTERS_EQUAL(&Progress2, ContainerOf(l1, DProcess_t, ProcessList));
+  POINTERS_EQUAL(&Progress1, ContainerOf(l2, DProcess_t, ProcessList));
 }
 
 TEST(DList, AddPop)
@@ -84,8 +84,8 @@ TEST(DList, AddPop)
   DList_t *l2 = DList_Pop(&ProcessList);
   POINTERS_EQUAL(&Progress1.ProcessList, l1);
   POINTERS_EQUAL(&Progress2.ProcessList, l2);
-  POINTERS_EQUAL(&Progress1, ContainerOf(l1, Process_t, ProcessList));
-  POINTERS_EQUAL(&Progress2, ContainerOf(l2, Process_t, ProcessList));
+  POINTERS_EQUAL(&Progress1, ContainerOf(l1, DProcess_t, ProcessList));
+  POINTERS_EQUAL(&Progress2, ContainerOf(l2, DProcess_t, ProcessList));
   ;
 }
 
