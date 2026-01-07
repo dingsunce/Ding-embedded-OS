@@ -43,7 +43,7 @@ extern "C"
 #endif
 
 #if OS_DEBUG == 0
-#define OS_PRINT
+#define OS_PRINT(...)
 #else
 #define OS_PRINT printf
 #endif
