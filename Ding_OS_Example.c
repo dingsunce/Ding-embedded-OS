@@ -288,7 +288,7 @@ void main(void)
   DOS_Init();
 
   SysTick_Reset(); // reset the tick to 0;
-  // call SysTick_Handler in interuption every 200us
+  // call SysTick_Handler in interuption every tick
   while (1)
   {
     DOS_Run();
