@@ -5,7 +5,7 @@
 #include "d_task.h"
 #include "d_mem.h"
 #include "d_memb.h"
-#include "message.h"
+#include "d_message.h"
 #include "osal.h"
 #include "process.h"
 #include "s_list.h"

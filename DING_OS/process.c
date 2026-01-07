@@ -5,7 +5,7 @@
 #include "process.h"
 #include "DList.h"
 #include "d_mem.h"
-#include "message.h"
+#include "d_message.h"
 #include "osal.h"
 
 #define PROCESS_STATE_NONE    0
@@ -141,7 +141,7 @@ void Process_Exit(Process_t *p)
     DList_Remove(&p->ProcessList);
     os_sem_signal(ProcessListSem);
 
-    Msg_Flush(p);
+    DMsg_Flush(p);
   }
 }
 //-----------------------------------------------------------------------------------------------------------

@@ -4,8 +4,8 @@
 
 #include "SendMsgToTask.h"
 #include "TestReset.h"
+#include "d_message.h"
 #include "d_task.h"
-#include "message.h"
 #include "process.h"
 #include <vector>
 
@@ -170,7 +170,7 @@ TEST(Process, ReStartProgress)
 
 TEST(Process, ClearAllPendingMsg_WhenExitProgress)
 {
-  Msg_SendLater(&AnyMsgProgress, SYS_MSG_CONTINUE_PROCESS, NULL, MSG_MSEC(10));
+  DMsg_SendLater(&AnyMsgProgress, SYS_MSG_CONTINUE_PROCESS, NULL, MSG_MSEC(10));
   Process_Exit(&AnyMsgProgress);
   AnyMsgs.clear();
 
@@ -194,8 +194,8 @@ TEST(Process, ExitProcessInHandler)
   SendMsgToTask(&ResetProgress, SYS_MSG_CONTINUE_PROCESS, NULL);
   LONGS_EQUAL(false, Process_IsRunning(&ResetProgress));
 
-  Msg_SendLater(&ResetProgress, SYS_MSG_CONTINUE_PROCESS, NULL, MSG_MSEC(10));
-  CHECK_FALSE(Msg_IsMsgInProcess(&ResetProgress, SYS_MSG_CONTINUE_PROCESS));
+  DMsg_SendLater(&ResetProgress, SYS_MSG_CONTINUE_PROCESS, NULL, MSG_MSEC(10));
+  CHECK_FALSE(DMsg_IsMsgInProcess(&ResetProgress, SYS_MSG_CONTINUE_PROCESS));
 }
 
 TEST(Process, StartUnInitiliazedProcess)

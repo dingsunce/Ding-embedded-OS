@@ -4,7 +4,7 @@
  *******************************************************************************/
 #include "d_tick.h"
 #include "d_memb.h"
-#include "message.h"
+#include "d_message.h"
 #include "s_list.h"
 
 static volatile u32  CurTicks = 0;
@@ -42,7 +42,7 @@ void DTick_On(void)
 
   TickOn = true;
 
-  Msg_PostSem();
+  DMsg_PostSem();
 }
 //-----------------------------------------------------------------------------------------------------------
 u32 DTick_GetDelayMs(u32 nOldTime)

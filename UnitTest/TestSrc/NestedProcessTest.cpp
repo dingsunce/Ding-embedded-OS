@@ -5,7 +5,7 @@
 #include "CleanVector.h"
 #include "SendMsgToTask.h"
 #include "TestReset.h"
-#include "message.h"
+#include "d_message.h"
 #include "process.h"
 #include <vector>
 

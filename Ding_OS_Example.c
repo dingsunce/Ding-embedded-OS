@@ -1,9 +1,9 @@
 
 #include "d_list.h"
 #include "d_memb.h"
+#include "d_message.h"
 #include "d_tick.h"
 #include "memory.h"
-#include "message.h"
 #include "process.h"
 #include <stdlib.h>
 
@@ -70,14 +70,14 @@ void TimerProccessInit(void)
 {
   Process_Start(&TimerProccess);
 
-  Msg_SendCycle(&TimerProccess, TIMER_CYCLE, MSG_NO_ARG,
-                15); // send message cyclically(15 ms period)
-  Msg_SendLater(&TimerProccess, TIMER_LATER, MSG_NO_ARG, 15); // send message 15 ms later
-  Msg_SendInstant(&TimerProccess, TIMER_NOW, MSG_NO_ARG);     // send message Now
-  Msg_SendInstant(&TimerProccess, TIMER_NOW, MSG_NO_ARG);     // send message Now with argument
-  Msg_SendInstant(&TimerProccess, TIMER_NOW, CreateArg(1));   // send message Now with argument
+  DMsg_SendCycle(&TimerProccess, TIMER_CYCLE, MSG_NO_ARG,
+                 15); // send message cyclically(15 ms period)
+  DMsg_SendLater(&TimerProccess, TIMER_LATER, MSG_NO_ARG, 15); // send message 15 ms later
+  DMsg_SendInstant(&TimerProccess, TIMER_NOW, MSG_NO_ARG);     // send message Now
+  DMsg_SendInstant(&TimerProccess, TIMER_NOW, MSG_NO_ARG);     // send message Now with argument
+  DMsg_SendInstant(&TimerProccess, TIMER_NOW, CreateArg(1));   // send message Now with argument
 
-  // Msg_Cancel(&TimerProccess, TIMER_NOW);  // cancel this message
+  // DMsg_Cancel(&TimerProccess, TIMER_NOW);  // cancel this message
 }
 
 // example2 create process in structure
@@ -131,7 +131,7 @@ static u8 DetectProcessHandler(Process_t *process, MsgId_t msgId, MsgArg_t arg)
     }
 
   OccupyNoMovementState:
-    Msg_SendLater(&ins->EventProcess, MS_MSG_EVENT, MSG_NO_ARG, 30);
+    DMsg_SendLater(&ins->EventProcess, MS_MSG_EVENT, MSG_NO_ARG, 30);
 
     PROCESS_WAIT_FOR_MSG(msgId == MS_MSG_MOTION_DETECTED || msgId == MS_MSG_HOLD_TIME_EXPIRE ||
                          msgId == MS_MSG_CANCEL_HOLD_TIMER);
@@ -173,7 +173,7 @@ void ProcessInStructure_Init(ProcessInStructure *ins)
 
   Process_Start(&ins->DetectProcess);
   Process_Start(&ins->EventProcess);
-  Msg_SendInstant(&ins->DetectProcess, MS_MSG_START_DETECT, MSG_NO_ARG);
+  DMsg_SendInstant(&ins->DetectProcess, MS_MSG_START_DETECT, MSG_NO_ARG);
 }
 
 // example3 memory allocate from global memory
