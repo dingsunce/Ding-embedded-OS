@@ -1,7 +1,7 @@
 
-#include "SysTick.h"
 #include "d_list.h"
-#include "memb.h"
+#include "d_memb.h"
+#include "d_tick.h"
 #include "memory.h"
 #include "message.h"
 #include "process.h"
@@ -191,13 +191,13 @@ typedef struct MembTest
   u8 Id;
 } MyBlock_t;
 
-MEMB(MemBlock, MyBlock_t, 10);
+DMEMB(MemBlock, MyBlock_t, 10);
 
 void AllocateFromMemoryBlock(void)
 {
-  Memb_Init(&MemBlock);
-  MyBlock_t *block = (MyBlock_t *)Memb_Alloc(&MemBlock);
-  Memb_Free(&MemBlock, block);
+  DMemb_Init(&MemBlock);
+  MyBlock_t *block = (MyBlock_t *)DMemb_Alloc(&MemBlock);
+  DMemb_Free(&MemBlock, block);
 }
 
 // example5 memory block and list
@@ -205,11 +205,11 @@ LIST(ElementList);
 
 void MemoryBlockAndList(void)
 {
-  Memb_Init(&MemBlock);
+  DMemb_Init(&MemBlock);
   List_Init(&ElementList);
 
-  MyBlock_t *block1 = (MyBlock_t *)Memb_Alloc(&MemBlock);
-  MyBlock_t *block2 = (MyBlock_t *)Memb_Alloc(&MemBlock);
+  MyBlock_t *block1 = (MyBlock_t *)DMemb_Alloc(&MemBlock);
+  MyBlock_t *block2 = (MyBlock_t *)DMemb_Alloc(&MemBlock);
 
   List_Add(ElementList, block1);
   List_Add(ElementList, block2);
@@ -222,8 +222,8 @@ void MemoryBlockAndList(void)
   MyBlock_t *element1 = List_Pop(ElementList);
   MyBlock_t *element2 = List_Pop(ElementList);
 
-  Memb_Free(&MemBlock, element1);
-  Memb_Free(&MemBlock, element2);
+  DMemb_Free(&MemBlock, element1);
+  DMemb_Free(&MemBlock, element2);
 }
 
 // example6 memory , list in structure
@@ -239,19 +239,19 @@ typedef struct TxEntry
 typedef struct Bus
 {
   LIST_STRUCT(Tx_List);
-  MEMB_STRUCT(Tx_Mem, TxEntryT, DALI_TX_SIZE);
+  DMEMB_STRUCT(Tx_Mem, TxEntryT, DALI_TX_SIZE);
 } BusT;
 
 void MemoryBlockAndListInStructure(BusT *bus)
 {
   LIST_STRUCT_INIT(bus, Tx_List);
-  MEMB_STRUCT_INIT(bus, Tx_Mem, TxEntryT, DALI_TX_SIZE);
+  DMEMB_STRUCT_INIT(bus, Tx_Mem, TxEntryT, DALI_TX_SIZE);
 
-  TxEntryT *entry = Memb_Alloc(&bus->Tx_Mem);
+  TxEntryT *entry = DMemb_Alloc(&bus->Tx_Mem);
   List_Add(bus->Tx_List, entry);
 
   TxEntryT *entryPop = (TxEntryT *)List_Pop(bus->Tx_List);
-  Memb_Free(&bus->Tx_Mem, entryPop);
+  DMemb_Free(&bus->Tx_Mem, entryPop);
 }
 
 // example7 os api in interruption
@@ -279,7 +279,7 @@ void UartInterrption(void)
 
 void SysTick_Handler(void)
 {
-  SysTick_On();
+  DTick_On();
 }
 
 // main function
@@ -287,15 +287,15 @@ void main(void)
 {
   DOS_Init();
 
-  SysTick_Reset(); // reset the tick to 0;
+  DTick_Reset(); // reset the tick to 0;
   // call SysTick_Handler in interuption every tick
   while (1)
   {
     DOS_Run();
 
-    if (SysTick_IsTickOn())
+    if (DTick_IsTickOn())
     {
-      SysTick_ResetTickOn();
+      DTick_ResetTickOn();
 
       DOS_RunOneTick();
     }

@@ -4,7 +4,7 @@
  *******************************************************************************/
 #include "d_task.h"
 #include "d_mem.h"
-#include "memb.h"
+#include "d_memb.h"
 #include "message.h"
 #include "osal.h"
 #include "process.h"
@@ -21,7 +21,7 @@ typedef struct TaskItems
 
 LIST(TaskElementList);
 
-MEMB(TaskElementMem, TaskItem_t, TASK_ITEM_NUM);
+DMEMB(TaskElementMem, TaskItem_t, TASK_ITEM_NUM);
 
 #if (TASK_DEBUG == 1)
 static u16 TaskMemAllocFailedNum = 0;
@@ -51,7 +51,7 @@ static os_return_t DTask_Thread(void *arg)
 void DTask_Init(void)
 {
   List_Init(TaskElementList);
-  Memb_Init(&TaskElementMem);
+  DMemb_Init(&TaskElementMem);
 
   TaskPendingSem = os_sem_create(0);
   TaskListSem = os_sem_create(1);
@@ -74,7 +74,7 @@ void DTask_Exit(void)
 //-----------------------------------------------------------------------------------------------------------
 static TaskItem_t *AllocateElement(void)
 {
-  TaskItem_t *e = (TaskItem_t *)Memb_Alloc(&TaskElementMem);
+  TaskItem_t *e = (TaskItem_t *)DMemb_Alloc(&TaskElementMem);
 
 #if (TASK_DEBUG == 1)
   if (e != NULL)
@@ -115,7 +115,7 @@ OsErr_t DTask_Store(Process_t *process, MsgId_t msgId, MsgArg_t arg)
 //-----------------------------------------------------------------------------------------------------------
 static void FreeElement(TaskItem_t *e)
 {
-  Memb_Free(&TaskElementMem, e);
+  DMemb_Free(&TaskElementMem, e);
 
 #if (TASK_DEBUG == 1)
   TaskMemAllocCurrentNum--;

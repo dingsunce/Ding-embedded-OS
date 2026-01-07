@@ -3,7 +3,7 @@
 #include "CppUTestExt/MockSupport_c.h"
 
 #include "TestReset.h"
-#include "memb.h"
+#include "d_memb.h"
 #include "s_list.h"
 
 #include "process.h"

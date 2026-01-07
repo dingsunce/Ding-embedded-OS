@@ -1,8 +1,8 @@
 
-#include "SysTick.h"
 #include "app_ipc_test.h"
 #include "app_msg_test.h"
 #include "d_os.h"
+#include "d_tick.h"
 #include <linux/delay.h>
 #include <linux/gpio.h>
 #include <linux/init.h>
@@ -64,7 +64,7 @@ static struct file_operations chrdevbase_fops = {
 
 static void one_tick_timer(os_timer_t *timer, void *arg)
 {
-  SysTick_On();
+  DTick_On();
 }
 
 static os_timer_t *One_Tick_Timer;

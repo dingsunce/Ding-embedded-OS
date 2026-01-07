@@ -3,14 +3,14 @@
  * $Author: sunce.ding
  *******************************************************************************/
 #include "d_os.h"
-#include "SysTick.h"
 #include "d_mem.h"
 #include "d_task.h"
+#include "d_tick.h"
 #include "message.h"
 //-----------------------------------------------------------------------------------------------------------
 void DOS_Init(void)
 {
-  SysTick_Init();
+  DTick_Init();
   DMem_Init();
   Process_Init();
   Msg_Init();

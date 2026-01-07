@@ -5,8 +5,8 @@
 #include "message.h"
 #include "DList.h"
 #include "d_mem.h"
+#include "d_memb.h"
 #include "d_task.h"
-#include "memb.h"
 #include "osal.h"
 #include "s_list.h"
 
@@ -26,7 +26,7 @@ typedef struct MsgTableItem
   DList_t TimerList;
 } MsgTableItem_t;
 
-MEMB(MsgTimerMem, MsgTimer_t, MSG_TIMER_NUM);
+DMEMB(MsgTimerMem, MsgTimer_t, MSG_TIMER_NUM);
 
 #if (MESSAGE_DEBUG == 1)
 static u16 MsgTimerMemAllocFailedNum = 0;
@@ -71,7 +71,7 @@ void Msg_Init(void)
 {
   TimerTick = 0;
   InitTimerTable();
-  Memb_Init(&MsgTimerMem);
+  DMemb_Init(&MsgTimerMem);
 
   MsgPendingSem = os_sem_create(0);
   MsgListSem = os_sem_create(1);
@@ -152,7 +152,7 @@ static MsgTimer_t *AllocateTimer(void)
 {
   MsgTimer_t *timer;
 
-  timer = (MsgTimer_t *)Memb_Alloc(&MsgTimerMem);
+  timer = (MsgTimer_t *)DMemb_Alloc(&MsgTimerMem);
 
 #if (MESSAGE_DEBUG == 1)
   if (timer != NULL)
@@ -172,7 +172,7 @@ static MsgTimer_t *AllocateTimer(void)
 //-----------------------------------------------------------------------------------------------------------
 static void FreeTimer(MsgTimer_t *timer)
 {
-  Memb_Free(&MsgTimerMem, timer);
+  DMemb_Free(&MsgTimerMem, timer);
 
 #if (MESSAGE_DEBUG == 1)
   if (MsgTimerMemAllocCurrentNum > 0)

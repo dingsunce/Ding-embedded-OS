@@ -1,7 +1,7 @@
-#include "SysTick.h"
 #include "app_ipc_test.h"
 #include "app_msg_test.h"
 #include "d_os.h"
+#include "d_tick.h"
 #include "osal.h"
 
 static os_thread_t *TaskStartThread;
@@ -32,7 +32,7 @@ static os_return_t App_TaskStart(void *p_arg)
 
 static void one_tick_timer(os_timer_t *timer, void *arg)
 {
-  SysTick_On();
+  DTick_On();
 }
 
 int main(int argc, char **argv)

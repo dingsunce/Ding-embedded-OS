@@ -3,7 +3,7 @@
 #include "CppUTestExt/MockSupport_c.h"
 
 #include "TestReset.h"
-#include "memb.h"
+#include "d_memb.h"
 #include "s_list.h"
 
 TEST_GROUP(List){TEST_SETUP(){TestOutput::enableCompactFormat();
@@ -26,12 +26,12 @@ typedef struct ObjectUpdateEntry
 } ObjectUpdateEntry_t;
 
 LIST(ObjectUpdateList);
-MEMB(ObjectUpdateMem, struct ObjectUpdateEntry, 100);
+DMEMB(ObjectUpdateMem, struct ObjectUpdateEntry, 100);
 
 static void PushOne(u16 no)
 {
   ObjectUpdateEntry_t *e;
-  e = (ObjectUpdateEntry_t *)Memb_Alloc(&ObjectUpdateMem);
+  e = (ObjectUpdateEntry_t *)DMemb_Alloc(&ObjectUpdateMem);
   e->updateNo = no;
   List_Push(ObjectUpdateList, e);
 }
@@ -39,7 +39,7 @@ static void PushOne(u16 no)
 static void AddOne(u16 no)
 {
   ObjectUpdateEntry_t *e;
-  e = (ObjectUpdateEntry_t *)Memb_Alloc(&ObjectUpdateMem);
+  e = (ObjectUpdateEntry_t *)DMemb_Alloc(&ObjectUpdateMem);
   e->updateNo = no;
   List_Add(ObjectUpdateList, e);
 }
@@ -57,7 +57,7 @@ static ObjectUpdateEntry_t *ChopOne(void)
 TEST(List, PushPop)
 {
   List_Init(ObjectUpdateList);
-  Memb_Init(&ObjectUpdateMem);
+  DMemb_Init(&ObjectUpdateMem);
 
   PushOne(1);
   PushOne(2);
@@ -69,7 +69,7 @@ TEST(List, PushPop)
 TEST(List, PushChop)
 {
   List_Init(ObjectUpdateList);
-  Memb_Init(&ObjectUpdateMem);
+  DMemb_Init(&ObjectUpdateMem);
 
   PushOne(1);
   PushOne(2);
@@ -81,7 +81,7 @@ TEST(List, PushChop)
 TEST(List, AddPop)
 {
   List_Init(ObjectUpdateList);
-  Memb_Init(&ObjectUpdateMem);
+  DMemb_Init(&ObjectUpdateMem);
 
   AddOne(1);
   AddOne(2);
@@ -93,7 +93,7 @@ TEST(List, AddPop)
 TEST(List, AddChop)
 {
   List_Init(ObjectUpdateList);
-  Memb_Init(&ObjectUpdateMem);
+  DMemb_Init(&ObjectUpdateMem);
 
   AddOne(1);
   AddOne(2);
@@ -105,7 +105,7 @@ TEST(List, AddChop)
 TEST(List, AddEmptyOne)
 {
   List_Init(ObjectUpdateList);
-  Memb_Init(&ObjectUpdateMem);
+  DMemb_Init(&ObjectUpdateMem);
 
   List_Add(ObjectUpdateList, NULL);
 
@@ -115,7 +115,7 @@ TEST(List, AddEmptyOne)
 TEST(List, PushEmptyOne)
 {
   List_Init(ObjectUpdateList);
-  Memb_Init(&ObjectUpdateMem);
+  DMemb_Init(&ObjectUpdateMem);
 
   List_Push(ObjectUpdateList, NULL);
 
@@ -125,7 +125,7 @@ TEST(List, PushEmptyOne)
 TEST(List, Length)
 {
   List_Init(ObjectUpdateList);
-  Memb_Init(&ObjectUpdateMem);
+  DMemb_Init(&ObjectUpdateMem);
 
   AddOne(1);
   LONGS_EQUAL(1, List_Length(ObjectUpdateList));
@@ -156,7 +156,7 @@ static int GetLengthByIteration()
 TEST(List, Iteration)
 {
   List_Init(ObjectUpdateList);
-  Memb_Init(&ObjectUpdateMem);
+  DMemb_Init(&ObjectUpdateMem);
 
   AddOne(1);
   AddOne(1);
@@ -166,14 +166,14 @@ TEST(List, Iteration)
 TEST(List, ReInit)
 {
   List_Init(ObjectUpdateList);
-  Memb_Init(&ObjectUpdateMem);
+  DMemb_Init(&ObjectUpdateMem);
 
   AddOne(1);
   AddOne(1);
 
   List_Init(ObjectUpdateList);
-  Memb_Init(&ObjectUpdateMem);
+  DMemb_Init(&ObjectUpdateMem);
 
   LONGS_EQUAL(0, List_Length(ObjectUpdateList));
-  LONGS_EQUAL(100, Memb_NumFree(&ObjectUpdateMem))
+  LONGS_EQUAL(100, DMemb_NumFree(&ObjectUpdateMem))
 }

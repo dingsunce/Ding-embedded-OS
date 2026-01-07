@@ -2,8 +2,8 @@
 #include "CppUTest/TestHarness.h"
 #include "CppUTestExt/MockSupport_c.h"
 
-#include "SysTick.h"
 #include "TestReset.h"
+#include "d_tick.h"
 
 static bool CallBack200usCalled = false;
 static bool CallBack1msCalled = false;
@@ -24,22 +24,22 @@ TEST_TEARDOWN()
 
 TEST(SysTickTest, GenerateTick)
 {
-  SysTick_On();
-  LONGS_EQUAL(1, SysTick_GetCurTicks());
-  SysTick_Reset();
-  LONGS_EQUAL(0, SysTick_GetCurTicks());
+  DTick_On();
+  LONGS_EQUAL(1, DTick_GetCurTicks());
+  DTick_Reset();
+  LONGS_EQUAL(0, DTick_GetCurTicks());
 
-  SysTick_On();
-  LONGS_EQUAL(1, sys_now());
-  SysTick_Reset();
-  LONGS_EQUAL(0, sys_now());
+  DTick_On();
+  LONGS_EQUAL(1, DTick_Now());
+  DTick_Reset();
+  LONGS_EQUAL(0, DTick_Now());
 }
 
-TEST(SysTickTest, SysTick_Update)
+TEST(SysTickTest, DTick_Update)
 {
-  SysTick_Update(10);
-  LONGS_EQUAL(10, sys_now());
+  DTick_Update(10);
+  LONGS_EQUAL(10, DTick_Now());
 
-  SysTick_Update(0xffffffff); // 0xffffffff + 1 is 0
-  LONGS_EQUAL(9, sys_now());
+  DTick_Update(0xffffffff); // 0xffffffff + 1 is 0
+  LONGS_EQUAL(9, DTick_Now());
 }

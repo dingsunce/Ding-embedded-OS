@@ -4,7 +4,7 @@
 
 #include "SList.h"
 #include "TestReset.h"
-#include "memb.h"
+#include "d_memb.h"
 
 typedef struct UpdateEntry
 {
@@ -13,10 +13,10 @@ typedef struct UpdateEntry
 } UpdateEntry_t;
 
 SLIST(ObjectUpdateList);
-MEMB(ObjectUpdateMem, struct UpdateEntry, 100);
+DMEMB(ObjectUpdateMem, struct UpdateEntry, 100);
 
 TEST_GROUP(SList){TEST_SETUP(){SList_Init(&ObjectUpdateList);
-Memb_Init(&ObjectUpdateMem);
+DMemb_Init(&ObjectUpdateMem);
 TestOutput::enableCompactFormat();
 }
 
@@ -33,7 +33,7 @@ TEST_TEARDOWN()
 static void PushOne(u16 no)
 {
   UpdateEntry_t *e;
-  e = (UpdateEntry_t *)Memb_Alloc(&ObjectUpdateMem);
+  e = (UpdateEntry_t *)DMemb_Alloc(&ObjectUpdateMem);
   e->updateNo = no;
   SList_Push(&ObjectUpdateList, &e->list);
 }
@@ -41,7 +41,7 @@ static void PushOne(u16 no)
 static UpdateEntry_t *AddOne(u16 no)
 {
   UpdateEntry_t *e;
-  e = (UpdateEntry_t *)Memb_Alloc(&ObjectUpdateMem);
+  e = (UpdateEntry_t *)DMemb_Alloc(&ObjectUpdateMem);
   e->updateNo = no;
   SList_Add(&ObjectUpdateList, &e->list);
   return e;
