@@ -40,19 +40,25 @@ void Process_Init(void)
   // prevent reiniting the process
   Process_ExitAll();
 
+  DList_Init(&MyProcessList);
+
   ProcessPendingSem = os_sem_create(0);
   ProcessListSem = os_sem_create(1);
   ProcessThread = os_thread_create("os_process", D_OS_PROCESS_PRIO, 256, Process_Thread, NULL);
-  if (ProcessThread)
-    OS_PRINT("ProcessThread Start\n");
+
+  OS_PRINT("ProcessThread Start\n");
 }
 //-----------------------------------------------------------------------------------------------------------
 void DProcess_Exit(void)
 {
   os_thread_destroy(ProcessThread);
 
-  // os_sem_destroy(ProcessPendingSem);
-  // os_sem_destroy(ProcessListSem);
+  os_sem_destroy(ProcessPendingSem);
+  os_sem_destroy(ProcessListSem);
+
+  os_thread_wait_for_completion(ProcessThread);
+
+  OS_PRINT("ProcessThread Exit\n");
 }
 //-----------------------------------------------------------------------------------------------------------
 void Process_InitStructure(Process_t *p, ProcessHandler handler)
@@ -76,7 +82,8 @@ void Process_InitStructure(Process_t *p, ProcessHandler handler)
 //-----------------------------------------------------------------------------------------------------------
 void Process_InitStruct(Process_t *p, ProcessHandler handler, const char *name)
 {
-  if (p->Handler != NULL) // already Initialized Process
+  // already Initialized Process
+  if (p->Handler != NULL)
     return;
 
   Process_InitStructure(p, handler);
@@ -86,7 +93,8 @@ void Process_InitStruct(Process_t *p, ProcessHandler handler, const char *name)
 //-----------------------------------------------------------------------------------------------------------
 void Process_Start(Process_t *p)
 {
-  if (p->Handler == NULL) // it is a UnInitialized Process
+  // it is a UnInitialized Process
+  if (p->Handler == NULL)
     return;
 
   if (p->State & PROCESS_STATE_RUNNING)
@@ -129,7 +137,7 @@ void Process_Exit(Process_t *p)
   {
     p->State = PROCESS_STATE_NONE;
 
-    os_sem_signal(ProcessListSem);
+    os_sem_wait(ProcessListSem, OS_WAIT_FOREVER);
     DList_Remove(&p->ProcessList);
     os_sem_signal(ProcessListSem);
 
@@ -146,8 +154,6 @@ void Process_ExitAll(void)
     tmp = tmp->next;
     Process_Exit(p);
   }
-
-  DList_Init(&MyProcessList);
 }
 //-----------------------------------------------------------------------------------------------------------
 static void Do_Poll(void)

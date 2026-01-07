@@ -77,8 +77,7 @@ void Msg_Init(void)
   MsgListSem = os_sem_create(1);
   MsgThread = os_thread_create("os_msg", D_OS_MSG_PRIO, 256, Msg_Thread, NULL);
 
-  if (MsgThread)
-    OS_PRINT("MsgThread Start\n");
+  OS_PRINT("MsgThread Start\n");
 
   MsgRunning = true;
 }
@@ -89,8 +88,12 @@ void Msg_Exit(void)
 
   os_thread_destroy(MsgThread);
 
-  // os_sem_destroy(MsgPendingSem);
-  // os_sem_destroy(MsgListSem);
+  os_sem_destroy(MsgPendingSem);
+  os_sem_destroy(MsgListSem);
+
+  os_thread_wait_for_completion(MsgThread);
+
+  OS_PRINT("MsgThread Exit\n");
 }
 //-----------------------------------------------------------------------------------------------------------
 void Msg_PostSem(void)

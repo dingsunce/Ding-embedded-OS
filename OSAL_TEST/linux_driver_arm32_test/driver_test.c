@@ -86,7 +86,7 @@ static int __init chrdevbase_init(void)
   One_Tick_Timer = os_timer_create(OS_TICK_PERIOD_MS, one_tick_timer, NULL, false);
   os_timer_start(One_Tick_Timer);
 
-  // app_pic_test_start();
+  app_pic_test_start();
 
   printk("chrdev init!\r\n");
 
@@ -95,11 +95,11 @@ static int __init chrdevbase_init(void)
 
 static void __exit chrdevbase_exit(void)
 {
-  os_timer_stop(One_Tick_Timer);
+  os_timer_destroy(One_Tick_Timer);
 
-  // app_pic_test_stop();
+  app_pic_test_stop();
 
-  // DOS_Exit();
+  DOS_Exit();
 
   unregister_chrdev(CHRDEVBASE_MAJOR, CHRDEVBASE_NAME);
 

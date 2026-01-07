@@ -10,6 +10,7 @@ ccflags-y += -I$(src)/../../../OSAL_TEST
 ccflags-y += -std=gnu99
 ccflags-y += -Wno-declaration-after-statement
 ccflags-y += -Wno-implicit-fallthrough
+ccflags-y += -DOS_DEBUG=1
 
 driver_test_src :=	../driver_test.o
 

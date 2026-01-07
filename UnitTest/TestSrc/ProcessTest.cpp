@@ -119,7 +119,7 @@ TEST(Process, AnyMsgReceived)
 
 TEST(Process, ExitProgress)
 {
-  // progress already started in setup
+  // process already started in setup
   Process_Exit(&SpecifiedMsgProgress);
   LONGS_EQUAL(false, Process_IsRunning(&SpecifiedMsgProgress));
 
@@ -146,7 +146,7 @@ TEST(Process, PollProgress)
 
 TEST(Process, StartProgress)
 {
-  // progress already started in setup
+  // process already started in setup
   LONGS_EQUAL(SYS_MSG_START_PROGRESS, AnyMsgs[0]);
   LONGS_EQUAL(SYS_MSG_START_PROGRESS, SpecifiedMsgs[0]);
 }
@@ -161,7 +161,7 @@ TEST(Process, StartProgressMultipleTimes)
 
 TEST(Process, ReStartProgress)
 {
-  // progress already started in setup
+  // process already started in setup
   Process_ReStart(&AnyMsgProgress);
   LONGS_EQUAL(2, AnyMsgs.size());
   LONGS_EQUAL(SYS_MSG_START_PROGRESS, AnyMsgs[0]);

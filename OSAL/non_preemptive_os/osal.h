@@ -34,7 +34,15 @@ extern "C"
 
 #define OS_WAIT_FOREVER 0xFFFFFFFF
 
+#ifndef OS_DEBUG
+#define OS_DEBUG 0
+#endif
+
+#if OS_DEBUG == 0
+#define OS_PRINT
+#else
 #define OS_PRINT printf
+#endif
 
   typedef u32 os_mutex_t;
   typedef u32 os_sem_t;
@@ -60,6 +68,7 @@ extern "C"
                                 void *arg);
   void         os_thread_destroy(os_thread_t *thread);
   bool         os_thread_should_stop(os_thread_t *thread);
+  void         os_thread_wait_for_completion(os_thread_t *thread);
 
   os_mutex_t *os_mutex_create(void);
   void        os_mutex_lock(os_mutex_t *mutex);

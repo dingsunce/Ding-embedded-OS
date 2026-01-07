@@ -9,6 +9,7 @@ target_compile_definitions(DING_OS PUBLIC MEM_DEBUG=1)
 target_compile_definitions(DING_OS PUBLIC MESSAGE_DEBUG=1)
 target_compile_definitions(DING_OS PUBLIC TASK_DEBUG=1)
 target_compile_definitions(DING_OS PUBLIC MEM_ALIGMENT_4BYTES=0)
+target_compile_definitions(DING_OS PUBLIC OS_DEBUG=1)
 
 target_link_libraries(LINUX_X86_TEST PUBLIC DING_OS)
 target_link_libraries(LINUX_X86_TEST PUBLIC OS_AL_LIB)

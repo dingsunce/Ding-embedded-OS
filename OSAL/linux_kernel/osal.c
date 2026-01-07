@@ -31,9 +31,23 @@ void os_free(void *ptr)
 //-----------------------------------------------------------------------------------------------------------
 os_thread_t *os_thread_create(char *name, u16 priority, u16 stacksize, os_entry_t entry, void *arg)
 {
-  struct task_struct *thread = kthread_run(entry, arg, name);
-  if (IS_ERR(thread))
+  os_thread_t *thread = os_malloc(sizeof(*thread));
+  if (thread == NULL)
     return NULL;
+
+  /*
+    When a kernel thread is created using kthread_run,
+    Once that function returns,
+    the kernel implicitly calls do_exit() with the return value.
+  */
+  thread->should_stop = false;
+  init_completion(&thread->thread_exited);
+  thread->pthread = kthread_run(entry, arg, name);
+  if (IS_ERR(thread->pthread))
+  {
+    os_free(thread);
+    return NULL;
+  }
 
   struct sched_attr attr = {
       .size = sizeof(struct sched_attr),
@@ -41,20 +55,31 @@ os_thread_t *os_thread_create(char *name, u16 priority, u16 stacksize, os_entry_
       .sched_priority = priority,
   };
 
-  sched_setattr_nocheck(thread, &attr);
+  sched_setattr_nocheck(thread->pthread, &attr);
 
   return thread;
 }
 //-----------------------------------------------------------------------------------------------------------
 void os_thread_destroy(os_thread_t *thread)
 {
-  // notifying the thread that it should exit
-  kthread_stop(thread);
+  thread->should_stop = true;
 }
 //-----------------------------------------------------------------------------------------------------------
 bool os_thread_should_stop(os_thread_t *thread)
 {
-  return kthread_should_stop();
+  /*
+    kthread_run will exexute the entry immediately, thread would be null at this point
+    when os_thread_create() returns, thread is not null
+  */
+  if (thread != NULL)
+    return thread->should_stop;
+
+  return false;
+}
+//-----------------------------------------------------------------------------------------------------------
+void os_thread_wait_for_completion(os_thread_t *thread)
+{
+  wait_for_completion(&thread->thread_exited);
 }
 //-----------------------------------------------------------------------------------------------------------
 os_mutex_t *os_mutex_create(void)

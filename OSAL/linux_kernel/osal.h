@@ -44,19 +44,36 @@ extern "C"
 
 #define OS_WAIT_FOREVER 0xFFFFFFFF
 
-#define OS_PRINT printk
+#ifndef OS_DEBUG
+#define OS_DEBUG 0
+#endif
 
-  typedef struct mutex       os_mutex_t;
-  typedef struct semaphore   os_sem_t;
-  typedef struct task_struct os_thread_t;
-  typedef u32                os_tick_t;
+#if OS_DEBUG == 0
+#define OS_PRINT
+#else
+#define OS_PRINT printk
+#endif
+
+  typedef struct mutex     os_mutex_t;
+  typedef struct semaphore os_sem_t;
+  typedef u32              os_tick_t;
 
   typedef int os_return_t;
   typedef int (*os_entry_t)(void *arg);
 #define OS_RETURN(thread)                                                                          \
   {                                                                                                \
+    complete(&thread->thread_exited);                                                              \
+    os_free(thread);                                                                               \
     return 0;                                                                                      \
   }
+
+  typedef struct os_thread
+  {
+    struct task_struct *pthread;
+    struct completion   thread_exited;
+    bool                should_stop;
+    bool                exited;
+  } os_thread_t;
 
   typedef struct os_mbox
   {
@@ -109,6 +126,7 @@ typedef struct os_timer
                                 void *arg);
   void         os_thread_destroy(os_thread_t *thread);
   bool         os_thread_should_stop(os_thread_t *thread);
+  void         os_thread_wait_for_completion(os_thread_t *thread);
 
   os_mutex_t *os_mutex_create(void);
   void        os_mutex_lock(os_mutex_t *mutex);

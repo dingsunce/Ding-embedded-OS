@@ -36,6 +36,7 @@ os_thread_t *os_thread_create(char *name, u16 priority, u16 stacksize, os_entry_
   if (thread == NULL)
     return NULL;
 
+  thread->should_stop = FALSE;
   HANDLE handle = CreateThread(NULL, 0, (LPTHREAD_START_ROUTINE)entry, (LPVOID)arg, 0, NULL);
   if (handle == NULL)
   {
@@ -44,7 +45,6 @@ os_thread_t *os_thread_create(char *name, u16 priority, u16 stacksize, os_entry_
   }
 
   thread->handle = handle;
-  thread->should_stop = FALSE;
 
   /*
     NORMAL_PRIORITY_CLASS
@@ -75,6 +75,12 @@ void os_thread_destroy(os_thread_t *thread)
 bool os_thread_should_stop(os_thread_t *thread)
 {
   return thread->should_stop;
+}
+//-----------------------------------------------------------------------------------------------------------
+void os_thread_wait_for_completion(os_thread_t *thread)
+{
+  WaitForSingleObject(thread->handle, INFINITE);
+  CloseHandle(thread->handle);
 }
 //-----------------------------------------------------------------------------------------------------------
 os_mutex_t *os_mutex_create(void)

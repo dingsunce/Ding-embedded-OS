@@ -51,6 +51,10 @@ bool os_thread_should_stop(os_thread_t *thread)
   return false;
 }
 //-----------------------------------------------------------------------------------------------------------
+void os_thread_wait_for_completion(os_thread_t *thread)
+{
+}
+//-----------------------------------------------------------------------------------------------------------
 os_mutex_t *os_mutex_create(void)
 {
   SemaphoreHandle_t handle = xSemaphoreCreateRecursiveMutex();

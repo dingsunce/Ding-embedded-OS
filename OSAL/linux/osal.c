@@ -72,6 +72,7 @@ os_thread_t *os_thread_create(char *name, u16 priority, u16 stacksize, os_entry_
     immediately destroys all threads created by pthread_create, regardless of whether they have
     finished their work.
   */
+  thread->should_stop = false;
   result = pthread_create(&thread->pthread, &attr, (void *)entry, arg);
   if (result != 0)
   {
@@ -79,7 +80,6 @@ os_thread_t *os_thread_create(char *name, u16 priority, u16 stacksize, os_entry_
     return NULL;
   }
 
-  thread->should_stop = false;
   pthread_setname_np(thread->pthread, name);
   return thread;
 }
@@ -87,9 +87,6 @@ os_thread_t *os_thread_create(char *name, u16 priority, u16 stacksize, os_entry_
 void os_thread_destroy(os_thread_t *thread)
 {
   thread->should_stop = true;
-
-  // Detach the thread. Resources will be reclaimed automatically upon termination.
-  pthread_detach(thread->pthread);
 }
 //-----------------------------------------------------------------------------------------------------------
 bool os_thread_should_stop(os_thread_t *thread)
@@ -102,6 +99,11 @@ bool os_thread_should_stop(os_thread_t *thread)
     return thread->should_stop;
 
   return false;
+}
+//-----------------------------------------------------------------------------------------------------------
+void os_thread_wait_for_completion(os_thread_t *thread)
+{
+  pthread_join(thread->pthread, NULL);
 }
 //-----------------------------------------------------------------------------------------------------------
 os_mutex_t *os_mutex_create(void)

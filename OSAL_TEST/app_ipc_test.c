@@ -20,8 +20,6 @@ static uint32_t mbox_value = 0;
 //-----------------------------------------------------------------------------------------------------------
 static void OneShot_Timer(os_timer_t *timer, void *arg)
 {
-  OS_PRINT("IPC Test: Destory Start\n");
-
   os_thread_destroy(TaskThread1);
   os_thread_destroy(TaskThread2);
 
@@ -137,7 +135,7 @@ void app_pic_test_start(void)
   TaskThread1 = os_thread_create("ipc_test_task1", 5, 256, Ipc_Task1, NULL);
   TaskThread2 = os_thread_create("ipc_test_task2", 6, 256, Ipc_Task2, NULL);
 
-  // os_timer_start(TestOneShotTimer);
+  os_timer_start(TestOneShotTimer);
   os_timer_start(TestCycleTimer);
 
   OS_PRINT("IPC Test Start\n");
@@ -145,8 +143,14 @@ void app_pic_test_start(void)
 //-----------------------------------------------------------------------------------------------------------
 void app_pic_test_stop(void)
 {
+  os_timer_destroy(TestOneShotTimer);
+  os_timer_destroy(TestCycleTimer);
+
   os_thread_destroy(TaskThread1);
   os_thread_destroy(TaskThread2);
+
+  os_thread_wait_for_completion(TaskThread1);
+  os_thread_wait_for_completion(TaskThread2);
 
   OS_PRINT("IPC Test Stop\n");
 }

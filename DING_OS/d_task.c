@@ -57,16 +57,19 @@ void DTask_Init(void)
   TaskListSem = os_sem_create(1);
   TaskThread = os_thread_create("os_task", D_OS_TASK_PRIO, 1024, DTask_Thread, NULL);
 
-  if (TaskThread)
-    OS_PRINT("TaskThread Start\n");
+  OS_PRINT("TaskThread Start\n");
 }
 //-----------------------------------------------------------------------------------------------------------
 void DTask_Exit(void)
 {
   os_thread_destroy(TaskThread);
 
-  // os_sem_destroy(TaskPendingSem);
-  // os_sem_destroy(TaskListSem);
+  os_sem_destroy(TaskPendingSem);
+  os_sem_destroy(TaskListSem);
+
+  os_thread_wait_for_completion(TaskThread);
+
+  OS_PRINT("TaskThread Exit\n");
 }
 //-----------------------------------------------------------------------------------------------------------
 static TaskItem_t *AllocateElement(void)
