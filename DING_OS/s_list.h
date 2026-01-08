@@ -1,10 +1,10 @@
 /*!*****************************************************************************
- * file		SList.h (Single List)
+ * file		s_list.h (Single List)
  * $Author: sunce.ding
  *******************************************************************************/
 
-#ifndef SLIST_H_
-#define SLIST_H_
+#ifndef S_LIST_H_
+#define S_LIST_H_
 
 #ifdef __cplusplus
 extern "C"

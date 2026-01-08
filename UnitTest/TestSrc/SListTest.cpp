@@ -2,9 +2,9 @@
 #include "CppUTest/TestHarness.h"
 #include "CppUTestExt/MockSupport_c.h"
 
-#include "SList.h"
 #include "TestReset.h"
 #include "d_memb.h"
+#include "s_list.h"
 
 typedef struct UpdateEntry
 {
