@@ -10,7 +10,7 @@ extern "C"
 {
 #endif
 
-#include "DList.h"
+#include "double_list.h"
 #include "pt.h"
 
   struct DProcess;
@@ -22,8 +22,8 @@ extern "C"
     Pt_t            Pt;
     u8              State;
     u8              NeedPoll;
-    DList_t         ProcessList;
-    DList_t         TimerList;
+    Double_List_t   ProcessList;
+    Double_List_t   TimerList;
     const char     *name;
   } DProcess_t;
 
@@ -32,9 +32,13 @@ extern "C"
 
 #define PROCESS(name)                                                                              \
   PROCESS_HANDLER(name, msgId, arg);                                                               \
-  static DProcess_t name = {                                                                       \
-      name##Handler, {0}, 0, 0, DLIST_INIT((name).ProcessList), DLIST_INIT((name).TimerList),      \
-      #name};
+  static DProcess_t name = {name##Handler,                                                         \
+                            {0},                                                                   \
+                            0,                                                                     \
+                            0,                                                                     \
+                            DOUBLE_LIST_INIT((name).ProcessList),                                  \
+                            DOUBLE_LIST_INIT((name).TimerList),                                    \
+                            #name};
 
 #define PROCESS_SCHEDULE_BEGIN() PT_BEGIN(&process->Pt)
 

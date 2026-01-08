@@ -1,9 +1,9 @@
 
-#include "d_list.h"
 #include "d_memb.h"
 #include "d_message.h"
 #include "d_process.h"
 #include "d_tick.h"
+#include "double_list.h"
 #include "memory.h"
 #include <stdlib.h>
 
@@ -102,7 +102,7 @@ typedef enum MsMsg
 //-----------------------------------------------------------------------------------------------------------
 static u8 DetectProcessHandler(DProcess_t *process, DMsgId_t msgId, DMsgArg_t arg)
 {
-  ProcessInStructure *ins = ContainerOf(process, ProcessInStructure, DetectProcess);
+  ProcessInStructure *ins = DContainerOf(process, ProcessInStructure, DetectProcess);
   PROCESS_SCHEDULE_BEGIN()
 
   while (true)
@@ -151,7 +151,7 @@ static u8 DetectProcessHandler(DProcess_t *process, DMsgId_t msgId, DMsgArg_t ar
 //-----------------------------------------------------------------------------------------------------------
 static u8 EventProcessHandler(DProcess_t *process, DMsgId_t msgId, DMsgArg_t arg)
 {
-  ProcessInStructure *ins = ContainerOf(process, ProcessInStructure, EventProcess);
+  ProcessInStructure *ins = DContainerOf(process, ProcessInStructure, EventProcess);
   PROCESS_SCHEDULE_BEGIN()
 
   while (true)

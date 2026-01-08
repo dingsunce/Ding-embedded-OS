@@ -3,8 +3,8 @@
 #include "CppUTestExt/MockSupport_c.h"
 
 #include "TestReset.h"
+#include "d_list.h"
 #include "d_memb.h"
-#include "s_list.h"
 
 TEST_GROUP(List){TEST_SETUP(){TestOutput::enableCompactFormat();
 }

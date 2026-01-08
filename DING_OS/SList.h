@@ -28,14 +28,11 @@ extern "C"
   u16      SList_Len(const SList_t *listHeader);
   void     SList_Remove(SList_t *listHeader, SList_t *entry);
 
-#define SLIST_INIT(name)                                                                                     \
-  {                                                                                                          \
-    NULL                                                                                                     \
-  }
+#define SLIST_INIT(name) {NULL}
 
 #define SLIST(name) static SList_t name = SLIST_INIT(name)
 
-#define PUBLIC_SLIST(name) SList_t name = DLIST_INIT(name)
+#define PUBLIC_SLIST(name) SList_t name = DOUBLE_LIST_INIT(name)
 
 #ifdef __cplusplus
 }

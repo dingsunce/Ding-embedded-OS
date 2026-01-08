@@ -28,7 +28,7 @@ void *DMemb_Alloc(DMemb_t *m)
   SList_t *myList = SList_Pop(&m->FreeList);
   if (myList != NULL)
   {
-    DMemblock_t *block = ContainerOf(myList, DMemblock_t, list);
+    DMemblock_t *block = DContainerOf(myList, DMemblock_t, list);
     block->InUse = true;
 
     os_sem_signal(m->Sem);

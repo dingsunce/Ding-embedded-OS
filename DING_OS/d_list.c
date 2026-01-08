@@ -1,8 +1,8 @@
 /*!*****************************************************************************
- * file		list.c (another implementation of single List)
+ * file		d_list.c (implementation of single List)
  * $Author: sunce.ding
  *******************************************************************************/
-#include "s_list.h"
+#include "d_list.h"
 
 typedef struct ListContent
 {
@@ -10,22 +10,22 @@ typedef struct ListContent
 } ListContent_t;
 
 //-----------------------------------------------------------------------------------------------------------
-void List_Init(s_list_t list)
+void List_Init(d_list_t list)
 {
   *list = NULL;
 }
 //-----------------------------------------------------------------------------------------------------------
-void *List_Head(s_list_t list)
+void *List_Head(d_list_t list)
 {
   return *list;
 }
 //-----------------------------------------------------------------------------------------------------------
-void List_Copy(s_list_t dest, s_list_t src)
+void List_Copy(d_list_t dest, d_list_t src)
 {
   *dest = *src;
 }
 //-----------------------------------------------------------------------------------------------------------
-void *List_Tail(s_list_t list)
+void *List_Tail(d_list_t list)
 {
   ListContent_t *l;
 
@@ -40,7 +40,7 @@ void *List_Tail(s_list_t list)
   return l;
 }
 //-----------------------------------------------------------------------------------------------------------
-void List_Add(s_list_t list, void *item)
+void List_Add(d_list_t list, void *item)
 {
   // Add an item to the end of the list.
   ListContent_t *l;
@@ -62,7 +62,7 @@ void List_Add(s_list_t list, void *item)
   }
 }
 //-----------------------------------------------------------------------------------------------------------
-void List_Push(s_list_t list, void *item)
+void List_Push(d_list_t list, void *item)
 {
   if (item == NULL)
     return;
@@ -71,7 +71,7 @@ void List_Push(s_list_t list, void *item)
   *list = item;
 }
 //-----------------------------------------------------------------------------------------------------------
-void *List_Chop(s_list_t list)
+void *List_Chop(d_list_t list)
 {
   // Remove the last object on the list.
   ListContent_t *l, *r;
@@ -95,7 +95,7 @@ void *List_Chop(s_list_t list)
   return r;
 }
 //-----------------------------------------------------------------------------------------------------------
-void *List_Pop(s_list_t list)
+void *List_Pop(d_list_t list)
 {
   // Remove the first object on a list.
   ListContent_t *l;
@@ -107,7 +107,7 @@ void *List_Pop(s_list_t list)
   return l;
 }
 //-----------------------------------------------------------------------------------------------------------
-void List_Remove(s_list_t list, void *item)
+void List_Remove(d_list_t list, void *item)
 {
   ListContent_t *l, *r;
 
@@ -132,7 +132,7 @@ void List_Remove(s_list_t list, void *item)
   }
 }
 //-----------------------------------------------------------------------------------------------------------
-u32 List_Length(s_list_t list)
+u32 List_Length(d_list_t list)
 {
   ListContent_t *l;
   u32            n = 0;
@@ -143,7 +143,7 @@ u32 List_Length(s_list_t list)
   return n;
 }
 //-----------------------------------------------------------------------------------------------------------
-bool List_IsEmpty(s_list_t list)
+bool List_IsEmpty(d_list_t list)
 {
   if (List_Head(list) != NULL)
     return false;
@@ -151,7 +151,7 @@ bool List_IsEmpty(s_list_t list)
   return true;
 }
 //-----------------------------------------------------------------------------------------------------------
-void List_Insert(s_list_t list, void *prevItem, void *newItem)
+void List_Insert(d_list_t list, void *prevItem, void *newItem)
 {
   if (prevItem == NULL)
   {

@@ -3,12 +3,12 @@
  * $Author: sunce.ding
  *******************************************************************************/
 #include "d_task.h"
+#include "d_list.h"
 #include "d_mem.h"
 #include "d_memb.h"
 #include "d_message.h"
 #include "d_process.h"
 #include "osal.h"
-#include "s_list.h"
 
 // The task queue.
 typedef struct TaskItems
