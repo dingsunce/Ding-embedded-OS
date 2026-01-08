@@ -13,13 +13,13 @@
 // The task queue.
 typedef struct TaskItems
 {
-  LIST_HEADER;
+  DLIST_HEADER;
   DProcess_t *Process;
   DMsgId_t    MsgId;
   DMsgArg_t   Arg;
 } TaskItem_t;
 
-LIST(TaskElementList);
+DLIST(TaskElementList);
 
 DMEMB(TaskElementMem, TaskItem_t, TASK_ITEM_NUM);
 
@@ -50,7 +50,7 @@ static os_return_t DTask_Thread(void *arg)
 //-----------------------------------------------------------------------------------------------------------
 void DTask_Init(void)
 {
-  List_Init(TaskElementList);
+  DList_Init(TaskElementList);
   DMemb_Init(&TaskElementMem);
 
   TaskPendingSem = os_sem_create(0);
@@ -102,7 +102,7 @@ OsErr_t DTask_Store(DProcess_t *process, DMsgId_t msgId, DMsgArg_t arg)
     e->Arg = arg;
 
     os_sem_wait(TaskListSem, OS_WAIT_FOREVER);
-    List_Add(TaskElementList, e);
+    DList_Add(TaskElementList, e);
     os_sem_signal(TaskListSem);
 
     os_sem_signal(TaskPendingSem);
@@ -125,7 +125,7 @@ static void FreeElement(TaskItem_t *e)
 void DTask_Run(void)
 {
   os_sem_wait(TaskListSem, OS_WAIT_FOREVER);
-  TaskItem_t *e = List_Pop(TaskElementList);
+  TaskItem_t *e = DList_Pop(TaskElementList);
   os_sem_signal(TaskListSem);
 
   if (e != NULL)
@@ -143,7 +143,7 @@ void DTask_Run(void)
 void DTask_RunAll(void)
 {
   os_sem_wait(TaskListSem, OS_WAIT_FOREVER);
-  TaskItem_t *e = List_Pop(TaskElementList);
+  TaskItem_t *e = DList_Pop(TaskElementList);
   os_sem_signal(TaskListSem);
 
   while (e != NULL)
@@ -157,7 +157,7 @@ void DTask_RunAll(void)
     FreeElement(e);
 
     os_sem_wait(TaskListSem, OS_WAIT_FOREVER);
-    e = List_Pop(TaskElementList);
+    e = DList_Pop(TaskElementList);
     os_sem_signal(TaskListSem);
   }
 }
@@ -165,7 +165,8 @@ void DTask_RunAll(void)
 void DTask_CancelMsg(DProcess_t *process, DMsgId_t msgId)
 {
   TaskItem_t *e;
-  for (e = (TaskItem_t *)List_Head(TaskElementList); e != NULL; e = (TaskItem_t *)List_ItemNext(e))
+  for (e = (TaskItem_t *)DList_Head(TaskElementList); e != NULL;
+       e = (TaskItem_t *)DList_ItemNext(e))
   {
     if (e->Process == process && e->MsgId == msgId)
       e->MsgId = SYS_MSG_NONE;
@@ -175,7 +176,8 @@ void DTask_CancelMsg(DProcess_t *process, DMsgId_t msgId)
 bool DTask_IsMsgInTask(DProcess_t *process, DMsgId_t msgId)
 {
   TaskItem_t *e;
-  for (e = (TaskItem_t *)List_Head(TaskElementList); e != NULL; e = (TaskItem_t *)List_ItemNext(e))
+  for (e = (TaskItem_t *)DList_Head(TaskElementList); e != NULL;
+       e = (TaskItem_t *)DList_ItemNext(e))
   {
     if (e->Process == process && e->MsgId == msgId)
       return true;
@@ -187,7 +189,8 @@ bool DTask_IsMsgInTask(DProcess_t *process, DMsgId_t msgId)
 void DTask_FlushMsg(DProcess_t *process)
 {
   TaskItem_t *e;
-  for (e = (TaskItem_t *)List_Head(TaskElementList); e != NULL; e = (TaskItem_t *)List_ItemNext(e))
+  for (e = (TaskItem_t *)DList_Head(TaskElementList); e != NULL;
+       e = (TaskItem_t *)DList_ItemNext(e))
   {
     if (e->Process == process)
       e->MsgId = SYS_MSG_NONE;

@@ -21,11 +21,11 @@ TEST_TEARDOWN()
 
 typedef struct ObjectUpdateEntry
 {
-  LIST_HEADER;
+  DLIST_HEADER;
   u32 updateNo;
 } ObjectUpdateEntry_t;
 
-LIST(ObjectUpdateList);
+DLIST(ObjectUpdateList);
 DMEMB(ObjectUpdateMem, struct ObjectUpdateEntry, 100);
 
 static void PushOne(u16 no)
@@ -33,7 +33,7 @@ static void PushOne(u16 no)
   ObjectUpdateEntry_t *e;
   e = (ObjectUpdateEntry_t *)DMemb_Alloc(&ObjectUpdateMem);
   e->updateNo = no;
-  List_Push(ObjectUpdateList, e);
+  DList_Push(ObjectUpdateList, e);
 }
 
 static void AddOne(u16 no)
@@ -41,22 +41,22 @@ static void AddOne(u16 no)
   ObjectUpdateEntry_t *e;
   e = (ObjectUpdateEntry_t *)DMemb_Alloc(&ObjectUpdateMem);
   e->updateNo = no;
-  List_Add(ObjectUpdateList, e);
+  DList_Add(ObjectUpdateList, e);
 }
 
 static ObjectUpdateEntry_t *PopOne(void)
 {
-  return (ObjectUpdateEntry_t *)List_Pop(ObjectUpdateList);
+  return (ObjectUpdateEntry_t *)DList_Pop(ObjectUpdateList);
 }
 
 static ObjectUpdateEntry_t *ChopOne(void)
 {
-  return (ObjectUpdateEntry_t *)List_Chop(ObjectUpdateList);
+  return (ObjectUpdateEntry_t *)DList_Chop(ObjectUpdateList);
 }
 
 TEST(List, PushPop)
 {
-  List_Init(ObjectUpdateList);
+  DList_Init(ObjectUpdateList);
   DMemb_Init(&ObjectUpdateMem);
 
   PushOne(1);
@@ -68,7 +68,7 @@ TEST(List, PushPop)
 
 TEST(List, PushChop)
 {
-  List_Init(ObjectUpdateList);
+  DList_Init(ObjectUpdateList);
   DMemb_Init(&ObjectUpdateMem);
 
   PushOne(1);
@@ -80,7 +80,7 @@ TEST(List, PushChop)
 
 TEST(List, AddPop)
 {
-  List_Init(ObjectUpdateList);
+  DList_Init(ObjectUpdateList);
   DMemb_Init(&ObjectUpdateMem);
 
   AddOne(1);
@@ -92,7 +92,7 @@ TEST(List, AddPop)
 
 TEST(List, AddChop)
 {
-  List_Init(ObjectUpdateList);
+  DList_Init(ObjectUpdateList);
   DMemb_Init(&ObjectUpdateMem);
 
   AddOne(1);
@@ -104,48 +104,48 @@ TEST(List, AddChop)
 
 TEST(List, AddEmptyOne)
 {
-  List_Init(ObjectUpdateList);
+  DList_Init(ObjectUpdateList);
   DMemb_Init(&ObjectUpdateMem);
 
-  List_Add(ObjectUpdateList, NULL);
+  DList_Add(ObjectUpdateList, NULL);
 
-  LONGS_EQUAL(0, List_Length(ObjectUpdateList));
+  LONGS_EQUAL(0, DList_Length(ObjectUpdateList));
 }
 
 TEST(List, PushEmptyOne)
 {
-  List_Init(ObjectUpdateList);
+  DList_Init(ObjectUpdateList);
   DMemb_Init(&ObjectUpdateMem);
 
-  List_Push(ObjectUpdateList, NULL);
+  DList_Push(ObjectUpdateList, NULL);
 
-  LONGS_EQUAL(0, List_Length(ObjectUpdateList));
+  LONGS_EQUAL(0, DList_Length(ObjectUpdateList));
 }
 
 TEST(List, Length)
 {
-  List_Init(ObjectUpdateList);
+  DList_Init(ObjectUpdateList);
   DMemb_Init(&ObjectUpdateMem);
 
   AddOne(1);
-  LONGS_EQUAL(1, List_Length(ObjectUpdateList));
+  LONGS_EQUAL(1, DList_Length(ObjectUpdateList));
 
   AddOne(2);
-  LONGS_EQUAL(2, List_Length(ObjectUpdateList));
+  LONGS_EQUAL(2, DList_Length(ObjectUpdateList));
 
   ChopOne();
-  LONGS_EQUAL(1, List_Length(ObjectUpdateList));
+  LONGS_EQUAL(1, DList_Length(ObjectUpdateList));
 
   ChopOne();
-  LONGS_EQUAL(0, List_Length(ObjectUpdateList));
+  LONGS_EQUAL(0, DList_Length(ObjectUpdateList));
 }
 
 static int GetLengthByIteration()
 {
   ObjectUpdateEntry_t *e;
   int                  length = 0;
-  for (e = (ObjectUpdateEntry_t *)List_Head(ObjectUpdateList); e != NULL;
-       e = (ObjectUpdateEntry_t *)List_ItemNext(e))
+  for (e = (ObjectUpdateEntry_t *)DList_Head(ObjectUpdateList); e != NULL;
+       e = (ObjectUpdateEntry_t *)DList_ItemNext(e))
   {
     length++;
   }
@@ -155,7 +155,7 @@ static int GetLengthByIteration()
 
 TEST(List, Iteration)
 {
-  List_Init(ObjectUpdateList);
+  DList_Init(ObjectUpdateList);
   DMemb_Init(&ObjectUpdateMem);
 
   AddOne(1);
@@ -165,15 +165,15 @@ TEST(List, Iteration)
 
 TEST(List, ReInit)
 {
-  List_Init(ObjectUpdateList);
+  DList_Init(ObjectUpdateList);
   DMemb_Init(&ObjectUpdateMem);
 
   AddOne(1);
   AddOne(1);
 
-  List_Init(ObjectUpdateList);
+  DList_Init(ObjectUpdateList);
   DMemb_Init(&ObjectUpdateMem);
 
-  LONGS_EQUAL(0, List_Length(ObjectUpdateList));
+  LONGS_EQUAL(0, DList_Length(ObjectUpdateList));
   LONGS_EQUAL(100, DMemb_NumFree(&ObjectUpdateMem))
 }

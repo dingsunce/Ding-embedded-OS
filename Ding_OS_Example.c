@@ -201,26 +201,26 @@ void AllocateFromMemoryBlock(void)
 }
 
 // example5 memory block and list
-LIST(ElementList);
+DLIST(ElementList);
 
 void MemoryBlockAndList(void)
 {
   DMemb_Init(&MemBlock);
-  List_Init(&ElementList);
+  DList_Init(&ElementList);
 
   MyBlock_t *block1 = (MyBlock_t *)DMemb_Alloc(&MemBlock);
   MyBlock_t *block2 = (MyBlock_t *)DMemb_Alloc(&MemBlock);
 
-  List_Add(ElementList, block1);
-  List_Add(ElementList, block2);
+  DList_Add(ElementList, block1);
+  DList_Add(ElementList, block2);
 
   MyBlock_t *e;
-  for (e = (MyBlock_t *)List_Head(ElementList); e != NULL; e = (MyBlock_t *)List_ItemNext(e))
+  for (e = (MyBlock_t *)DList_Head(ElementList); e != NULL; e = (MyBlock_t *)DList_ItemNext(e))
   {
   }
 
-  MyBlock_t *element1 = List_Pop(ElementList);
-  MyBlock_t *element2 = List_Pop(ElementList);
+  MyBlock_t *element1 = DList_Pop(ElementList);
+  MyBlock_t *element2 = DList_Pop(ElementList);
 
   DMemb_Free(&MemBlock, element1);
   DMemb_Free(&MemBlock, element2);
@@ -231,26 +231,26 @@ void MemoryBlockAndList(void)
 
 typedef struct TxEntry
 {
-  LIST_HEADER;
+  DLIST_HEADER;
   u8 Id;
   u8 Type;
 } TxEntryT;
 
 typedef struct Bus
 {
-  LIST_STRUCT(Tx_List);
+  DLIST_STRUCT(Tx_List);
   DMEMB_STRUCT(Tx_Mem, TxEntryT, DALI_TX_SIZE);
 } BusT;
 
 void MemoryBlockAndListInStructure(BusT *bus)
 {
-  LIST_STRUCT_INIT(bus, Tx_List);
+  DLIST_STRUCT_INIT(bus, Tx_List);
   DMEMB_STRUCT_INIT(bus, Tx_Mem, TxEntryT, DALI_TX_SIZE);
 
   TxEntryT *entry = DMemb_Alloc(&bus->Tx_Mem);
-  List_Add(bus->Tx_List, entry);
+  DList_Add(bus->Tx_List, entry);
 
-  TxEntryT *entryPop = (TxEntryT *)List_Pop(bus->Tx_List);
+  TxEntryT *entryPop = (TxEntryT *)DList_Pop(bus->Tx_List);
   DMemb_Free(&bus->Tx_Mem, entryPop);
 }
 
