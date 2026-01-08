@@ -32,7 +32,7 @@ extern "C"
 
 #define SLIST(name) static SList_t name = SLIST_INIT(name)
 
-#define PUBLIC_SLIST(name) SList_t name = DOUBLE_LIST_INIT(name)
+#define PUBLIC_SLIST(name) SList_t name = SLIST_INIT(name)
 
 #ifdef __cplusplus
 }

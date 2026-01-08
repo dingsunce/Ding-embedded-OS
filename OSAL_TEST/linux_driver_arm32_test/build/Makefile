@@ -18,12 +18,12 @@ driver_test_src += \
 		../../../DING_OS/d_mem.o \
 		../../../DING_OS/d_os.o \
 		../../../DING_OS/d_task.o \
-		../../../DING_OS/DList.o \
+		../../../DING_OS/double_list.o \
 		../../../DING_OS/d_memb.o \
 		../../../DING_OS/d_message.o \
 		../../../DING_OS/d_process.o \
 		../../../DING_OS/s_list.o \
-		../../../DING_OS/SList.o \
+		../../../DING_OS/d_list.o \
 		../../../DING_OS/d_tick.o \
 
 driver_test_src += \

@@ -21,9 +21,9 @@ typedef struct TaskItems
 
 DLIST(TaskElementList);
 
-DMEMB(TaskElementMem, TaskItem_t, TASK_ITEM_NUM);
+DMEMB(TaskElementMem, TaskItem_t, DTASK_ITEM_NUM);
 
-#if (TASK_DEBUG == 1)
+#if (DTASK_DEBUG == 1)
 static u16 TaskMemAllocFailedNum = 0;
 static u16 TaskMemAllocCurrentNum = 0;
 static u16 TaskMemAllocMaxNum = 0;
@@ -76,7 +76,7 @@ static TaskItem_t *AllocateElement(void)
 {
   TaskItem_t *e = (TaskItem_t *)DMemb_Alloc(&TaskElementMem);
 
-#if (TASK_DEBUG == 1)
+#if (DTASK_DEBUG == 1)
   if (e != NULL)
   {
     TaskMemAllocCurrentNum++;
@@ -117,7 +117,7 @@ static void FreeElement(TaskItem_t *e)
 {
   DMemb_Free(&TaskElementMem, e);
 
-#if (TASK_DEBUG == 1)
+#if (DTASK_DEBUG == 1)
   TaskMemAllocCurrentNum--;
 #endif
 }

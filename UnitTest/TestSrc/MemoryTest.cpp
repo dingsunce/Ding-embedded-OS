@@ -22,7 +22,7 @@ TEST(Memory, Allocate)
 {
   DMem_Malloc(10);
   LONGS_EQUAL(10 + MEM_HEADER_SIZE, DMem_GetAllocSize());
-  LONGS_EQUAL(MEM_HEAP - 10 - MEM_HEADER_SIZE, DMem_GetFreeSize());
+  LONGS_EQUAL(DMEM_HEAP - 10 - MEM_HEADER_SIZE, DMem_GetFreeSize());
 
   DMem_Malloc(20);
   LONGS_EQUAL(30 + 2 * MEM_HEADER_SIZE, DMem_GetAllocSize());
@@ -44,26 +44,26 @@ TEST(Memory, AllocateZeroNum)
 {
   DMem_Malloc(0);
   LONGS_EQUAL(0, DMem_GetAllocSize());
-  LONGS_EQUAL(MEM_HEAP, DMem_GetFreeSize());
+  LONGS_EQUAL(DMEM_HEAP, DMem_GetFreeSize());
 }
 
-TEST(Memory, AllocateTooMush){LONGS_EQUAL(NULL, DMem_Malloc(MEM_HEAP))}
+TEST(Memory, AllocateTooMush){LONGS_EQUAL(NULL, DMem_Malloc(DMEM_HEAP))}
 
 TEST(Memory, AllocateExhausted)
 {
-  DMem_Malloc(MEM_HEAP - MEM_HEADER_SIZE);
-  LONGS_EQUAL(MEM_HEAP, DMem_GetAllocSize());
+  DMem_Malloc(DMEM_HEAP - MEM_HEADER_SIZE);
+  LONGS_EQUAL(DMEM_HEAP, DMem_GetAllocSize());
   LONGS_EQUAL(0, DMem_GetFreeSize());
 }
 
 TEST(Memory, ReAllocate)
 {
-  void *alloctated = DMem_Malloc(MEM_HEAP - MEM_HEADER_SIZE);
+  void *alloctated = DMem_Malloc(DMEM_HEAP - MEM_HEADER_SIZE);
   DMem_Free(alloctated);
 
-  DMem_Malloc(MEM_HEAP - MEM_HEADER_SIZE);
+  DMem_Malloc(DMEM_HEAP - MEM_HEADER_SIZE);
 
-  LONGS_EQUAL(MEM_HEAP, DMem_GetAllocSize());
+  LONGS_EQUAL(DMEM_HEAP, DMem_GetAllocSize());
   LONGS_EQUAL(0, DMem_GetFreeSize());
 }
 
@@ -72,7 +72,7 @@ TEST(Memory, Free)
   void *alloctated = DMem_Malloc(10);
   DMem_Free(alloctated);
   LONGS_EQUAL(0, DMem_GetAllocSize());
-  LONGS_EQUAL(MEM_HEAP, DMem_GetFreeSize());
+  LONGS_EQUAL(DMEM_HEAP, DMem_GetFreeSize());
 }
 
 TEST(Memory, FreeAnonymousPointer)
@@ -81,7 +81,7 @@ TEST(Memory, FreeAnonymousPointer)
   header.Len = 10;
   DMem_Free((void *)(&header + 1));
   LONGS_EQUAL(0, DMem_GetAllocSize());
-  LONGS_EQUAL(MEM_HEAP, DMem_GetFreeSize());
+  LONGS_EQUAL(DMEM_HEAP, DMem_GetFreeSize());
 }
 
 TEST(Memory, CoalesceOnce)
@@ -94,7 +94,7 @@ TEST(Memory, CoalesceOnce)
   void *alloctated3 = DMem_Malloc(20);
 
   LONGS_EQUAL(20 + MEM_HEADER_SIZE, DMem_GetAllocSize());
-  LONGS_EQUAL(MEM_HEAP - 20 - MEM_HEADER_SIZE, DMem_GetFreeSize());
+  LONGS_EQUAL(DMEM_HEAP - 20 - MEM_HEADER_SIZE, DMem_GetFreeSize());
   POINTERS_EQUAL(alloctated3, alloctated1);
 }
 
@@ -113,6 +113,6 @@ TEST(Memory, CoalesceMultitimes)
   void *alloctated5 = DMem_Malloc(30);
 
   LONGS_EQUAL(30 + MEM_HEADER_SIZE, DMem_GetAllocSize());
-  LONGS_EQUAL(MEM_HEAP - 30 - MEM_HEADER_SIZE, DMem_GetFreeSize());
+  LONGS_EQUAL(DMEM_HEAP - 30 - MEM_HEADER_SIZE, DMem_GetFreeSize());
   POINTERS_EQUAL(alloctated5, alloctated1);
 }

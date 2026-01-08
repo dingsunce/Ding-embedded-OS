@@ -22,8 +22,8 @@ extern "C"
     Pt_t            Pt;
     u8              State;
     u8              NeedPoll;
-    Double_List_t   ProcessList;
-    Double_List_t   TimerList;
+    Db_List_t       ProcessList;
+    Db_List_t       TimerList;
     const char     *name;
   } DProcess_t;
 
@@ -32,13 +32,9 @@ extern "C"
 
 #define PROCESS(name)                                                                              \
   PROCESS_HANDLER(name, msgId, arg);                                                               \
-  static DProcess_t name = {name##Handler,                                                         \
-                            {0},                                                                   \
-                            0,                                                                     \
-                            0,                                                                     \
-                            DOUBLE_LIST_INIT((name).ProcessList),                                  \
-                            DOUBLE_LIST_INIT((name).TimerList),                                    \
-                            #name};
+  static DProcess_t name = {                                                                       \
+      name##Handler, {0}, 0, 0, DB_LIST_INIT((name).ProcessList), DB_LIST_INIT((name).TimerList),  \
+      #name};
 
 #define PROCESS_SCHEDULE_BEGIN() PT_BEGIN(&process->Pt)
 

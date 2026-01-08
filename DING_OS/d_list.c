@@ -1,5 +1,5 @@
 /*!*****************************************************************************
- * file		d_list.c (implementation of single List)
+ * file		d_list.c (an implementation of single List)
  * $Author: sunce.ding
  *******************************************************************************/
 #include "d_list.h"

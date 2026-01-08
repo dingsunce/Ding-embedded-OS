@@ -3,12 +3,12 @@ file(GLOB_RECURSE unit_test_src_cpp *.cpp)
 
 add_executable(UNIT_TEST main.cpp ${unit_test_src_c} ${unit_test_src_cpp})
 
-target_compile_definitions(DING_OS PUBLIC MEM_DEBUG=1)
-target_compile_definitions(DING_OS PUBLIC MESSAGE_DEBUG=1)
-target_compile_definitions(DING_OS PUBLIC TASK_DEBUG=1)
+target_compile_definitions(DING_OS PUBLIC DMEM_DEBUG=1)
+target_compile_definitions(DING_OS PUBLIC DMESSAGE_DEBUG=1)
+target_compile_definitions(DING_OS PUBLIC DTASK_DEBUG=1)
 
 target_compile_definitions(DING_OS PUBLIC UNIT_TEST=1)
-target_compile_definitions(DING_OS PUBLIC MEM_ALIGMENT_4BYTES=0)
+target_compile_definitions(DING_OS PUBLIC DMEM_ALIGMENT_4BYTES=0)
 
 target_include_directories(UNIT_TEST PUBLIC ./TestMock)
 target_include_directories(UNIT_TEST PUBLIC ./TestSrc)
