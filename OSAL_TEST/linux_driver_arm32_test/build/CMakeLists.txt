@@ -11,6 +11,11 @@ add_custom_target(${TAGET_NAME}
                 modules 
                 ARCH=arm 
                 CROSS_COMPILE=arm-none-linux-gnueabihf-
+
+    COMMAND echo "remove ${CMAKE_CURRENT_BINARY_DIR} .o .cmd files"    
+
+    COMMAND ${CMAKE_COMMAND} -DDIR=${CMAKE_CURRENT_SOURCE_DIR} -P "$${CMAKE_CURRENT_SOURCE_DIR}/cleanup.cmake"
+
     WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
     COMMENT "Creating linux ko..."
     VERBATIM
@@ -29,7 +34,8 @@ add_custom_target(clean_module
 
 # run ${TAGET_NAME} target in cmake build
 add_custom_target(default_target ALL
-    DEPENDS ${TAGET_NAME}
+    COMMAND echo "Running default target"
+    DEPENDS  ${TAGET_NAME}
 )
 
 
