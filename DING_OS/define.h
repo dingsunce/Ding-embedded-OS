@@ -42,19 +42,6 @@ extern "C"
 #define BUILD_UINT(n4, n3, n2, n1)                                                                 \
   ((u32)((u8)(n4) << 24) + (u32)((u8)(n3) << 16) + (u32)((u8)(n2) << 8) + (u32)((u8)(n1)))
 
-// knx bus is big endian
-#define KNX_HIBYTE(nWord) ((u8)((nWord) & 0x00ff))
-#define KNX_LOBYTE(nWord) ((u8)((nWord) >> 8))
-#define KNX_LOHI(nWord)   KNX_LOBYTE(nWord), KNX_HIBYTE(nWord)
-#define KNX_HILO(nWord)   KNX_HIBYTE(nWord), KNX_LOBYTE(nWord)
-
-#define KNX_FOURTH_BYTE(nUint) ((u8)((nUint) & 0x000000ff))
-#define KNX_THIRD_BYTE(nUint)  ((u8)((nUint) >> 8))
-#define KNX_SECOND_BYTE(nUint) ((u8)((nUint) >> 16))
-#define KNX_FIRST_BYTE(nUint)  ((u8)((nUint) >> 24))
-#define KNX_BUILD_UINT(n4, n3, n2, n1)                                                             \
-  ((u32)((u8)(n1) << 24) + (u32)((u8)(n2) << 16) + (u32)((u8)(n3) << 8) + (u32)((u8)(n4)))
-
 #define PLACE_BIT(VAR, Place) ((VAR) |= (u16)(1 << (Place)))
 #define CLEAN_BIT(VAR, Place) ((VAR) &= (u16)((u16)(1 << (Place)) ^ 0xffff))
 #define CHECK_BIT(VAR, Place) (((u16)(VAR) & (u16)(1 << (Place))) ? 1 : 0)
