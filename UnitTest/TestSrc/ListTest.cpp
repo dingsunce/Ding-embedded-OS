@@ -54,6 +54,14 @@ static ObjectUpdateEntry_t *ChopOne(void)
   return (ObjectUpdateEntry_t *)DList_Chop(ObjectUpdateList);
 }
 
+static void InsertOne(u16 no, void *prevItem)
+{
+  ObjectUpdateEntry_t *e;
+  e = (ObjectUpdateEntry_t *)DMemb_Alloc(&ObjectUpdateMem);
+  e->updateNo = no;
+  DList_Insert(ObjectUpdateList, prevItem, e);
+}
+
 TEST(List, PushPop)
 {
   DList_Init(ObjectUpdateList);
@@ -176,4 +184,37 @@ TEST(List, ReInit)
 
   LONGS_EQUAL(0, DList_Length(ObjectUpdateList));
   LONGS_EQUAL(100, DMemb_NumFree(&ObjectUpdateMem))
+}
+
+TEST(List, Insert)
+{
+  DList_Init(ObjectUpdateList);
+  DMemb_Init(&ObjectUpdateMem);
+
+  // Insert into empty list (should push to front)
+  InsertOne(1, NULL);
+  LONGS_EQUAL(1, DList_Length(ObjectUpdateList));
+  LONGS_EQUAL(1, PopOne()->updateNo);
+
+  // Insert after first item
+  AddOne(1); // list: 1
+  AddOne(2); // list: 1 -> 2
+  ObjectUpdateEntry_t *first = (ObjectUpdateEntry_t *)DList_Head(ObjectUpdateList);
+  InsertOne(3, first); // insert 3 after 1: 1 -> 3 -> 2
+  LONGS_EQUAL(3, DList_Length(ObjectUpdateList));
+  LONGS_EQUAL(1, PopOne()->updateNo);
+  LONGS_EQUAL(3, PopOne()->updateNo);
+  LONGS_EQUAL(2, PopOne()->updateNo);
+
+  // Insert at end
+  DList_Init(ObjectUpdateList); // reset list
+  DMemb_Init(&ObjectUpdateMem);
+  AddOne(1); // list: 1
+  AddOne(2); // list: 1 -> 2
+  ObjectUpdateEntry_t *second = (ObjectUpdateEntry_t *)DList_ItemNext(DList_Head(ObjectUpdateList));
+  InsertOne(4, second); // insert 4 after 2: 1 -> 2 -> 4
+  LONGS_EQUAL(3, DList_Length(ObjectUpdateList));
+  LONGS_EQUAL(1, PopOne()->updateNo);
+  LONGS_EQUAL(2, PopOne()->updateNo);
+  LONGS_EQUAL(4, PopOne()->updateNo);
 }

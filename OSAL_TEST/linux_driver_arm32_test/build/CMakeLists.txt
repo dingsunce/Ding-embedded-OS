@@ -34,6 +34,6 @@ add_custom_target(clean_module
 
 # run ${TAGET_NAME} target in cmake build
 add_custom_target(default_target ALL
-    COMMAND echo "Running default target"
+    COMMAND echo "Running make_linux_ko target"
     DEPENDS  ${TAGET_NAME}
 )
