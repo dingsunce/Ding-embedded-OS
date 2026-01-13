@@ -2,12 +2,16 @@ if(NOT DEFINED DIR)
     set(DIR "${CMAKE_CURRENT_BINARY_DIR}")
 endif()
 
+if(NOT DEFINED RELATIVE_DIR)
+    set(RELATIVE_DIR "../../..")
+endif()
+
 set(DIRS_TO_CLEAN
     "${DIR}"
     "${DIR}/.."
-    "${DIR}/../../../DING_OS"
-    "${DIR}/../../../OSAL/linux_kernel"
-    "${DIR}/../../../OSAL_TEST"
+    "${DIR}/${RELATIVE_DIR}/DING_OS"
+    "${DIR}/${RELATIVE_DIR}/OSAL/linux_kernel"
+    "${DIR}/${RELATIVE_DIR}/OSAL_TEST"
 )
 
 foreach(CLEAN_DIR ${DIRS_TO_CLEAN})
