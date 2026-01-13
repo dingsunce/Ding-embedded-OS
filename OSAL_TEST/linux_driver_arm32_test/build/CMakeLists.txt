@@ -7,7 +7,6 @@ add_custom_target(${TAGET_NAME}
     COMMAND make 
             -C ${KERNEL_SOURCE_DIR}  
                 M=${CMAKE_CURRENT_SOURCE_DIR} 
-                MO=${CMAKE_CURRENT_BINARY_DIR} 
                 modules 
                 ARCH=arm 
                 CROSS_COMPILE=arm-none-linux-gnueabihf-
