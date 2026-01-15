@@ -9,9 +9,9 @@ extern "C"
 {
 #endif
 
+#include "d_define.h"
 #include "d_os.h"
 #include "d_task.h"
-#include "define.h"
 #include "error.h"
 
 #define SYS_MSG_START_PROGRESS   0xf000

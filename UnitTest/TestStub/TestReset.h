@@ -10,7 +10,7 @@ extern "C"
 {
 #endif
 
-#include "define.h"
+#include "d_define.h"
   void TestReset(void);
 
 #ifdef __cplusplus

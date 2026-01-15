@@ -167,13 +167,13 @@ TEST(Platform, U16ToU8PointorTest)
 {
   u16 value = 0x1001;
   u8 *p = (u8 *)&value;
-  LONGS_EQUAL(*p, LOBYTE(value));
-  LONGS_EQUAL(*(p + 1), HIBYTE(value));
+  LONGS_EQUAL(*p, LO_U16(value));
+  LONGS_EQUAL(*(p + 1), HI_U16(value));
 }
 
 TEST(Platform, U8ToU16PointorTest)
 {
-  u8 value[2] = {LOHI(0x55aa)};
+  u8 value[2] = {LO_HI_U16(0x55aa)};
   LONGS_EQUAL(0x55aa, (*(u16 *)value));
 }
 
