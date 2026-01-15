@@ -11,9 +11,9 @@ extern "C"
 #endif
 
 #include "d_define.h"
+#include "d_error.h"
 #include "d_os.h"
 #include "d_process.h"
-#include "error.h"
 
   void    DTask_Init(void);
   void    DTask_Exit(void);
