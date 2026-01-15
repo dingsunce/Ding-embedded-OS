@@ -130,6 +130,23 @@ TEST(Platform, ClrBitTest)
   LONGS_EQUAL(0x00, value);
 }
 
+TEST(Platform, InvertBitTest)
+{
+  u16 value = 0x8001;
+  CLEAN_BIT(value, 15);
+  LONGS_EQUAL(0x01, value);
+
+  INVERT_BIT(value, 15);
+  LONGS_EQUAL(0x8001, value);
+
+  value = 0x03;
+  CLEAN_BIT(value, 1);
+  LONGS_EQUAL(0x01, value);
+
+  INVERT_BIT(value, 1);
+  LONGS_EQUAL(0x03, value);
+}
+
 TEST(Platform, DivideTest)
 {
   LONGS_EQUAL(12, 100 / 8);
