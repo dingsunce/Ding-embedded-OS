@@ -1,0 +1,39 @@
+{
+    // Disable Microsoft C/C++ IntelliSense to avoid conflict with clangd
+    "C_Cpp.intelliSenseEngine": "disabled",
+
+    // Force clangd to activate even when other C/C++ extensions are installed
+    "clangd.detectExtensionConflicts": false,
+
+    // Path to clangd executable, uncomment if clangd is not in PATH
+    // "clangd.path": "/usr/bin/clangd",
+    // "clangd.path": "C:/Program Files/LLVM/bin/clangd.exe",
+
+    // Arguments passed to clangd language server
+    "clangd.arguments": [
+        "--background-index",              // Index project in background
+        "--clang-tidy",                    // Enable clang-tidy static analysis
+        "--header-insertion=iwyu",         // Auto insert headers in IWYU style
+        "--all-scopes-completion",         // Provide completion across all scopes
+        "--function-arg-placeholders",     // Show parameter placeholders in completion
+        "--pch-storage=disk",              // Store PCH cache on disk to save memory
+        "-j=4",                            // Number of worker threads
+        "--log=error",                     // Log level: error / info / verbose
+        "--compile-commands-dir=${workspaceFolder}"
+    ],
+
+    // Restart clangd automatically when configuration changes
+    "clangd.onConfigChanged": "restart",
+
+    // Enable semantic syntax highlighting
+    "editor.semanticHighlighting.enabled": true,
+
+    // Global editor switch for inlay hints
+    "editor.inlayHints.enabled": "on",
+
+    // Generate and copy compile_commands.json for clangd
+    "cmake.configureSettings": {
+        "CMAKE_EXPORT_COMPILE_COMMANDS": "ON"
+    },
+    "cmake.copyCompileCommands": "${workspaceFolder}/compile_commands.json"
+}

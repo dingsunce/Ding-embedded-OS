@@ -1,23 +1,17 @@
-#include "CppUTest/CommandLineTestRunner.h"
-#include "CppUTest/TestHarness.h"
-#include "CppUTestExt/MockSupport_c.h"
+#include <gtest/gtest.h>
 
 #include "TestReset.h"
 #include "d_list.h"
 #include "d_memb.h"
 
-TEST_GROUP(List){TEST_SETUP(){TestOutput::enableCompactFormat();
-}
-
-TEST_TEARDOWN()
+class List : public ::testing::Test
 {
-  TestReset();
-  mock_c()->checkExpectations();
-  mock_c()->clear();
-  TestOutput::disableCompactFormat();
-}
-}
-;
+protected:
+  void TearDown() override
+  {
+    TestReset();
+  }
+};
 
 typedef struct ObjectUpdateEntry
 {
@@ -62,7 +56,7 @@ static void InsertOne(u16 no, void *prevItem)
   DList_Insert(ObjectUpdateList, prevItem, e);
 }
 
-TEST(List, PushPop)
+TEST_F(List, PushPop)
 {
   DList_Init(ObjectUpdateList);
   DMemb_Init(&ObjectUpdateMem);
@@ -70,11 +64,11 @@ TEST(List, PushPop)
   PushOne(1);
   PushOne(2);
 
-  LONGS_EQUAL(2, PopOne()->updateNo);
-  LONGS_EQUAL(1, PopOne()->updateNo);
+  EXPECT_EQ(2, PopOne()->updateNo);
+  EXPECT_EQ(1, PopOne()->updateNo);
 }
 
-TEST(List, PushChop)
+TEST_F(List, PushChop)
 {
   DList_Init(ObjectUpdateList);
   DMemb_Init(&ObjectUpdateMem);
@@ -82,11 +76,11 @@ TEST(List, PushChop)
   PushOne(1);
   PushOne(2);
 
-  LONGS_EQUAL(1, ChopOne()->updateNo);
-  LONGS_EQUAL(2, ChopOne()->updateNo);
+  EXPECT_EQ(1, ChopOne()->updateNo);
+  EXPECT_EQ(2, ChopOne()->updateNo);
 }
 
-TEST(List, AddPop)
+TEST_F(List, AddPop)
 {
   DList_Init(ObjectUpdateList);
   DMemb_Init(&ObjectUpdateMem);
@@ -94,11 +88,11 @@ TEST(List, AddPop)
   AddOne(1);
   AddOne(2);
 
-  LONGS_EQUAL(1, PopOne()->updateNo);
-  LONGS_EQUAL(2, PopOne()->updateNo);
+  EXPECT_EQ(1, PopOne()->updateNo);
+  EXPECT_EQ(2, PopOne()->updateNo);
 }
 
-TEST(List, AddChop)
+TEST_F(List, AddChop)
 {
   DList_Init(ObjectUpdateList);
   DMemb_Init(&ObjectUpdateMem);
@@ -106,46 +100,60 @@ TEST(List, AddChop)
   AddOne(1);
   AddOne(2);
 
-  LONGS_EQUAL(2, ChopOne()->updateNo);
-  LONGS_EQUAL(1, ChopOne()->updateNo);
+  EXPECT_EQ(2, ChopOne()->updateNo);
+  EXPECT_EQ(1, ChopOne()->updateNo);
 }
 
-TEST(List, AddEmptyOne)
+TEST_F(List, AddEmptyOne)
 {
   DList_Init(ObjectUpdateList);
   DMemb_Init(&ObjectUpdateMem);
 
   DList_Add(ObjectUpdateList, NULL);
 
-  LONGS_EQUAL(0, DList_Length(ObjectUpdateList));
+  EXPECT_EQ(0, DList_Length(ObjectUpdateList));
 }
 
-TEST(List, PushEmptyOne)
+TEST_F(List, PushEmptyOne)
 {
   DList_Init(ObjectUpdateList);
   DMemb_Init(&ObjectUpdateMem);
 
   DList_Push(ObjectUpdateList, NULL);
 
-  LONGS_EQUAL(0, DList_Length(ObjectUpdateList));
+  EXPECT_EQ(0, DList_Length(ObjectUpdateList));
 }
 
-TEST(List, Length)
+TEST_F(List, IsEmpty)
+{
+  DList_Init(ObjectUpdateList);
+  DMemb_Init(&ObjectUpdateMem);
+
+  EXPECT_TRUE(DList_IsEmpty(ObjectUpdateList));
+
+  AddOne(1);
+  EXPECT_FALSE(DList_IsEmpty(ObjectUpdateList));
+
+  PopOne();
+  EXPECT_TRUE(DList_IsEmpty(ObjectUpdateList));
+}
+
+TEST_F(List, Length)
 {
   DList_Init(ObjectUpdateList);
   DMemb_Init(&ObjectUpdateMem);
 
   AddOne(1);
-  LONGS_EQUAL(1, DList_Length(ObjectUpdateList));
+  EXPECT_EQ(1, DList_Length(ObjectUpdateList));
 
   AddOne(2);
-  LONGS_EQUAL(2, DList_Length(ObjectUpdateList));
+  EXPECT_EQ(2, DList_Length(ObjectUpdateList));
 
   ChopOne();
-  LONGS_EQUAL(1, DList_Length(ObjectUpdateList));
+  EXPECT_EQ(1, DList_Length(ObjectUpdateList));
 
   ChopOne();
-  LONGS_EQUAL(0, DList_Length(ObjectUpdateList));
+  EXPECT_EQ(0, DList_Length(ObjectUpdateList));
 }
 
 static int GetLengthByIteration()
@@ -161,17 +169,17 @@ static int GetLengthByIteration()
   return length;
 }
 
-TEST(List, Iteration)
+TEST_F(List, Iteration)
 {
   DList_Init(ObjectUpdateList);
   DMemb_Init(&ObjectUpdateMem);
 
   AddOne(1);
   AddOne(1);
-  LONGS_EQUAL(2, GetLengthByIteration());
+  EXPECT_EQ(2, GetLengthByIteration());
 }
 
-TEST(List, ReInit)
+TEST_F(List, ReInit)
 {
   DList_Init(ObjectUpdateList);
   DMemb_Init(&ObjectUpdateMem);
@@ -182,29 +190,29 @@ TEST(List, ReInit)
   DList_Init(ObjectUpdateList);
   DMemb_Init(&ObjectUpdateMem);
 
-  LONGS_EQUAL(0, DList_Length(ObjectUpdateList));
-  LONGS_EQUAL(100, DMemb_NumFree(&ObjectUpdateMem))
+  EXPECT_EQ(0, DList_Length(ObjectUpdateList));
+  EXPECT_EQ(100, DMemb_NumFree(&ObjectUpdateMem));
 }
 
-TEST(List, Insert)
+TEST_F(List, Insert)
 {
   DList_Init(ObjectUpdateList);
   DMemb_Init(&ObjectUpdateMem);
 
   // Insert into empty list (should push to front)
   InsertOne(1, NULL);
-  LONGS_EQUAL(1, DList_Length(ObjectUpdateList));
-  LONGS_EQUAL(1, PopOne()->updateNo);
+  EXPECT_EQ(1, DList_Length(ObjectUpdateList));
+  EXPECT_EQ(1, PopOne()->updateNo);
 
   // Insert after first item
   AddOne(1); // list: 1
   AddOne(2); // list: 1 -> 2
   ObjectUpdateEntry_t *first = (ObjectUpdateEntry_t *)DList_Head(ObjectUpdateList);
   InsertOne(3, first); // insert 3 after 1: 1 -> 3 -> 2
-  LONGS_EQUAL(3, DList_Length(ObjectUpdateList));
-  LONGS_EQUAL(1, PopOne()->updateNo);
-  LONGS_EQUAL(3, PopOne()->updateNo);
-  LONGS_EQUAL(2, PopOne()->updateNo);
+  EXPECT_EQ(3, DList_Length(ObjectUpdateList));
+  EXPECT_EQ(1, PopOne()->updateNo);
+  EXPECT_EQ(3, PopOne()->updateNo);
+  EXPECT_EQ(2, PopOne()->updateNo);
 
   // Insert at end
   DList_Init(ObjectUpdateList); // reset list
@@ -213,8 +221,8 @@ TEST(List, Insert)
   AddOne(2); // list: 1 -> 2
   ObjectUpdateEntry_t *second = (ObjectUpdateEntry_t *)DList_ItemNext(DList_Head(ObjectUpdateList));
   InsertOne(4, second); // insert 4 after 2: 1 -> 2 -> 4
-  LONGS_EQUAL(3, DList_Length(ObjectUpdateList));
-  LONGS_EQUAL(1, PopOne()->updateNo);
-  LONGS_EQUAL(2, PopOne()->updateNo);
-  LONGS_EQUAL(4, PopOne()->updateNo);
+  EXPECT_EQ(3, DList_Length(ObjectUpdateList));
+  EXPECT_EQ(1, PopOne()->updateNo);
+  EXPECT_EQ(2, PopOne()->updateNo);
+  EXPECT_EQ(4, PopOne()->updateNo);
 }

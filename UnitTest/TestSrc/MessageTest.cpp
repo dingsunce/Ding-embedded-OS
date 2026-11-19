@@ -1,6 +1,4 @@
-#include "CppUTest/CommandLineTestRunner.h"
-#include "CppUTest/TestHarness.h"
-#include "CppUTestExt/MockSupport_c.h"
+#include <gtest/gtest.h>
 
 #include "CleanVector.h"
 #include "SendMsgToTask.h"
@@ -29,123 +27,123 @@ PROCESS_HANDLER(MessageProgress, msgId, arg)
   PROCESS_SCHEDULE_END();
 }
 
-TEST_GROUP(Message){TEST_SETUP(){DProcess_Start(&MessageProgress);
-TestOutput::enableCompactFormat();
-}
-
-TEST_TEARDOWN()
+class Message : public ::testing::Test
 {
-  CleanVector(Msgs);
-  TestReset();
-  mock_c()->checkExpectations();
-  mock_c()->clear();
-  TestOutput::disableCompactFormat();
-}
-}
-;
+protected:
+  void SetUp() override
+  {
+    DProcess_Start(&MessageProgress);
+  }
 
-TEST(Message, SendInstantMessage)
+  void TearDown() override
+  {
+    CleanVector(Msgs);
+    TestReset();
+  }
+};
+
+TEST_F(Message, SendInstantMessage)
 {
-  LONGS_EQUAL(0, Msgs.size());
+  EXPECT_EQ(0, Msgs.size());
   DMsg_SendInstant(&MessageProgress, SYS_MSG_TEST_PROCESS, NULL);
   DTask_Run();
-  LONGS_EQUAL(1, Msgs.size());
-  LONGS_EQUAL(SYS_MSG_TEST_PROCESS, Msgs[0]);
+  EXPECT_EQ(1, Msgs.size());
+  EXPECT_EQ(SYS_MSG_TEST_PROCESS, Msgs[0]);
 }
 
-TEST(Message, SendMessageLater)
+TEST_F(Message, SendMessageLater)
 {
-  LONGS_EQUAL(0, Msgs.size());
+  EXPECT_EQ(0, Msgs.size());
   DMsg_SendLater(&MessageProgress, SYS_MSG_TEST_PROCESS, NULL, MSG_MSEC(1000));
   RunMsgTimer(MSG_MSEC(1000));
-  LONGS_EQUAL(1, Msgs.size());
-  LONGS_EQUAL(SYS_MSG_TEST_PROCESS, Msgs[0]);
+  EXPECT_EQ(1, Msgs.size());
+  EXPECT_EQ(SYS_MSG_TEST_PROCESS, Msgs[0]);
 }
 
-TEST(Message, ReSendMessageLater)
+TEST_F(Message, ReSendMessageLater)
 {
-  LONGS_EQUAL(0, Msgs.size());
+  EXPECT_EQ(0, Msgs.size());
   DMsg_SendLater(&MessageProgress, SYS_MSG_TEST_PROCESS, NULL, MSG_MSEC(1000));
   DMsg_ReSendLater(&MessageProgress, SYS_MSG_TEST_PROCESS, NULL, MSG_MSEC(1000));
   RunMsgTimer(MSG_MSEC(1000));
   RunMsgTimer(MSG_MSEC(1000));
-  LONGS_EQUAL(1, Msgs.size());
-  LONGS_EQUAL(SYS_MSG_TEST_PROCESS, Msgs[0]);
+  EXPECT_EQ(1, Msgs.size());
+  EXPECT_EQ(SYS_MSG_TEST_PROCESS, Msgs[0]);
 }
 
-TEST(Message, SendMessageCycle)
+TEST_F(Message, SendMessageCycle)
 {
-  LONGS_EQUAL(0, Msgs.size());
+  EXPECT_EQ(0, Msgs.size());
   DMsg_SendCycle(&MessageProgress, SYS_MSG_TEST_PROCESS, NULL, MSG_MSEC(10));
   RunMsgTimer(MSG_MSEC(10));
   RunMsgTimer(MSG_MSEC(10));
-  LONGS_EQUAL(2, Msgs.size());
-  LONGS_EQUAL(SYS_MSG_TEST_PROCESS, Msgs[0]);
-  LONGS_EQUAL(SYS_MSG_TEST_PROCESS, Msgs[1]);
+  EXPECT_EQ(2, Msgs.size());
+  EXPECT_EQ(SYS_MSG_TEST_PROCESS, Msgs[0]);
+  EXPECT_EQ(SYS_MSG_TEST_PROCESS, Msgs[1]);
 }
 
-TEST(Message, SendTwoMessages)
+TEST_F(Message, SendTwoMessages)
 {
-  LONGS_EQUAL(0, Msgs.size());
+  EXPECT_EQ(0, Msgs.size());
   DMsg_SendCycle(&MessageProgress, SYS_MSG_TEST_PROCESS, NULL, MSG_MSEC(8));
   DMsg_SendCycle(&MessageProgress, SYS_MSG_CONTINUE_PROCESS, NULL, MSG_MSEC(9));
   RunMsgTimer(MSG_MSEC(8));
   RunMsgTimer(MSG_MSEC(1));
-  LONGS_EQUAL(2, Msgs.size());
-  LONGS_EQUAL(SYS_MSG_TEST_PROCESS, Msgs[0]);
-  LONGS_EQUAL(SYS_MSG_CONTINUE_PROCESS, Msgs[1]);
+  EXPECT_EQ(2, Msgs.size());
+  EXPECT_EQ(SYS_MSG_TEST_PROCESS, Msgs[0]);
+  EXPECT_EQ(SYS_MSG_CONTINUE_PROCESS, Msgs[1]);
 }
 
-TEST(Message, SendThreeMessages)
+TEST_F(Message, SendThreeMessages)
 {
-  LONGS_EQUAL(0, Msgs.size());
+  EXPECT_EQ(0, Msgs.size());
   DMsg_SendCycle(&MessageProgress, SYS_MSG_TEST_PROCESS, NULL, MSG_MSEC(8));
   DMsg_SendCycle(&MessageProgress, SYS_MSG_POLL_PROCESS, NULL, MSG_MSEC(7));
   DMsg_SendCycle(&MessageProgress, SYS_MSG_CONTINUE_PROCESS, NULL, MSG_MSEC(9));
   RunMsgTimer(MSG_MSEC(10));
-  LONGS_EQUAL(3, Msgs.size());
-  LONGS_EQUAL(SYS_MSG_POLL_PROCESS, Msgs[0]);
-  LONGS_EQUAL(SYS_MSG_TEST_PROCESS, Msgs[1]);
-  LONGS_EQUAL(SYS_MSG_CONTINUE_PROCESS, Msgs[2]);
+  EXPECT_EQ(3, Msgs.size());
+  EXPECT_EQ(SYS_MSG_POLL_PROCESS, Msgs[0]);
+  EXPECT_EQ(SYS_MSG_TEST_PROCESS, Msgs[1]);
+  EXPECT_EQ(SYS_MSG_CONTINUE_PROCESS, Msgs[2]);
 }
 
-TEST(Message, CancelFirstMessage)
+TEST_F(Message, CancelFirstMessage)
 {
-  LONGS_EQUAL(0, Msgs.size());
+  EXPECT_EQ(0, Msgs.size());
   DMsg_SendLater(&MessageProgress, SYS_MSG_TEST_PROCESS, NULL, MSG_MSEC(10));
   DMsg_SendLater(&MessageProgress, SYS_MSG_TEST_PROCESS, NULL, MSG_MSEC(1));
 
   DMsg_CancelFirst(&MessageProgress, SYS_MSG_TEST_PROCESS);
   RunMsgTimer(MSG_MSEC(10));
 
-  LONGS_EQUAL(1, Msgs.size());
-  LONGS_EQUAL(SYS_MSG_TEST_PROCESS, Msgs[0]);
+  EXPECT_EQ(1, Msgs.size());
+  EXPECT_EQ(SYS_MSG_TEST_PROCESS, Msgs[0]);
 }
 
-TEST(Message, CancelAllMessages)
+TEST_F(Message, CancelAllMessages)
 {
-  LONGS_EQUAL(0, Msgs.size());
+  EXPECT_EQ(0, Msgs.size());
   DMsg_SendLater(&MessageProgress, SYS_MSG_TEST_PROCESS, NULL, MSG_MSEC(10));
   DMsg_SendLater(&MessageProgress, SYS_MSG_TEST_PROCESS, NULL, MSG_MSEC(1));
 
   DMsg_Cancel(&MessageProgress, SYS_MSG_TEST_PROCESS);
   RunMsgTimer(MSG_MSEC(10));
   RunMsgTimer(MSG_MSEC(10));
-  LONGS_EQUAL(0, Msgs.size());
+  EXPECT_EQ(0, Msgs.size());
 }
 
-TEST(Message, CancelCycleMessages)
+TEST_F(Message, CancelCycleMessages)
 {
-  LONGS_EQUAL(0, Msgs.size());
+  EXPECT_EQ(0, Msgs.size());
   DMsg_SendCycle(&MessageProgress, SYS_MSG_TEST_PROCESS, NULL, MSG_MSEC(10));
   DMsg_Cancel(&MessageProgress, SYS_MSG_TEST_PROCESS);
   RunMsgTimer(MSG_MSEC(10));
-  LONGS_EQUAL(0, Msgs.size());
+  EXPECT_EQ(0, Msgs.size());
 }
 
-TEST(Message, FlushMessages)
+TEST_F(Message, FlushMessages)
 {
-  LONGS_EQUAL(0, Msgs.size());
+  EXPECT_EQ(0, Msgs.size());
   DMsg_SendLater(&MessageProgress, SYS_MSG_TEST_PROCESS, NULL, MSG_MSEC(10));
   DMsg_SendLater(&MessageProgress, SYS_MSG_POLL_PROCESS, NULL, MSG_MSEC(1));
 
@@ -153,34 +151,34 @@ TEST(Message, FlushMessages)
   RunMsgTimer(MSG_MSEC(10));
   RunMsgTimer(MSG_MSEC(10));
 
-  LONGS_EQUAL(0, Msgs.size());
+  EXPECT_EQ(0, Msgs.size());
 }
 
-TEST(Message, CancelAllMessagesInTaskList)
+TEST_F(Message, CancelAllMessagesInTaskList)
 {
-  LONGS_EQUAL(0, Msgs.size());
+  EXPECT_EQ(0, Msgs.size());
   DMsg_SendInstant(&MessageProgress, SYS_MSG_TEST_PROCESS, NULL);
   DMsg_SendInstant(&MessageProgress, SYS_MSG_TEST_PROCESS, NULL);
 
   DMsg_Cancel(&MessageProgress, SYS_MSG_TEST_PROCESS);
   RunMsgTimer(MSG_MSEC(10));
 
-  LONGS_EQUAL(0, Msgs.size());
+  EXPECT_EQ(0, Msgs.size());
 }
 
-TEST(Message, FlushMessagesInTaskList)
+TEST_F(Message, FlushMessagesInTaskList)
 {
-  LONGS_EQUAL(0, Msgs.size());
+  EXPECT_EQ(0, Msgs.size());
   DMsg_SendInstant(&MessageProgress, SYS_MSG_TEST_PROCESS, NULL);
   DMsg_SendInstant(&MessageProgress, SYS_MSG_POLL_PROCESS, NULL);
 
   DMsg_Flush(&MessageProgress);
   RunMsgTimer(MSG_MSEC(10));
 
-  LONGS_EQUAL(0, Msgs.size());
+  EXPECT_EQ(0, Msgs.size());
 }
 
-TEST(Message, FreeArgInCancellingMessages)
+TEST_F(Message, FreeArgInCancellingMessages)
 {
   void *arg0 = DMem_Malloc(5);
   DMsg_SendLater(&MessageProgress, SYS_MSG_TEST_PROCESS, arg0, MSG_MSEC(10));
@@ -188,10 +186,10 @@ TEST(Message, FreeArgInCancellingMessages)
 
   // memory of arg0 is released, it is reused by arg1
   void *arg1 = DMem_Malloc(5);
-  POINTERS_EQUAL(arg1, arg0);
+  EXPECT_EQ(arg1, arg0);
 }
 
-TEST(Message, FreeArgInHandlingMessages)
+TEST_F(Message, FreeArgInHandlingMessages)
 {
   void *arg0 = DMem_Malloc(5);
   DMsg_SendLater(&MessageProgress, SYS_MSG_TEST_PROCESS, arg0, MSG_MSEC(10));
@@ -199,37 +197,37 @@ TEST(Message, FreeArgInHandlingMessages)
 
   // memory of arg0 is released, it is reused by arg1
   void *arg1 = DMem_Malloc(5);
-  POINTERS_EQUAL(arg1, arg0);
+  EXPECT_EQ(arg1, arg0);
 }
 
-TEST(Message, RemianTime)
+TEST_F(Message, RemianTime)
 {
-  LONGS_EQUAL(0, Msgs.size());
+  EXPECT_EQ(0, Msgs.size());
   DMsg_SendLater(&MessageProgress, SYS_MSG_TEST_PROCESS, NULL, MSG_MSEC(10));
-  LONGS_EQUAL(10, DMsg_GetRemainTime(&MessageProgress, SYS_MSG_TEST_PROCESS));
+  EXPECT_EQ(10, DMsg_GetRemainTime(&MessageProgress, SYS_MSG_TEST_PROCESS));
 
   RunMsgTimer(MSG_MSEC(1));
-  LONGS_EQUAL(9, DMsg_GetRemainTime(&MessageProgress, SYS_MSG_TEST_PROCESS));
+  EXPECT_EQ(9, DMsg_GetRemainTime(&MessageProgress, SYS_MSG_TEST_PROCESS));
 
   RunMsgTimer(MSG_MSEC(9));
-  LONGS_EQUAL(0, DMsg_GetRemainTime(&MessageProgress, SYS_MSG_TEST_PROCESS));
+  EXPECT_EQ(0, DMsg_GetRemainTime(&MessageProgress, SYS_MSG_TEST_PROCESS));
 }
 
-TEST(Message, IsMessageInProcess)
+TEST_F(Message, IsMessageInProcess)
 {
   DMsg_SendLater(&MessageProgress, SYS_MSG_TEST_PROCESS, NULL, MSG_MSEC(10));
-  CHECK_TRUE(DMsg_IsMsgInProcess(&MessageProgress, SYS_MSG_TEST_PROCESS));
+  EXPECT_TRUE(DMsg_IsMsgInProcess(&MessageProgress, SYS_MSG_TEST_PROCESS));
 
   RunMsgTimer(MSG_MSEC(10));
-  CHECK_FALSE(DMsg_IsMsgInProcess(&MessageProgress, SYS_MSG_TEST_PROCESS));
+  EXPECT_FALSE(DMsg_IsMsgInProcess(&MessageProgress, SYS_MSG_TEST_PROCESS));
 }
 
-TEST(Message, DoNotHandleMessageWhenProcessIsIdle)
+TEST_F(Message, DoNotHandleMessageWhenProcessIsIdle)
 {
   DProcess_ExitProc(&MessageProgress);
   DMsg_SendInstant(&MessageProgress, SYS_MSG_TEST_PROCESS, NULL);
-  CHECK_FALSE(DTask_IsMsgInTask(&MessageProgress, SYS_MSG_TEST_PROCESS));
+  EXPECT_FALSE(DTask_IsMsgInTask(&MessageProgress, SYS_MSG_TEST_PROCESS));
 
   DMsg_SendLater(&MessageProgress, SYS_MSG_TEST_PROCESS, NULL, MSG_MSEC(10));
-  CHECK_FALSE(DMsg_IsMsgInProcess(&MessageProgress, SYS_MSG_TEST_PROCESS));
+  EXPECT_FALSE(DMsg_IsMsgInProcess(&MessageProgress, SYS_MSG_TEST_PROCESS));
 }

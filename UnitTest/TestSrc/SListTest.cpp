@@ -1,6 +1,4 @@
-#include "CppUTest/CommandLineTestRunner.h"
-#include "CppUTest/TestHarness.h"
-#include "CppUTestExt/MockSupport_c.h"
+#include <gtest/gtest.h>
 
 #include "TestReset.h"
 #include "d_memb.h"
@@ -15,20 +13,20 @@ typedef struct UpdateEntry
 SLIST(ObjectUpdateList);
 DMEMB(ObjectUpdateMem, struct UpdateEntry, 100);
 
-TEST_GROUP(SList){TEST_SETUP(){SList_Init(&ObjectUpdateList);
-DMemb_Init(&ObjectUpdateMem);
-TestOutput::enableCompactFormat();
-}
-
-TEST_TEARDOWN()
+class SListTestFixture : public ::testing::Test
 {
-  TestReset();
-  mock_c()->checkExpectations();
-  mock_c()->clear();
-  TestOutput::disableCompactFormat();
-}
-}
-;
+protected:
+  void SetUp() override
+  {
+    SList_Init(&ObjectUpdateList);
+    DMemb_Init(&ObjectUpdateMem);
+  }
+
+  void TearDown() override
+  {
+    TestReset();
+  }
+};
 
 static void PushOne(u16 no)
 {
@@ -59,80 +57,143 @@ static UpdateEntry_t *ChopOne(void)
   return DContainerOf(slist, UpdateEntry_t, list);
 }
 
-TEST(SList, PushPop)
+TEST_F(SListTestFixture, PushPop)
 {
   PushOne(1);
   PushOne(2);
 
-  LONGS_EQUAL(2, PopOne()->updateNo);
-  LONGS_EQUAL(1, PopOne()->updateNo);
+  EXPECT_EQ(2, PopOne()->updateNo);
+  EXPECT_EQ(1, PopOne()->updateNo);
 }
 
-TEST(SList, PushChop)
+TEST_F(SListTestFixture, PushChop)
 {
   PushOne(1);
   PushOne(2);
 
-  LONGS_EQUAL(1, ChopOne()->updateNo);
-  LONGS_EQUAL(2, ChopOne()->updateNo);
+  EXPECT_EQ(1, ChopOne()->updateNo);
+  EXPECT_EQ(2, ChopOne()->updateNo);
 }
 
-TEST(SList, AddPop)
+TEST_F(SListTestFixture, AddPop)
 {
   AddOne(1);
   AddOne(2);
 
-  LONGS_EQUAL(1, PopOne()->updateNo);
-  LONGS_EQUAL(2, PopOne()->updateNo);
+  EXPECT_EQ(1, PopOne()->updateNo);
+  EXPECT_EQ(2, PopOne()->updateNo);
 }
 
-TEST(SList, AddChop)
+TEST_F(SListTestFixture, AddChop)
 {
   AddOne(1);
   AddOne(2);
 
-  LONGS_EQUAL(2, ChopOne()->updateNo);
-  LONGS_EQUAL(1, ChopOne()->updateNo);
+  EXPECT_EQ(2, ChopOne()->updateNo);
+  EXPECT_EQ(1, ChopOne()->updateNo);
 }
 
-TEST(SList, AddEmptyOne)
+TEST_F(SListTestFixture, AddEmptyOne)
 {
   SList_Add(&ObjectUpdateList, NULL);
-  LONGS_EQUAL(0, SList_Len(&ObjectUpdateList));
+  EXPECT_EQ(0, SList_Len(&ObjectUpdateList));
 }
 
-TEST(SList, PushEmptyOne)
+TEST_F(SListTestFixture, PushEmptyOne)
 {
   SList_Push(&ObjectUpdateList, NULL);
-  LONGS_EQUAL(0, SList_Len(&ObjectUpdateList));
+  EXPECT_EQ(0, SList_Len(&ObjectUpdateList));
 }
 
-TEST(SList, Length)
+TEST_F(SListTestFixture, Length)
 {
   AddOne(1);
-  LONGS_EQUAL(1, SList_Len(&ObjectUpdateList));
+  EXPECT_EQ(1, SList_Len(&ObjectUpdateList));
 
   AddOne(2);
-  LONGS_EQUAL(2, SList_Len(&ObjectUpdateList));
+  EXPECT_EQ(2, SList_Len(&ObjectUpdateList));
 
   ChopOne();
-  LONGS_EQUAL(1, SList_Len(&ObjectUpdateList));
+  EXPECT_EQ(1, SList_Len(&ObjectUpdateList));
 
   ChopOne();
-  LONGS_EQUAL(0, SList_Len(&ObjectUpdateList));
+  EXPECT_EQ(0, SList_Len(&ObjectUpdateList));
 }
 
-TEST(SList, Iteration)
+TEST_F(SListTestFixture, Iteration)
 {
   AddOne(1);
   AddOne(1);
-  LONGS_EQUAL(2, SList_Len(&ObjectUpdateList));
+  EXPECT_EQ(2, SList_Len(&ObjectUpdateList));
 }
 
-TEST(SList, AddRemove)
+TEST_F(SListTestFixture, AddRemove)
 {
   UpdateEntry_t *e = AddOne(1);
-  LONGS_EQUAL(1, SList_Len(&ObjectUpdateList));
+  EXPECT_EQ(1, SList_Len(&ObjectUpdateList));
   SList_Remove(&ObjectUpdateList, &e->list);
-  LONGS_EQUAL(0, SList_Len(&ObjectUpdateList));
+  EXPECT_EQ(0, SList_Len(&ObjectUpdateList));
+}
+
+TEST_F(SListTestFixture, RemoveFromBeginning)
+{
+  UpdateEntry_t *e1 = AddOne(1);
+  UpdateEntry_t *e2 = AddOne(2);
+  UpdateEntry_t *e3 = AddOne(3);
+  EXPECT_EQ(3, SList_Len(&ObjectUpdateList));
+
+  SList_Remove(&ObjectUpdateList, &e1->list);
+  EXPECT_EQ(2, SList_Len(&ObjectUpdateList));
+  EXPECT_EQ(2, PopOne()->updateNo);
+  EXPECT_EQ(3, PopOne()->updateNo);
+}
+
+TEST_F(SListTestFixture, RemoveFromMiddle)
+{
+  UpdateEntry_t *e1 = AddOne(1);
+  UpdateEntry_t *e2 = AddOne(2);
+  UpdateEntry_t *e3 = AddOne(3);
+  EXPECT_EQ(3, SList_Len(&ObjectUpdateList));
+
+  SList_Remove(&ObjectUpdateList, &e2->list);
+  EXPECT_EQ(2, SList_Len(&ObjectUpdateList));
+  EXPECT_EQ(1, PopOne()->updateNo);
+  EXPECT_EQ(3, PopOne()->updateNo);
+}
+
+TEST_F(SListTestFixture, RemoveFromEnd)
+{
+  UpdateEntry_t *e1 = AddOne(1);
+  UpdateEntry_t *e2 = AddOne(2);
+  UpdateEntry_t *e3 = AddOne(3);
+  EXPECT_EQ(3, SList_Len(&ObjectUpdateList));
+
+  SList_Remove(&ObjectUpdateList, &e3->list);
+  EXPECT_EQ(2, SList_Len(&ObjectUpdateList));
+  EXPECT_EQ(1, PopOne()->updateNo);
+  EXPECT_EQ(2, PopOne()->updateNo);
+}
+
+TEST_F(SListTestFixture, RemoveNonExistentElement)
+{
+  UpdateEntry_t *e1 = AddOne(1);
+  UpdateEntry_t *e2 = AddOne(2);
+  UpdateEntry_t *e3 = (UpdateEntry_t *)DMemb_Alloc(&ObjectUpdateMem);
+  e3->updateNo = 99;
+  EXPECT_EQ(2, SList_Len(&ObjectUpdateList));
+
+  SList_Remove(&ObjectUpdateList, &e3->list);
+  EXPECT_EQ(2, SList_Len(&ObjectUpdateList));
+  EXPECT_EQ(1, PopOne()->updateNo);
+  EXPECT_EQ(2, PopOne()->updateNo);
+}
+
+TEST_F(SListTestFixture, RemoveFromEmptyList)
+{
+  UpdateEntry_t *e1 = (UpdateEntry_t *)DMemb_Alloc(&ObjectUpdateMem);
+  e1->updateNo = 1;
+  EXPECT_EQ(0, SList_Len(&ObjectUpdateList));
+
+  SList_Remove(&ObjectUpdateList, &e1->list);
+  EXPECT_EQ(0, SList_Len(&ObjectUpdateList));
 }

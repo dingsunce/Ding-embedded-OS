@@ -1,6 +1,4 @@
-#include "CppUTest/CommandLineTestRunner.h"
-#include "CppUTest/TestHarness.h"
-#include "CppUTestExt/MockSupport_c.h"
+#include <gtest/gtest.h>
 
 #include "CleanVector.h"
 #include "SendMsgToTask.h"
@@ -38,31 +36,27 @@ PROCESS_HANDLER(MainProgress, msgId, arg)
   PROCESS_SCHEDULE_END();
 }
 
-TEST_GROUP(ProcessNested){TEST_SETUP(){TestOutput::enableCompactFormat();
-}
-
-TEST_TEARDOWN()
+class ProcessNested : public ::testing::Test
 {
-  CleanVector(SubMsgs);
-  TestReset();
-  mock_c()->checkExpectations();
-  mock_c()->clear();
-  TestOutput::disableCompactFormat();
-}
-}
-;
+protected:
+  void TearDown() override
+  {
+    CleanVector(SubMsgs);
+    TestReset();
+  }
+};
 
-TEST(ProcessNested, StartSubProcessFromMainProgress)
+TEST_F(ProcessNested, StartSubProcessFromMainProgress)
 {
   DProcess_Start(&MainProgress);
-  LONGS_EQUAL(1, SubMsgs.size());
-  LONGS_EQUAL(SYS_MSG_START_PROGRESS, SubMsgs[0]);
+  EXPECT_EQ(1, SubMsgs.size());
+  EXPECT_EQ(SYS_MSG_START_PROGRESS, SubMsgs[0]);
 }
 
-TEST(ProcessNested, WaitingForEndOfSubProcess)
+TEST_F(ProcessNested, WaitingForEndOfSubProcess)
 {
   DProcess_Start(&MainProgress);
-  LONGS_EQUAL(true, DProcess_IsRunning(&MainProgress));
+  EXPECT_TRUE(DProcess_IsRunning(&MainProgress));
   SendMsgToTask(&SubProgress, SYS_MSG_EXIT_PROCESS, NULL);
-  LONGS_EQUAL(false, DProcess_IsRunning(&MainProgress));
+  EXPECT_FALSE(DProcess_IsRunning(&MainProgress));
 }

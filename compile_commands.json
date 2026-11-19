@@ -1,0 +1,147 @@
+[
+{
+  "directory": "D:/GitHub/Ding-embedded-OS/Output/windows_unit_test",
+  "command": "C:\\PROGRA~1\\LLVM\\bin\\clang.exe -DDMEM_ALIGMENT_4BYTES=0 -DDMEM_DEBUG=1 -DDMESSAGE_DEBUG=1 -DDTASK_DEBUG=1 -DUNIT_TEST=1 -ID:/GitHub/Ding-embedded-OS -ID:/GitHub/Ding-embedded-OS/DING_OS -ID:/GitHub/Ding-embedded-OS/OSAL/non_preemptive_os -g -Xclang -gcodeview -O0 -D_DEBUG -D_DLL -D_MT -Xclang --dependent-lib=msvcrtd -o DING_OS\\CMakeFiles\\DING_OS.dir\\d_list.c.obj -c D:\\GitHub\\Ding-embedded-OS\\DING_OS\\d_list.c",
+  "file": "D:\\GitHub\\Ding-embedded-OS\\DING_OS\\d_list.c"
+},
+{
+  "directory": "D:/GitHub/Ding-embedded-OS/Output/windows_unit_test",
+  "command": "C:\\PROGRA~1\\LLVM\\bin\\clang.exe -DDMEM_ALIGMENT_4BYTES=0 -DDMEM_DEBUG=1 -DDMESSAGE_DEBUG=1 -DDTASK_DEBUG=1 -DUNIT_TEST=1 -ID:/GitHub/Ding-embedded-OS -ID:/GitHub/Ding-embedded-OS/DING_OS -ID:/GitHub/Ding-embedded-OS/OSAL/non_preemptive_os -g -Xclang -gcodeview -O0 -D_DEBUG -D_DLL -D_MT -Xclang --dependent-lib=msvcrtd -o DING_OS\\CMakeFiles\\DING_OS.dir\\d_mem.c.obj -c D:\\GitHub\\Ding-embedded-OS\\DING_OS\\d_mem.c",
+  "file": "D:\\GitHub\\Ding-embedded-OS\\DING_OS\\d_mem.c"
+},
+{
+  "directory": "D:/GitHub/Ding-embedded-OS/Output/windows_unit_test",
+  "command": "C:\\PROGRA~1\\LLVM\\bin\\clang.exe -DDMEM_ALIGMENT_4BYTES=0 -DDMEM_DEBUG=1 -DDMESSAGE_DEBUG=1 -DDTASK_DEBUG=1 -DUNIT_TEST=1 -ID:/GitHub/Ding-embedded-OS -ID:/GitHub/Ding-embedded-OS/DING_OS -ID:/GitHub/Ding-embedded-OS/OSAL/non_preemptive_os -g -Xclang -gcodeview -O0 -D_DEBUG -D_DLL -D_MT -Xclang --dependent-lib=msvcrtd -o DING_OS\\CMakeFiles\\DING_OS.dir\\d_memb.c.obj -c D:\\GitHub\\Ding-embedded-OS\\DING_OS\\d_memb.c",
+  "file": "D:\\GitHub\\Ding-embedded-OS\\DING_OS\\d_memb.c"
+},
+{
+  "directory": "D:/GitHub/Ding-embedded-OS/Output/windows_unit_test",
+  "command": "C:\\PROGRA~1\\LLVM\\bin\\clang.exe -DDMEM_ALIGMENT_4BYTES=0 -DDMEM_DEBUG=1 -DDMESSAGE_DEBUG=1 -DDTASK_DEBUG=1 -DUNIT_TEST=1 -ID:/GitHub/Ding-embedded-OS -ID:/GitHub/Ding-embedded-OS/DING_OS -ID:/GitHub/Ding-embedded-OS/OSAL/non_preemptive_os -g -Xclang -gcodeview -O0 -D_DEBUG -D_DLL -D_MT -Xclang --dependent-lib=msvcrtd -o DING_OS\\CMakeFiles\\DING_OS.dir\\d_message.c.obj -c D:\\GitHub\\Ding-embedded-OS\\DING_OS\\d_message.c",
+  "file": "D:\\GitHub\\Ding-embedded-OS\\DING_OS\\d_message.c"
+},
+{
+  "directory": "D:/GitHub/Ding-embedded-OS/Output/windows_unit_test",
+  "command": "C:\\PROGRA~1\\LLVM\\bin\\clang.exe -DDMEM_ALIGMENT_4BYTES=0 -DDMEM_DEBUG=1 -DDMESSAGE_DEBUG=1 -DDTASK_DEBUG=1 -DUNIT_TEST=1 -ID:/GitHub/Ding-embedded-OS -ID:/GitHub/Ding-embedded-OS/DING_OS -ID:/GitHub/Ding-embedded-OS/OSAL/non_preemptive_os -g -Xclang -gcodeview -O0 -D_DEBUG -D_DLL -D_MT -Xclang --dependent-lib=msvcrtd -o DING_OS\\CMakeFiles\\DING_OS.dir\\d_os.c.obj -c D:\\GitHub\\Ding-embedded-OS\\DING_OS\\d_os.c",
+  "file": "D:\\GitHub\\Ding-embedded-OS\\DING_OS\\d_os.c"
+},
+{
+  "directory": "D:/GitHub/Ding-embedded-OS/Output/windows_unit_test",
+  "command": "C:\\PROGRA~1\\LLVM\\bin\\clang.exe -DDMEM_ALIGMENT_4BYTES=0 -DDMEM_DEBUG=1 -DDMESSAGE_DEBUG=1 -DDTASK_DEBUG=1 -DUNIT_TEST=1 -ID:/GitHub/Ding-embedded-OS -ID:/GitHub/Ding-embedded-OS/DING_OS -ID:/GitHub/Ding-embedded-OS/OSAL/non_preemptive_os -g -Xclang -gcodeview -O0 -D_DEBUG -D_DLL -D_MT -Xclang --dependent-lib=msvcrtd -o DING_OS\\CMakeFiles\\DING_OS.dir\\d_process.c.obj -c D:\\GitHub\\Ding-embedded-OS\\DING_OS\\d_process.c",
+  "file": "D:\\GitHub\\Ding-embedded-OS\\DING_OS\\d_process.c"
+},
+{
+  "directory": "D:/GitHub/Ding-embedded-OS/Output/windows_unit_test",
+  "command": "C:\\PROGRA~1\\LLVM\\bin\\clang.exe -DDMEM_ALIGMENT_4BYTES=0 -DDMEM_DEBUG=1 -DDMESSAGE_DEBUG=1 -DDTASK_DEBUG=1 -DUNIT_TEST=1 -ID:/GitHub/Ding-embedded-OS -ID:/GitHub/Ding-embedded-OS/DING_OS -ID:/GitHub/Ding-embedded-OS/OSAL/non_preemptive_os -g -Xclang -gcodeview -O0 -D_DEBUG -D_DLL -D_MT -Xclang --dependent-lib=msvcrtd -o DING_OS\\CMakeFiles\\DING_OS.dir\\d_task.c.obj -c D:\\GitHub\\Ding-embedded-OS\\DING_OS\\d_task.c",
+  "file": "D:\\GitHub\\Ding-embedded-OS\\DING_OS\\d_task.c"
+},
+{
+  "directory": "D:/GitHub/Ding-embedded-OS/Output/windows_unit_test",
+  "command": "C:\\PROGRA~1\\LLVM\\bin\\clang.exe -DDMEM_ALIGMENT_4BYTES=0 -DDMEM_DEBUG=1 -DDMESSAGE_DEBUG=1 -DDTASK_DEBUG=1 -DUNIT_TEST=1 -ID:/GitHub/Ding-embedded-OS -ID:/GitHub/Ding-embedded-OS/DING_OS -ID:/GitHub/Ding-embedded-OS/OSAL/non_preemptive_os -g -Xclang -gcodeview -O0 -D_DEBUG -D_DLL -D_MT -Xclang --dependent-lib=msvcrtd -o DING_OS\\CMakeFiles\\DING_OS.dir\\d_tick.c.obj -c D:\\GitHub\\Ding-embedded-OS\\DING_OS\\d_tick.c",
+  "file": "D:\\GitHub\\Ding-embedded-OS\\DING_OS\\d_tick.c"
+},
+{
+  "directory": "D:/GitHub/Ding-embedded-OS/Output/windows_unit_test",
+  "command": "C:\\PROGRA~1\\LLVM\\bin\\clang.exe -DDMEM_ALIGMENT_4BYTES=0 -DDMEM_DEBUG=1 -DDMESSAGE_DEBUG=1 -DDTASK_DEBUG=1 -DUNIT_TEST=1 -ID:/GitHub/Ding-embedded-OS -ID:/GitHub/Ding-embedded-OS/DING_OS -ID:/GitHub/Ding-embedded-OS/OSAL/non_preemptive_os -g -Xclang -gcodeview -O0 -D_DEBUG -D_DLL -D_MT -Xclang --dependent-lib=msvcrtd -o DING_OS\\CMakeFiles\\DING_OS.dir\\double_list.c.obj -c D:\\GitHub\\Ding-embedded-OS\\DING_OS\\double_list.c",
+  "file": "D:\\GitHub\\Ding-embedded-OS\\DING_OS\\double_list.c"
+},
+{
+  "directory": "D:/GitHub/Ding-embedded-OS/Output/windows_unit_test",
+  "command": "C:\\PROGRA~1\\LLVM\\bin\\clang.exe -DDMEM_ALIGMENT_4BYTES=0 -DDMEM_DEBUG=1 -DDMESSAGE_DEBUG=1 -DDTASK_DEBUG=1 -DUNIT_TEST=1 -ID:/GitHub/Ding-embedded-OS -ID:/GitHub/Ding-embedded-OS/DING_OS -ID:/GitHub/Ding-embedded-OS/OSAL/non_preemptive_os -g -Xclang -gcodeview -O0 -D_DEBUG -D_DLL -D_MT -Xclang --dependent-lib=msvcrtd -o DING_OS\\CMakeFiles\\DING_OS.dir\\s_list.c.obj -c D:\\GitHub\\Ding-embedded-OS\\DING_OS\\s_list.c",
+  "file": "D:\\GitHub\\Ding-embedded-OS\\DING_OS\\s_list.c"
+},
+{
+  "directory": "D:/GitHub/Ding-embedded-OS/Output/windows_unit_test",
+  "command": "C:\\PROGRA~1\\LLVM\\bin\\clang.exe -ID:/GitHub/Ding-embedded-OS -ID:/GitHub/Ding-embedded-OS/DING_OS -ID:/GitHub/Ding-embedded-OS/OSAL/non_preemptive_os -g -Xclang -gcodeview -O0 -D_DEBUG -D_DLL -D_MT -Xclang --dependent-lib=msvcrtd -o OSAL\\non_preemptive_os\\CMakeFiles\\OS_AL_LIB.dir\\osal.c.obj -c D:\\GitHub\\Ding-embedded-OS\\OSAL\\non_preemptive_os\\osal.c",
+  "file": "D:\\GitHub\\Ding-embedded-OS\\OSAL\\non_preemptive_os\\osal.c"
+},
+{
+  "directory": "D:/GitHub/Ding-embedded-OS/Output/windows_unit_test",
+  "command": "C:\\PROGRA~1\\LLVM\\bin\\CLANG_~1.EXE -DDMEM_ALIGMENT_4BYTES=0 -DDMEM_DEBUG=1 -DDMESSAGE_DEBUG=1 -DDTASK_DEBUG=1 -DUNIT_TEST=1 -ID:/GitHub/Ding-embedded-OS -ID:/GitHub/Ding-embedded-OS/DING_OS -ID:/GitHub/Ding-embedded-OS/OSAL/non_preemptive_os -ID:/GitHub/Ding-embedded-OS/UnitTest/./TestMock -ID:/GitHub/Ding-embedded-OS/UnitTest/./TestSrc -ID:/GitHub/Ding-embedded-OS/UnitTest/./TestStub -isystem D:/GitHub/Ding-embedded-OS/Output/windows_unit_test/_deps/googletest-src/googletest/include -isystem D:/GitHub/Ding-embedded-OS/Output/windows_unit_test/_deps/googletest-src/googletest -g -Xclang -gcodeview -O0 -D_DEBUG -D_DLL -D_MT -Xclang --dependent-lib=msvcrtd -std=c++17 -o UnitTest\\CMakeFiles\\UNIT_TEST.dir\\main.cpp.obj -c D:\\GitHub\\Ding-embedded-OS\\UnitTest\\main.cpp",
+  "file": "D:\\GitHub\\Ding-embedded-OS\\UnitTest\\main.cpp"
+},
+{
+  "directory": "D:/GitHub/Ding-embedded-OS/Output/windows_unit_test",
+  "command": "C:\\PROGRA~1\\LLVM\\bin\\clang.exe -DDMEM_ALIGMENT_4BYTES=0 -DDMEM_DEBUG=1 -DDMESSAGE_DEBUG=1 -DDTASK_DEBUG=1 -DUNIT_TEST=1 -ID:/GitHub/Ding-embedded-OS -ID:/GitHub/Ding-embedded-OS/DING_OS -ID:/GitHub/Ding-embedded-OS/OSAL/non_preemptive_os -ID:/GitHub/Ding-embedded-OS/UnitTest/./TestMock -ID:/GitHub/Ding-embedded-OS/UnitTest/./TestSrc -ID:/GitHub/Ding-embedded-OS/UnitTest/./TestStub -isystem D:/GitHub/Ding-embedded-OS/Output/windows_unit_test/_deps/googletest-src/googletest/include -isystem D:/GitHub/Ding-embedded-OS/Output/windows_unit_test/_deps/googletest-src/googletest -g -Xclang -gcodeview -O0 -D_DEBUG -D_DLL -D_MT -Xclang --dependent-lib=msvcrtd -o UnitTest\\CMakeFiles\\UNIT_TEST.dir\\TestStub\\SendMsgToTask.c.obj -c D:\\GitHub\\Ding-embedded-OS\\UnitTest\\TestStub\\SendMsgToTask.c",
+  "file": "D:\\GitHub\\Ding-embedded-OS\\UnitTest\\TestStub\\SendMsgToTask.c"
+},
+{
+  "directory": "D:/GitHub/Ding-embedded-OS/Output/windows_unit_test",
+  "command": "C:\\PROGRA~1\\LLVM\\bin\\clang.exe -DDMEM_ALIGMENT_4BYTES=0 -DDMEM_DEBUG=1 -DDMESSAGE_DEBUG=1 -DDTASK_DEBUG=1 -DUNIT_TEST=1 -ID:/GitHub/Ding-embedded-OS -ID:/GitHub/Ding-embedded-OS/DING_OS -ID:/GitHub/Ding-embedded-OS/OSAL/non_preemptive_os -ID:/GitHub/Ding-embedded-OS/UnitTest/./TestMock -ID:/GitHub/Ding-embedded-OS/UnitTest/./TestSrc -ID:/GitHub/Ding-embedded-OS/UnitTest/./TestStub -isystem D:/GitHub/Ding-embedded-OS/Output/windows_unit_test/_deps/googletest-src/googletest/include -isystem D:/GitHub/Ding-embedded-OS/Output/windows_unit_test/_deps/googletest-src/googletest -g -Xclang -gcodeview -O0 -D_DEBUG -D_DLL -D_MT -Xclang --dependent-lib=msvcrtd -o UnitTest\\CMakeFiles\\UNIT_TEST.dir\\TestStub\\TestReset.c.obj -c D:\\GitHub\\Ding-embedded-OS\\UnitTest\\TestStub\\TestReset.c",
+  "file": "D:\\GitHub\\Ding-embedded-OS\\UnitTest\\TestStub\\TestReset.c"
+},
+{
+  "directory": "D:/GitHub/Ding-embedded-OS/Output/windows_unit_test",
+  "command": "C:\\PROGRA~1\\LLVM\\bin\\CLANG_~1.EXE -DDMEM_ALIGMENT_4BYTES=0 -DDMEM_DEBUG=1 -DDMESSAGE_DEBUG=1 -DDTASK_DEBUG=1 -DUNIT_TEST=1 -ID:/GitHub/Ding-embedded-OS -ID:/GitHub/Ding-embedded-OS/DING_OS -ID:/GitHub/Ding-embedded-OS/OSAL/non_preemptive_os -ID:/GitHub/Ding-embedded-OS/UnitTest/./TestMock -ID:/GitHub/Ding-embedded-OS/UnitTest/./TestSrc -ID:/GitHub/Ding-embedded-OS/UnitTest/./TestStub -isystem D:/GitHub/Ding-embedded-OS/Output/windows_unit_test/_deps/googletest-src/googletest/include -isystem D:/GitHub/Ding-embedded-OS/Output/windows_unit_test/_deps/googletest-src/googletest -g -Xclang -gcodeview -O0 -D_DEBUG -D_DLL -D_MT -Xclang --dependent-lib=msvcrtd -std=c++17 -o UnitTest\\CMakeFiles\\UNIT_TEST.dir\\TestSrc\\DoubleListTest.cpp.obj -c D:\\GitHub\\Ding-embedded-OS\\UnitTest\\TestSrc\\DoubleListTest.cpp",
+  "file": "D:\\GitHub\\Ding-embedded-OS\\UnitTest\\TestSrc\\DoubleListTest.cpp"
+},
+{
+  "directory": "D:/GitHub/Ding-embedded-OS/Output/windows_unit_test",
+  "command": "C:\\PROGRA~1\\LLVM\\bin\\CLANG_~1.EXE -DDMEM_ALIGMENT_4BYTES=0 -DDMEM_DEBUG=1 -DDMESSAGE_DEBUG=1 -DDTASK_DEBUG=1 -DUNIT_TEST=1 -ID:/GitHub/Ding-embedded-OS -ID:/GitHub/Ding-embedded-OS/DING_OS -ID:/GitHub/Ding-embedded-OS/OSAL/non_preemptive_os -ID:/GitHub/Ding-embedded-OS/UnitTest/./TestMock -ID:/GitHub/Ding-embedded-OS/UnitTest/./TestSrc -ID:/GitHub/Ding-embedded-OS/UnitTest/./TestStub -isystem D:/GitHub/Ding-embedded-OS/Output/windows_unit_test/_deps/googletest-src/googletest/include -isystem D:/GitHub/Ding-embedded-OS/Output/windows_unit_test/_deps/googletest-src/googletest -g -Xclang -gcodeview -O0 -D_DEBUG -D_DLL -D_MT -Xclang --dependent-lib=msvcrtd -std=c++17 -o UnitTest\\CMakeFiles\\UNIT_TEST.dir\\TestSrc\\ListTest.cpp.obj -c D:\\GitHub\\Ding-embedded-OS\\UnitTest\\TestSrc\\ListTest.cpp",
+  "file": "D:\\GitHub\\Ding-embedded-OS\\UnitTest\\TestSrc\\ListTest.cpp"
+},
+{
+  "directory": "D:/GitHub/Ding-embedded-OS/Output/windows_unit_test",
+  "command": "C:\\PROGRA~1\\LLVM\\bin\\CLANG_~1.EXE -DDMEM_ALIGMENT_4BYTES=0 -DDMEM_DEBUG=1 -DDMESSAGE_DEBUG=1 -DDTASK_DEBUG=1 -DUNIT_TEST=1 -ID:/GitHub/Ding-embedded-OS -ID:/GitHub/Ding-embedded-OS/DING_OS -ID:/GitHub/Ding-embedded-OS/OSAL/non_preemptive_os -ID:/GitHub/Ding-embedded-OS/UnitTest/./TestMock -ID:/GitHub/Ding-embedded-OS/UnitTest/./TestSrc -ID:/GitHub/Ding-embedded-OS/UnitTest/./TestStub -isystem D:/GitHub/Ding-embedded-OS/Output/windows_unit_test/_deps/googletest-src/googletest/include -isystem D:/GitHub/Ding-embedded-OS/Output/windows_unit_test/_deps/googletest-src/googletest -g -Xclang -gcodeview -O0 -D_DEBUG -D_DLL -D_MT -Xclang --dependent-lib=msvcrtd -std=c++17 -o UnitTest\\CMakeFiles\\UNIT_TEST.dir\\TestSrc\\MemBlockTest.cpp.obj -c D:\\GitHub\\Ding-embedded-OS\\UnitTest\\TestSrc\\MemBlockTest.cpp",
+  "file": "D:\\GitHub\\Ding-embedded-OS\\UnitTest\\TestSrc\\MemBlockTest.cpp"
+},
+{
+  "directory": "D:/GitHub/Ding-embedded-OS/Output/windows_unit_test",
+  "command": "C:\\PROGRA~1\\LLVM\\bin\\CLANG_~1.EXE -DDMEM_ALIGMENT_4BYTES=0 -DDMEM_DEBUG=1 -DDMESSAGE_DEBUG=1 -DDTASK_DEBUG=1 -DUNIT_TEST=1 -ID:/GitHub/Ding-embedded-OS -ID:/GitHub/Ding-embedded-OS/DING_OS -ID:/GitHub/Ding-embedded-OS/OSAL/non_preemptive_os -ID:/GitHub/Ding-embedded-OS/UnitTest/./TestMock -ID:/GitHub/Ding-embedded-OS/UnitTest/./TestSrc -ID:/GitHub/Ding-embedded-OS/UnitTest/./TestStub -isystem D:/GitHub/Ding-embedded-OS/Output/windows_unit_test/_deps/googletest-src/googletest/include -isystem D:/GitHub/Ding-embedded-OS/Output/windows_unit_test/_deps/googletest-src/googletest -g -Xclang -gcodeview -O0 -D_DEBUG -D_DLL -D_MT -Xclang --dependent-lib=msvcrtd -std=c++17 -o UnitTest\\CMakeFiles\\UNIT_TEST.dir\\TestSrc\\MemoryTest.cpp.obj -c D:\\GitHub\\Ding-embedded-OS\\UnitTest\\TestSrc\\MemoryTest.cpp",
+  "file": "D:\\GitHub\\Ding-embedded-OS\\UnitTest\\TestSrc\\MemoryTest.cpp"
+},
+{
+  "directory": "D:/GitHub/Ding-embedded-OS/Output/windows_unit_test",
+  "command": "C:\\PROGRA~1\\LLVM\\bin\\CLANG_~1.EXE -DDMEM_ALIGMENT_4BYTES=0 -DDMEM_DEBUG=1 -DDMESSAGE_DEBUG=1 -DDTASK_DEBUG=1 -DUNIT_TEST=1 -ID:/GitHub/Ding-embedded-OS -ID:/GitHub/Ding-embedded-OS/DING_OS -ID:/GitHub/Ding-embedded-OS/OSAL/non_preemptive_os -ID:/GitHub/Ding-embedded-OS/UnitTest/./TestMock -ID:/GitHub/Ding-embedded-OS/UnitTest/./TestSrc -ID:/GitHub/Ding-embedded-OS/UnitTest/./TestStub -isystem D:/GitHub/Ding-embedded-OS/Output/windows_unit_test/_deps/googletest-src/googletest/include -isystem D:/GitHub/Ding-embedded-OS/Output/windows_unit_test/_deps/googletest-src/googletest -g -Xclang -gcodeview -O0 -D_DEBUG -D_DLL -D_MT -Xclang --dependent-lib=msvcrtd -std=c++17 -o UnitTest\\CMakeFiles\\UNIT_TEST.dir\\TestSrc\\MessageTest.cpp.obj -c D:\\GitHub\\Ding-embedded-OS\\UnitTest\\TestSrc\\MessageTest.cpp",
+  "file": "D:\\GitHub\\Ding-embedded-OS\\UnitTest\\TestSrc\\MessageTest.cpp"
+},
+{
+  "directory": "D:/GitHub/Ding-embedded-OS/Output/windows_unit_test",
+  "command": "C:\\PROGRA~1\\LLVM\\bin\\CLANG_~1.EXE -DDMEM_ALIGMENT_4BYTES=0 -DDMEM_DEBUG=1 -DDMESSAGE_DEBUG=1 -DDTASK_DEBUG=1 -DUNIT_TEST=1 -ID:/GitHub/Ding-embedded-OS -ID:/GitHub/Ding-embedded-OS/DING_OS -ID:/GitHub/Ding-embedded-OS/OSAL/non_preemptive_os -ID:/GitHub/Ding-embedded-OS/UnitTest/./TestMock -ID:/GitHub/Ding-embedded-OS/UnitTest/./TestSrc -ID:/GitHub/Ding-embedded-OS/UnitTest/./TestStub -isystem D:/GitHub/Ding-embedded-OS/Output/windows_unit_test/_deps/googletest-src/googletest/include -isystem D:/GitHub/Ding-embedded-OS/Output/windows_unit_test/_deps/googletest-src/googletest -g -Xclang -gcodeview -O0 -D_DEBUG -D_DLL -D_MT -Xclang --dependent-lib=msvcrtd -std=c++17 -o UnitTest\\CMakeFiles\\UNIT_TEST.dir\\TestSrc\\NestedProcessTest.cpp.obj -c D:\\GitHub\\Ding-embedded-OS\\UnitTest\\TestSrc\\NestedProcessTest.cpp",
+  "file": "D:\\GitHub\\Ding-embedded-OS\\UnitTest\\TestSrc\\NestedProcessTest.cpp"
+},
+{
+  "directory": "D:/GitHub/Ding-embedded-OS/Output/windows_unit_test",
+  "command": "C:\\PROGRA~1\\LLVM\\bin\\CLANG_~1.EXE -DDMEM_ALIGMENT_4BYTES=0 -DDMEM_DEBUG=1 -DDMESSAGE_DEBUG=1 -DDTASK_DEBUG=1 -DUNIT_TEST=1 -ID:/GitHub/Ding-embedded-OS -ID:/GitHub/Ding-embedded-OS/DING_OS -ID:/GitHub/Ding-embedded-OS/OSAL/non_preemptive_os -ID:/GitHub/Ding-embedded-OS/UnitTest/./TestMock -ID:/GitHub/Ding-embedded-OS/UnitTest/./TestSrc -ID:/GitHub/Ding-embedded-OS/UnitTest/./TestStub -isystem D:/GitHub/Ding-embedded-OS/Output/windows_unit_test/_deps/googletest-src/googletest/include -isystem D:/GitHub/Ding-embedded-OS/Output/windows_unit_test/_deps/googletest-src/googletest -g -Xclang -gcodeview -O0 -D_DEBUG -D_DLL -D_MT -Xclang --dependent-lib=msvcrtd -std=c++17 -o UnitTest\\CMakeFiles\\UNIT_TEST.dir\\TestSrc\\PlatformTest.cpp.obj -c D:\\GitHub\\Ding-embedded-OS\\UnitTest\\TestSrc\\PlatformTest.cpp",
+  "file": "D:\\GitHub\\Ding-embedded-OS\\UnitTest\\TestSrc\\PlatformTest.cpp"
+},
+{
+  "directory": "D:/GitHub/Ding-embedded-OS/Output/windows_unit_test",
+  "command": "C:\\PROGRA~1\\LLVM\\bin\\CLANG_~1.EXE -DDMEM_ALIGMENT_4BYTES=0 -DDMEM_DEBUG=1 -DDMESSAGE_DEBUG=1 -DDTASK_DEBUG=1 -DUNIT_TEST=1 -ID:/GitHub/Ding-embedded-OS -ID:/GitHub/Ding-embedded-OS/DING_OS -ID:/GitHub/Ding-embedded-OS/OSAL/non_preemptive_os -ID:/GitHub/Ding-embedded-OS/UnitTest/./TestMock -ID:/GitHub/Ding-embedded-OS/UnitTest/./TestSrc -ID:/GitHub/Ding-embedded-OS/UnitTest/./TestStub -isystem D:/GitHub/Ding-embedded-OS/Output/windows_unit_test/_deps/googletest-src/googletest/include -isystem D:/GitHub/Ding-embedded-OS/Output/windows_unit_test/_deps/googletest-src/googletest -g -Xclang -gcodeview -O0 -D_DEBUG -D_DLL -D_MT -Xclang --dependent-lib=msvcrtd -std=c++17 -o UnitTest\\CMakeFiles\\UNIT_TEST.dir\\TestSrc\\ProcessTest.cpp.obj -c D:\\GitHub\\Ding-embedded-OS\\UnitTest\\TestSrc\\ProcessTest.cpp",
+  "file": "D:\\GitHub\\Ding-embedded-OS\\UnitTest\\TestSrc\\ProcessTest.cpp"
+},
+{
+  "directory": "D:/GitHub/Ding-embedded-OS/Output/windows_unit_test",
+  "command": "C:\\PROGRA~1\\LLVM\\bin\\CLANG_~1.EXE -DDMEM_ALIGMENT_4BYTES=0 -DDMEM_DEBUG=1 -DDMESSAGE_DEBUG=1 -DDTASK_DEBUG=1 -DUNIT_TEST=1 -ID:/GitHub/Ding-embedded-OS -ID:/GitHub/Ding-embedded-OS/DING_OS -ID:/GitHub/Ding-embedded-OS/OSAL/non_preemptive_os -ID:/GitHub/Ding-embedded-OS/UnitTest/./TestMock -ID:/GitHub/Ding-embedded-OS/UnitTest/./TestSrc -ID:/GitHub/Ding-embedded-OS/UnitTest/./TestStub -isystem D:/GitHub/Ding-embedded-OS/Output/windows_unit_test/_deps/googletest-src/googletest/include -isystem D:/GitHub/Ding-embedded-OS/Output/windows_unit_test/_deps/googletest-src/googletest -g -Xclang -gcodeview -O0 -D_DEBUG -D_DLL -D_MT -Xclang --dependent-lib=msvcrtd -std=c++17 -o UnitTest\\CMakeFiles\\UNIT_TEST.dir\\TestSrc\\SListTest.cpp.obj -c D:\\GitHub\\Ding-embedded-OS\\UnitTest\\TestSrc\\SListTest.cpp",
+  "file": "D:\\GitHub\\Ding-embedded-OS\\UnitTest\\TestSrc\\SListTest.cpp"
+},
+{
+  "directory": "D:/GitHub/Ding-embedded-OS/Output/windows_unit_test",
+  "command": "C:\\PROGRA~1\\LLVM\\bin\\CLANG_~1.EXE -DDMEM_ALIGMENT_4BYTES=0 -DDMEM_DEBUG=1 -DDMESSAGE_DEBUG=1 -DDTASK_DEBUG=1 -DUNIT_TEST=1 -ID:/GitHub/Ding-embedded-OS -ID:/GitHub/Ding-embedded-OS/DING_OS -ID:/GitHub/Ding-embedded-OS/OSAL/non_preemptive_os -ID:/GitHub/Ding-embedded-OS/UnitTest/./TestMock -ID:/GitHub/Ding-embedded-OS/UnitTest/./TestSrc -ID:/GitHub/Ding-embedded-OS/UnitTest/./TestStub -isystem D:/GitHub/Ding-embedded-OS/Output/windows_unit_test/_deps/googletest-src/googletest/include -isystem D:/GitHub/Ding-embedded-OS/Output/windows_unit_test/_deps/googletest-src/googletest -g -Xclang -gcodeview -O0 -D_DEBUG -D_DLL -D_MT -Xclang --dependent-lib=msvcrtd -std=c++17 -o UnitTest\\CMakeFiles\\UNIT_TEST.dir\\TestSrc\\SharedProcessTest.cpp.obj -c D:\\GitHub\\Ding-embedded-OS\\UnitTest\\TestSrc\\SharedProcessTest.cpp",
+  "file": "D:\\GitHub\\Ding-embedded-OS\\UnitTest\\TestSrc\\SharedProcessTest.cpp"
+},
+{
+  "directory": "D:/GitHub/Ding-embedded-OS/Output/windows_unit_test",
+  "command": "C:\\PROGRA~1\\LLVM\\bin\\CLANG_~1.EXE -DDMEM_ALIGMENT_4BYTES=0 -DDMEM_DEBUG=1 -DDMESSAGE_DEBUG=1 -DDTASK_DEBUG=1 -DUNIT_TEST=1 -ID:/GitHub/Ding-embedded-OS -ID:/GitHub/Ding-embedded-OS/DING_OS -ID:/GitHub/Ding-embedded-OS/OSAL/non_preemptive_os -ID:/GitHub/Ding-embedded-OS/UnitTest/./TestMock -ID:/GitHub/Ding-embedded-OS/UnitTest/./TestSrc -ID:/GitHub/Ding-embedded-OS/UnitTest/./TestStub -isystem D:/GitHub/Ding-embedded-OS/Output/windows_unit_test/_deps/googletest-src/googletest/include -isystem D:/GitHub/Ding-embedded-OS/Output/windows_unit_test/_deps/googletest-src/googletest -g -Xclang -gcodeview -O0 -D_DEBUG -D_DLL -D_MT -Xclang --dependent-lib=msvcrtd -std=c++17 -o UnitTest\\CMakeFiles\\UNIT_TEST.dir\\TestSrc\\SysTickTest.cpp.obj -c D:\\GitHub\\Ding-embedded-OS\\UnitTest\\TestSrc\\SysTickTest.cpp",
+  "file": "D:\\GitHub\\Ding-embedded-OS\\UnitTest\\TestSrc\\SysTickTest.cpp"
+},
+{
+  "directory": "D:/GitHub/Ding-embedded-OS/Output/windows_unit_test",
+  "command": "C:\\PROGRA~1\\LLVM\\bin\\CLANG_~1.EXE -ID:/GitHub/Ding-embedded-OS -ID:/GitHub/Ding-embedded-OS/DING_OS -ID:/GitHub/Ding-embedded-OS/OSAL/non_preemptive_os -ID:/GitHub/Ding-embedded-OS/Output/windows_unit_test/_deps/googletest-src/googlemock/include -ID:/GitHub/Ding-embedded-OS/Output/windows_unit_test/_deps/googletest-src/googlemock -isystem D:/GitHub/Ding-embedded-OS/Output/windows_unit_test/_deps/googletest-src/googletest/include -isystem D:/GitHub/Ding-embedded-OS/Output/windows_unit_test/_deps/googletest-src/googletest -g -Xclang -gcodeview -O0 -D_DEBUG -D_DLL -D_MT -Xclang --dependent-lib=msvcrtd -Wall -Wshadow -Wconversion -Wundef -DGTEST_HAS_PTHREAD=0 -fexceptions -W -Wpointer-arith -Wreturn-type -Wcast-qual -Wwrite-strings -Wswitch -Wunused-parameter -Wcast-align -Winline -Wredundant-decls -Wchar-subscripts -std=c++17 -o _deps\\googletest-build\\googlemock\\CMakeFiles\\gmock.dir\\src\\gmock-all.cc.obj -c D:\\GitHub\\Ding-embedded-OS\\Output\\windows_unit_test\\_deps\\googletest-src\\googlemock\\src\\gmock-all.cc",
+  "file": "D:\\GitHub\\Ding-embedded-OS\\Output\\windows_unit_test\\_deps\\googletest-src\\googlemock\\src\\gmock-all.cc"
+},
+{
+  "directory": "D:/GitHub/Ding-embedded-OS/Output/windows_unit_test",
+  "command": "C:\\PROGRA~1\\LLVM\\bin\\CLANG_~1.EXE -isystem D:/GitHub/Ding-embedded-OS -isystem D:/GitHub/Ding-embedded-OS/DING_OS -isystem D:/GitHub/Ding-embedded-OS/OSAL/non_preemptive_os -isystem D:/GitHub/Ding-embedded-OS/Output/windows_unit_test/_deps/googletest-src/googlemock/include -isystem D:/GitHub/Ding-embedded-OS/Output/windows_unit_test/_deps/googletest-src/googlemock -isystem D:/GitHub/Ding-embedded-OS/Output/windows_unit_test/_deps/googletest-src/googletest/include -isystem D:/GitHub/Ding-embedded-OS/Output/windows_unit_test/_deps/googletest-src/googletest -g -Xclang -gcodeview -O0 -D_DEBUG -D_DLL -D_MT -Xclang --dependent-lib=msvcrtd -Wall -Wshadow -Wconversion -Wundef -DGTEST_HAS_PTHREAD=0 -fexceptions -W -Wpointer-arith -Wreturn-type -Wcast-qual -Wwrite-strings -Wswitch -Wunused-parameter -Wcast-align -Winline -Wredundant-decls -Wchar-subscripts -std=c++17 -o _deps\\googletest-build\\googlemock\\CMakeFiles\\gmock_main.dir\\src\\gmock_main.cc.obj -c D:\\GitHub\\Ding-embedded-OS\\Output\\windows_unit_test\\_deps\\googletest-src\\googlemock\\src\\gmock_main.cc",
+  "file": "D:\\GitHub\\Ding-embedded-OS\\Output\\windows_unit_test\\_deps\\googletest-src\\googlemock\\src\\gmock_main.cc"
+},
+{
+  "directory": "D:/GitHub/Ding-embedded-OS/Output/windows_unit_test",
+  "command": "C:\\PROGRA~1\\LLVM\\bin\\CLANG_~1.EXE -ID:/GitHub/Ding-embedded-OS -ID:/GitHub/Ding-embedded-OS/DING_OS -ID:/GitHub/Ding-embedded-OS/OSAL/non_preemptive_os -ID:/GitHub/Ding-embedded-OS/Output/windows_unit_test/_deps/googletest-src/googletest/include -ID:/GitHub/Ding-embedded-OS/Output/windows_unit_test/_deps/googletest-src/googletest -g -Xclang -gcodeview -O0 -D_DEBUG -D_DLL -D_MT -Xclang --dependent-lib=msvcrtd -Wall -Wshadow -Wconversion -Wundef -DGTEST_HAS_PTHREAD=0 -fexceptions -W -Wpointer-arith -Wreturn-type -Wcast-qual -Wwrite-strings -Wswitch -Wunused-parameter -Wcast-align -Winline -Wredundant-decls -Wchar-subscripts -std=c++17 -o _deps\\googletest-build\\googletest\\CMakeFiles\\gtest.dir\\src\\gtest-all.cc.obj -c D:\\GitHub\\Ding-embedded-OS\\Output\\windows_unit_test\\_deps\\googletest-src\\googletest\\src\\gtest-all.cc",
+  "file": "D:\\GitHub\\Ding-embedded-OS\\Output\\windows_unit_test\\_deps\\googletest-src\\googletest\\src\\gtest-all.cc"
+},
+{
+  "directory": "D:/GitHub/Ding-embedded-OS/Output/windows_unit_test",
+  "command": "C:\\PROGRA~1\\LLVM\\bin\\CLANG_~1.EXE -ID:/GitHub/Ding-embedded-OS -ID:/GitHub/Ding-embedded-OS/DING_OS -ID:/GitHub/Ding-embedded-OS/OSAL/non_preemptive_os -isystem D:/GitHub/Ding-embedded-OS/Output/windows_unit_test/_deps/googletest-src/googletest/include -isystem D:/GitHub/Ding-embedded-OS/Output/windows_unit_test/_deps/googletest-src/googletest -g -Xclang -gcodeview -O0 -D_DEBUG -D_DLL -D_MT -Xclang --dependent-lib=msvcrtd -Wall -Wshadow -Wconversion -Wundef -DGTEST_HAS_PTHREAD=0 -fexceptions -W -Wpointer-arith -Wreturn-type -Wcast-qual -Wwrite-strings -Wswitch -Wunused-parameter -Wcast-align -Winline -Wredundant-decls -Wchar-subscripts -std=c++17 -o _deps\\googletest-build\\googletest\\CMakeFiles\\gtest_main.dir\\src\\gtest_main.cc.obj -c D:\\GitHub\\Ding-embedded-OS\\Output\\windows_unit_test\\_deps\\googletest-src\\googletest\\src\\gtest_main.cc",
+  "file": "D:\\GitHub\\Ding-embedded-OS\\Output\\windows_unit_test\\_deps\\googletest-src\\googletest\\src\\gtest_main.cc"
+}
+]

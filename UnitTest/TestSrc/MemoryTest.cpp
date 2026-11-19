@@ -1,90 +1,87 @@
-#include "CppUTest/CommandLineTestRunner.h"
-#include "CppUTest/TestHarness.h"
-#include "CppUTestExt/MockSupport_c.h"
+#include <gtest/gtest.h>
 
 #include "TestReset.h"
 #include "d_mem.h"
 
-TEST_GROUP(Memory){TEST_SETUP(){TestOutput::enableCompactFormat();
-}
-
-TEST_TEARDOWN()
+class Memory : public ::testing::Test
 {
-  TestReset();
-  mock_c()->checkExpectations();
-  mock_c()->clear();
-  TestOutput::disableCompactFormat();
-}
-}
-;
+protected:
+  void TearDown() override
+  {
+    TestReset();
+  }
+};
 
-TEST(Memory, Allocate)
+TEST_F(Memory, Allocate)
 {
   DMem_Malloc(10);
-  LONGS_EQUAL(10 + MEM_HEADER_SIZE, DMem_GetAllocSize());
-  LONGS_EQUAL(DMEM_HEAP - 10 - MEM_HEADER_SIZE, DMem_GetFreeSize());
+  EXPECT_EQ(10 + MEM_HEADER_SIZE, DMem_GetAllocSize());
+  EXPECT_EQ(DMEM_HEAP - 10 - MEM_HEADER_SIZE, DMem_GetFreeSize());
 
   DMem_Malloc(20);
-  LONGS_EQUAL(30 + 2 * MEM_HEADER_SIZE, DMem_GetAllocSize());
+  EXPECT_EQ(30 + 2 * MEM_HEADER_SIZE, DMem_GetAllocSize());
 
   DMem_Malloc(20);
-  LONGS_EQUAL(50 + 3 * MEM_HEADER_SIZE, DMem_GetAllocSize());
+  EXPECT_EQ(50 + 3 * MEM_HEADER_SIZE, DMem_GetAllocSize());
 
   DMem_Malloc(20);
-  LONGS_EQUAL(70 + 4 * MEM_HEADER_SIZE, DMem_GetAllocSize());
+  EXPECT_EQ(70 + 4 * MEM_HEADER_SIZE, DMem_GetAllocSize());
 
   DMem_Malloc(1024);
-  LONGS_EQUAL(70 + 1024 + 5 * MEM_HEADER_SIZE, DMem_GetAllocSize());
+  EXPECT_EQ(70 + 1024 + 5 * MEM_HEADER_SIZE, DMem_GetAllocSize());
 
   DMem_Malloc(1024);
-  LONGS_EQUAL(70 + 2 * 1024 + 6 * MEM_HEADER_SIZE, DMem_GetAllocSize());
+  EXPECT_EQ(70 + 2 * 1024 + 6 * MEM_HEADER_SIZE, DMem_GetAllocSize());
 }
 
-TEST(Memory, AllocateZeroNum)
+TEST_F(Memory, AllocateZeroNum)
 {
   DMem_Malloc(0);
-  LONGS_EQUAL(0, DMem_GetAllocSize());
-  LONGS_EQUAL(DMEM_HEAP, DMem_GetFreeSize());
+  EXPECT_EQ(0, DMem_GetAllocSize());
+  EXPECT_EQ(DMEM_HEAP, DMem_GetFreeSize());
 }
 
-TEST(Memory, AllocateTooMush){LONGS_EQUAL(NULL, DMem_Malloc(DMEM_HEAP))}
+TEST_F(Memory, AllocateTooMush)
+{
+  EXPECT_EQ(nullptr, DMem_Malloc(DMEM_HEAP));
+}
 
-TEST(Memory, AllocateExhausted)
+TEST_F(Memory, AllocateExhausted)
 {
   DMem_Malloc(DMEM_HEAP - MEM_HEADER_SIZE);
-  LONGS_EQUAL(DMEM_HEAP, DMem_GetAllocSize());
-  LONGS_EQUAL(0, DMem_GetFreeSize());
+  EXPECT_EQ(DMEM_HEAP, DMem_GetAllocSize());
+  EXPECT_EQ(0, DMem_GetFreeSize());
 }
 
-TEST(Memory, ReAllocate)
+TEST_F(Memory, ReAllocate)
 {
   void *alloctated = DMem_Malloc(DMEM_HEAP - MEM_HEADER_SIZE);
   DMem_Free(alloctated);
 
   DMem_Malloc(DMEM_HEAP - MEM_HEADER_SIZE);
 
-  LONGS_EQUAL(DMEM_HEAP, DMem_GetAllocSize());
-  LONGS_EQUAL(0, DMem_GetFreeSize());
+  EXPECT_EQ(DMEM_HEAP, DMem_GetAllocSize());
+  EXPECT_EQ(0, DMem_GetFreeSize());
 }
 
-TEST(Memory, Free)
+TEST_F(Memory, Free)
 {
   void *alloctated = DMem_Malloc(10);
   DMem_Free(alloctated);
-  LONGS_EQUAL(0, DMem_GetAllocSize());
-  LONGS_EQUAL(DMEM_HEAP, DMem_GetFreeSize());
+  EXPECT_EQ(0, DMem_GetAllocSize());
+  EXPECT_EQ(DMEM_HEAP, DMem_GetFreeSize());
 }
 
-TEST(Memory, FreeAnonymousPointer)
+TEST_F(Memory, FreeAnonymousPointer)
 {
   static MemHdr_t header;
   header.Len = 10;
   DMem_Free((void *)(&header + 1));
-  LONGS_EQUAL(0, DMem_GetAllocSize());
-  LONGS_EQUAL(DMEM_HEAP, DMem_GetFreeSize());
+  EXPECT_EQ(0, DMem_GetAllocSize());
+  EXPECT_EQ(DMEM_HEAP, DMem_GetFreeSize());
 }
 
-TEST(Memory, CoalesceOnce)
+TEST_F(Memory, CoalesceOnce)
 {
   void *alloctated1 = DMem_Malloc(10);
   void *alloctated2 = DMem_Malloc(10);
@@ -93,12 +90,12 @@ TEST(Memory, CoalesceOnce)
 
   void *alloctated3 = DMem_Malloc(20);
 
-  LONGS_EQUAL(20 + MEM_HEADER_SIZE, DMem_GetAllocSize());
-  LONGS_EQUAL(DMEM_HEAP - 20 - MEM_HEADER_SIZE, DMem_GetFreeSize());
-  POINTERS_EQUAL(alloctated3, alloctated1);
+  EXPECT_EQ(20 + MEM_HEADER_SIZE, DMem_GetAllocSize());
+  EXPECT_EQ(DMEM_HEAP - 20 - MEM_HEADER_SIZE, DMem_GetFreeSize());
+  EXPECT_EQ(alloctated3, alloctated1);
 }
 
-TEST(Memory, CoalesceMultitimes)
+TEST_F(Memory, CoalesceMultitimes)
 {
   void *alloctated1 = DMem_Malloc(10);
   void *alloctated2 = DMem_Malloc(10);
@@ -112,7 +109,7 @@ TEST(Memory, CoalesceMultitimes)
 
   void *alloctated5 = DMem_Malloc(30);
 
-  LONGS_EQUAL(30 + MEM_HEADER_SIZE, DMem_GetAllocSize());
-  LONGS_EQUAL(DMEM_HEAP - 30 - MEM_HEADER_SIZE, DMem_GetFreeSize());
-  POINTERS_EQUAL(alloctated5, alloctated1);
+  EXPECT_EQ(30 + MEM_HEADER_SIZE, DMem_GetAllocSize());
+  EXPECT_EQ(DMEM_HEAP - 30 - MEM_HEADER_SIZE, DMem_GetFreeSize());
+  EXPECT_EQ(alloctated5, alloctated1);
 }

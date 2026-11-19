@@ -9,26 +9,26 @@
     {
       "name": "windows_unit_test",
       "displayName": "windows_unit_test",
-      "generator": "Visual Studio 17 2022",
+      "generator": "Ninja",
       "binaryDir": "${sourceDir}/Output/windows_unit_test",
-      "architecture": {
-        "value": "Win32",
-        "strategy": "set"
-      },
-      "toolset": {
-        "value": "host=x86",
-        "strategy": "set"
-      },
       "cacheVariables": {
+        "CMAKE_C_COMPILER": "clang",
+        "CMAKE_CXX_COMPILER": "clang++",
+        "CMAKE_BUILD_TYPE": "Debug",
+        "CMAKE_EXPORT_COMPILE_COMMANDS": "ON",
         "DING_OS_TEST_ENVN": "1"
       }
     },
     {
       "name": "windows_x86_test",
       "displayName": "windows_x86_test",
-      "generator": "Visual Studio 17 2022",
+      "generator": "Ninja",
       "binaryDir": "${sourceDir}/Output/windows_x86_test",
       "cacheVariables": {
+         "CMAKE_C_COMPILER": "clang",
+        "CMAKE_CXX_COMPILER": "clang++",
+        "CMAKE_BUILD_TYPE": "Debug",
+        "CMAKE_EXPORT_COMPILE_COMMANDS": "ON",
         "DING_OS_TEST_ENVN": "2"
       }
     },

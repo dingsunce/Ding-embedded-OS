@@ -1,6 +1,4 @@
-#include "CppUTest/CommandLineTestRunner.h"
-#include "CppUTest/TestHarness.h"
-#include "CppUTestExt/MockSupport_c.h"
+#include <gtest/gtest.h>
 
 #include "CleanVector.h"
 #include "SendMsgToTask.h"
@@ -38,58 +36,58 @@ void InitAndStartSharedProcesses(void)
   DProcess_Start(&Process1);
 }
 
-TEST_GROUP(ProcessShared){TEST_SETUP(){InitAndStartSharedProcesses();
-TestOutput::enableCompactFormat();
-}
-
-TEST_TEARDOWN()
+class ProcessShared : public ::testing::Test
 {
-  CleanVector(Msgs);
-  CleanVector(Processes);
+protected:
+  void SetUp() override
+  {
+    InitAndStartSharedProcesses();
+  }
 
-  TestReset();
-  mock_c()->checkExpectations();
-  mock_c()->clear();
-  TestOutput::disableCompactFormat();
-}
-}
-;
+  void TearDown() override
+  {
+    CleanVector(Msgs);
+    CleanVector(Processes);
 
-TEST(ProcessShared, SharedHandler)
+    TestReset();
+  }
+};
+
+TEST_F(ProcessShared, SharedHandler)
 {
-  LONGS_EQUAL(2, Msgs.size());
-  LONGS_EQUAL(SYS_MSG_START_PROGRESS, Msgs[0]);
-  LONGS_EQUAL(SYS_MSG_START_PROGRESS, Msgs[1]);
+  EXPECT_EQ(2, Msgs.size());
+  EXPECT_EQ(SYS_MSG_START_PROGRESS, Msgs[0]);
+  EXPECT_EQ(SYS_MSG_START_PROGRESS, Msgs[1]);
 
-  LONGS_EQUAL(2, Processes.size());
-  POINTERS_EQUAL(&Process0, Processes[0]);
-  POINTERS_EQUAL(&Process1, Processes[1]);
+  EXPECT_EQ(2, Processes.size());
+  EXPECT_EQ(&Process0, Processes[0]);
+  EXPECT_EQ(&Process1, Processes[1]);
 }
 
-TEST(ProcessShared, SharedScheduleSection)
+TEST_F(ProcessShared, SharedScheduleSection)
 {
-  LONGS_EQUAL(true, DProcess_IsRunning(&Process0));
-  LONGS_EQUAL(true, DProcess_IsRunning(&Process1));
+  EXPECT_TRUE(DProcess_IsRunning(&Process0));
+  EXPECT_TRUE(DProcess_IsRunning(&Process1));
 
   SendMsgToTask(&Process0, SYS_MSG_EXIT_PROCESS, NULL);
-  LONGS_EQUAL(false, DProcess_IsRunning(&Process0));
-  LONGS_EQUAL(true, DProcess_IsRunning(&Process1));
+  EXPECT_FALSE(DProcess_IsRunning(&Process0));
+  EXPECT_TRUE(DProcess_IsRunning(&Process1));
 
   SendMsgToTask(&Process1, SYS_MSG_EXIT_PROCESS, NULL);
-  LONGS_EQUAL(false, DProcess_IsRunning(&Process0));
-  LONGS_EQUAL(false, DProcess_IsRunning(&Process1));
+  EXPECT_FALSE(DProcess_IsRunning(&Process0));
+  EXPECT_FALSE(DProcess_IsRunning(&Process1));
 }
 
-TEST(ProcessShared, MultipleInitializtion)
+TEST_F(ProcessShared, MultipleInitializtion)
 {
   DProcess_InitStruct(&Process0, ProgressHandler, "Process0");
   DProcess_InitStruct(&Process1, ProgressHandler, "Process1");
 
-  LONGS_EQUAL(2, Msgs.size());
-  LONGS_EQUAL(SYS_MSG_START_PROGRESS, Msgs[0]);
-  LONGS_EQUAL(SYS_MSG_START_PROGRESS, Msgs[1]);
+  EXPECT_EQ(2, Msgs.size());
+  EXPECT_EQ(SYS_MSG_START_PROGRESS, Msgs[0]);
+  EXPECT_EQ(SYS_MSG_START_PROGRESS, Msgs[1]);
 
-  LONGS_EQUAL(2, Processes.size());
-  POINTERS_EQUAL(&Process0, Processes[0]);
-  POINTERS_EQUAL(&Process1, Processes[1]);
+  EXPECT_EQ(2, Processes.size());
+  EXPECT_EQ(&Process0, Processes[0]);
+  EXPECT_EQ(&Process1, Processes[1]);
 }

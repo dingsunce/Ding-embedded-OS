@@ -1,231 +1,225 @@
-#include "CppUTest/CommandLineTestRunner.h"
-#include "CppUTest/TestHarness.h"
-#include "CppUTestExt/MockSupport_c.h"
+#include <gtest/gtest.h>
 
 #include "TestReset.h"
 
-TEST_GROUP(Platform){TEST_SETUP(){TestOutput::enableCompactFormat();
-}
-
-TEST_TEARDOWN()
+class Platform : public ::testing::Test
 {
-  TestReset();
-  mock_c()->checkExpectations();
-  mock_c()->clear();
-  TestOutput::disableCompactFormat();
-}
-}
-;
+protected:
+  void TearDown() override
+  {
+    TestReset();
+  }
+};
 
-TEST(Platform, U8Test)
+TEST_F(Platform, U8Test)
 {
   u8 value = 0xff;
   value = value + 2;
-  LONGS_EQUAL(1, value);
+  EXPECT_EQ(1, value);
 }
 
-TEST(Platform, S8ToU8Test)
+TEST_F(Platform, S8ToU8Test)
 {
   s8 value = -3;
   u8 value1 = (u8)value;
-  LONGS_EQUAL(253, value1);
-  BYTES_EQUAL(-3, 253);
+  EXPECT_EQ(253, value1);
+  EXPECT_EQ(static_cast<u8>(-3), static_cast<u8>(253));
 }
 
-TEST(Platform, U8ToS8Test)
+TEST_F(Platform, U8ToS8Test)
 {
   u8 value = 131; // 0x83
   s8 value1 = (s8)value;
-  LONGS_EQUAL(-125, value1);
-  BYTES_EQUAL(131, value1);
+  EXPECT_EQ(-125, value1);
+  EXPECT_EQ(static_cast<u8>(131), static_cast<u8>(value1));
 
   value = (u8)value1;
-  LONGS_EQUAL(131, value);
+  EXPECT_EQ(131, value);
 }
 
-TEST(Platform, U16Test)
+TEST_F(Platform, U16Test)
 {
   u16 value = 0xffff;
   value = value + 2;
-  LONGS_EQUAL(1, value);
+  EXPECT_EQ(1, value);
 }
 
-TEST(Platform, U32Test)
+TEST_F(Platform, U32Test)
 {
   u32 value = 0xffffffff;
   value = value + 2;
-  LONGS_EQUAL(1, value);
+  EXPECT_EQ(1, value);
 }
 
-TEST(Platform, StringTest1)
+TEST_F(Platform, StringTest1)
 {
   char string[] = "TEST";
-  LONGS_EQUAL(5, sizeof(string));
-  LONGS_EQUAL(4, strlen(string));
+  EXPECT_EQ(5, sizeof(string));
+  EXPECT_EQ(4, strlen(string));
 }
 
-TEST(Platform, StringTest2)
+TEST_F(Platform, StringTest2)
 {
   const char *string = "TESTTEST";
-  // LONGS_EQUAL(4, sizeof(string));  // 32bits architecture
-  // LONGS_EQUAL(8, sizeof(string));  // 64bits architecture
-  LONGS_EQUAL(1, sizeof(*string));
-  LONGS_EQUAL(8, strlen(string));
+  // EXPECT_EQ(4, sizeof(string));  // 32bits architecture
+  // EXPECT_EQ(8, sizeof(string));  // 64bits architecture
+  EXPECT_EQ(1, sizeof(*string));
+  EXPECT_EQ(8, strlen(string));
 }
 
-TEST(Platform, sprintfTest)
+TEST_F(Platform, sprintfTest)
 {
   char        buffer[10];
   char        expectResult[3] = {'1', '0', '\0'};
   const char *expectResultPoint = "10";
 
   sprintf(buffer, "%d", 10);
-  STRCMP_EQUAL("10", buffer);
-  STRCMP_EQUAL(expectResult, buffer);
-  STRCMP_EQUAL(expectResultPoint, buffer);
+  EXPECT_STREQ("10", buffer);
+  EXPECT_STREQ(expectResult, buffer);
+  EXPECT_STREQ(expectResultPoint, buffer);
 }
 
-TEST(Platform, memsetTest)
+TEST_F(Platform, memsetTest)
 {
   char buffer[10];
   char expectResult[3] = {'\0', '\0', '\0'};
-  strcpy(buffer, "");
+  strcpy_s(buffer, "");
 
-  LONGS_EQUAL(0, strlen(buffer));
-  LONGS_EQUAL(0, buffer[0]);
-  STRCMP_EQUAL(expectResult, buffer);
+  EXPECT_EQ(0, strlen(buffer));
+  EXPECT_EQ(0, buffer[0]);
+  EXPECT_STREQ(expectResult, buffer);
 }
 
-TEST(Platform, zeroTest)
+TEST_F(Platform, zeroTest)
 {
-  LONGS_EQUAL(0, '\0');
-  LONGS_EQUAL(sizeof('\0'), sizeof(u8));
+  EXPECT_EQ(0, '\0');
+  EXPECT_EQ(sizeof('\0'), sizeof(u8));
 }
 
-TEST(Platform, ValidBitTest)
+TEST_F(Platform, ValidBitTest)
 {
   u16 value = 0x7fff;
-  CHECK_TRUE(CHECK_BIT(value, 0));
-  CHECK_TRUE(CHECK_BIT(value, 14));
-  CHECK_FALSE(CHECK_BIT(value, 15));
+  EXPECT_TRUE(CHECK_BIT(value, 0));
+  EXPECT_TRUE(CHECK_BIT(value, 14));
+  EXPECT_FALSE(CHECK_BIT(value, 15));
 }
 
-TEST(Platform, SetBitTest)
+TEST_F(Platform, SetBitTest)
 {
   u16 value = 0;
   PLACE_BIT(value, 0);
-  LONGS_EQUAL(0x01, value);
+  EXPECT_EQ(0x01, value);
 
   PLACE_BIT(value, 15);
-  LONGS_EQUAL(0x8001, value);
+  EXPECT_EQ(0x8001, value);
 }
 
-TEST(Platform, ClrBitTest)
+TEST_F(Platform, ClrBitTest)
 {
   u16 value = 0x8001;
   CLEAN_BIT(value, 15);
-  LONGS_EQUAL(0x01, value);
+  EXPECT_EQ(0x01, value);
 
   CLEAN_BIT(value, 0);
-  LONGS_EQUAL(0x00, value);
+  EXPECT_EQ(0x00, value);
 }
 
-TEST(Platform, InvertBitTest)
+TEST_F(Platform, InvertBitTest)
 {
   u16 value = 0x8001;
   CLEAN_BIT(value, 15);
-  LONGS_EQUAL(0x01, value);
+  EXPECT_EQ(0x01, value);
 
   INVERT_BIT(value, 15);
-  LONGS_EQUAL(0x8001, value);
+  EXPECT_EQ(0x8001, value);
 
   value = 0x03;
   CLEAN_BIT(value, 1);
-  LONGS_EQUAL(0x01, value);
+  EXPECT_EQ(0x01, value);
 
   INVERT_BIT(value, 1);
-  LONGS_EQUAL(0x03, value);
+  EXPECT_EQ(0x03, value);
 }
 
-TEST(Platform, DivideTest)
+TEST_F(Platform, DivideTest)
 {
-  LONGS_EQUAL(12, 100 / 8);
-  LONGS_EQUAL(6, 100 / 16);
-  LONGS_EQUAL(3, 100 / 32);
-  LONGS_EQUAL(1, 100 / 64);
+  EXPECT_EQ(12, 100 / 8);
+  EXPECT_EQ(6, 100 / 16);
+  EXPECT_EQ(3, 100 / 32);
+  EXPECT_EQ(1, 100 / 64);
 }
 
-TEST(Platform, MultifyTest)
+TEST_F(Platform, MultifyTest)
 {
-  LONGS_EQUAL(0, (u8)((float)2 * (float)(0.4)));
-  LONGS_EQUAL(1, (u8)((float)3 * (float)(0.4)));
-  LONGS_EQUAL(100, (u8)((float)252 * (float)(0.4)));
-  LONGS_EQUAL(101, (u8)((float)253 * (float)(0.4)));
+  EXPECT_EQ(0, (u8)((float)2 * (float)(0.4)));
+  EXPECT_EQ(1, (u8)((float)3 * (float)(0.4)));
+  EXPECT_EQ(100, (u8)((float)252 * (float)(0.4)));
+  EXPECT_EQ(101, (u8)((float)253 * (float)(0.4)));
 }
 
-TEST(Platform, U16ToU8PointorTest)
+TEST_F(Platform, U16ToU8PointorTest)
 {
   u16 value = 0x1001;
   u8 *p = (u8 *)&value;
-  LONGS_EQUAL(*p, LO_U16(value));
-  LONGS_EQUAL(*(p + 1), HI_U16(value));
+  EXPECT_EQ(*p, LO_U16(value));
+  EXPECT_EQ(*(p + 1), HI_U16(value));
 }
 
-TEST(Platform, U8ToU16PointorTest)
+TEST_F(Platform, U8ToU16PointorTest)
 {
   u8 value[2] = {LO_HI_U16(0x55aa)};
-  LONGS_EQUAL(0x55aa, (*(u16 *)value));
+  EXPECT_EQ(0x55aa, (*(u16 *)value));
 }
 
-TEST(Platform, LittleEndJudgment)
+TEST_F(Platform, LittleEndJudgment)
 {
   u32 x = 1;
-  LONGS_EQUAL(1, *(u8 *)&x);
+  EXPECT_EQ(1, *(u8 *)&x);
 }
 
-TEST(Platform, FloatToU8)
+TEST_F(Platform, FloatToU8)
 {
   float x = (float)1.65;
-  LONGS_EQUAL(1, (u8)x);
+  EXPECT_EQ(1, (u8)x);
 }
 
-TEST(Platform, FloatToU8_UpperRound)
+TEST_F(Platform, FloatToU8_UpperRound)
 {
   float x = (float)1.50;
   x = (float)(x * (float)(10) + (float)(5)) / (float)(10);
-  LONGS_EQUAL(2, (u8)x);
+  EXPECT_EQ(2, (u8)x);
 }
 
-TEST(Platform, FloatToU8_DownRound)
+TEST_F(Platform, FloatToU8_DownRound)
 {
   float x = (float)1.49;
   x = (float)(x * (float)(10) + (float)(5)) / (float)(10);
-  LONGS_EQUAL(1, (u8)x);
+  EXPECT_EQ(1, (u8)x);
 }
 
-TEST(Platform, NegtiveNumCompare)
+TEST_F(Platform, NegtiveNumCompare)
 {
   s8 test = -2;
-  LONGS_EQUAL(254, (u8)test);
+  EXPECT_EQ(254, (u8)test);
 }
 
-TEST(Platform, Mask)
+TEST_F(Platform, Mask)
 {
   u32 mask = -1;
-  LONGS_EQUAL(0xffffffff, mask);
+  EXPECT_EQ(0xffffffff, mask);
   mask += mask;
-  LONGS_EQUAL(0xfffffffe, mask);
+  EXPECT_EQ(0xfffffffe, mask);
   mask += mask;
-  LONGS_EQUAL(0xfffffffc, mask);
+  EXPECT_EQ(0xfffffffc, mask);
   mask += mask;
-  LONGS_EQUAL(0xfffffff8, mask);
+  EXPECT_EQ(0xfffffff8, mask);
 }
 
-TEST(Platform, negative)
+TEST_F(Platform, negative)
 {
   u32 mask = -1;
-  LONGS_EQUAL(0xffffffff, mask);
+  EXPECT_EQ(0xffffffff, mask);
 
   mask = -2;
-  LONGS_EQUAL(0xfffffffe, mask);
+  EXPECT_EQ(0xfffffffe, mask);
 }

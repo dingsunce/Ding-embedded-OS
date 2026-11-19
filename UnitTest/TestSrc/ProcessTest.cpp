@@ -1,6 +1,4 @@
-#include "CppUTest/CommandLineTestRunner.h"
-#include "CppUTest/TestHarness.h"
-#include "CppUTestExt/MockSupport_c.h"
+#include <gtest/gtest.h>
 
 #include "SendMsgToTask.h"
 #include "TestReset.h"
@@ -72,103 +70,102 @@ PROCESS_HANDLER(ResetProgress, msgId, arg)
   PROCESS_SCHEDULE_END();
 }
 
-TEST_GROUP(Process){TEST_SETUP(){DProcess_Start(&AnyMsgProgress);
-DProcess_Start(&SpecifiedMsgProgress);
-DProcess_Start(&PollMsgProgress);
-DProcess_Start(&ResetProgress);
-
-TestOutput::enableCompactFormat();
-}
-
-TEST_TEARDOWN()
+class Process : public ::testing::Test
 {
-  AnyMsgs.clear();
-  AnyMsgs.shrink_to_fit();
+protected:
+  void SetUp() override
+  {
+    DProcess_Start(&AnyMsgProgress);
+    DProcess_Start(&SpecifiedMsgProgress);
+    DProcess_Start(&PollMsgProgress);
+    DProcess_Start(&ResetProgress);
+  }
 
-  SpecifiedMsgs.clear();         // destroy the object held in vector
-  SpecifiedMsgs.shrink_to_fit(); // deallocate the memory of vector
+  void TearDown() override
+  {
+    AnyMsgs.clear();
+    AnyMsgs.shrink_to_fit();
 
-  TestReset();
-  mock_c()->checkExpectations();
-  mock_c()->clear();
-  TestOutput::disableCompactFormat();
-}
-}
-;
+    SpecifiedMsgs.clear();         // destroy the object held in vector
+    SpecifiedMsgs.shrink_to_fit(); // deallocate the memory of vector
 
-TEST(Process, ProcessHandleMsg)
+    TestReset();
+  }
+};
+
+TEST_F(Process, ProcessHandleMsg)
 {
-  LONGS_EQUAL(false, SpecifiedMsgReceived);
+  EXPECT_FALSE(SpecifiedMsgReceived);
   DProcess_HandleMsg(&SpecifiedMsgProgress, SYS_MSG_CONTINUE_PROCESS, NULL);
-  LONGS_EQUAL(true, SpecifiedMsgReceived);
+  EXPECT_TRUE(SpecifiedMsgReceived);
 }
 
-TEST(Process, SpecifiedMsgReceived)
+TEST_F(Process, SpecifiedMsgReceived)
 {
-  LONGS_EQUAL(false, SpecifiedMsgReceived);
+  EXPECT_FALSE(SpecifiedMsgReceived);
   SendMsgToTask(&SpecifiedMsgProgress, SYS_MSG_CONTINUE_PROCESS, NULL);
-  LONGS_EQUAL(true, SpecifiedMsgReceived);
+  EXPECT_TRUE(SpecifiedMsgReceived);
 }
 
-TEST(Process, AnyMsgReceived)
+TEST_F(Process, AnyMsgReceived)
 {
-  LONGS_EQUAL(false, AnyMsgReceived);
+  EXPECT_FALSE(AnyMsgReceived);
   SendMsgToTask(&AnyMsgProgress, SYS_MSG_CONTINUE_PROCESS, NULL);
-  LONGS_EQUAL(true, AnyMsgReceived);
+  EXPECT_TRUE(AnyMsgReceived);
 }
 
-TEST(Process, ExitProgress)
+TEST_F(Process, ExitProgress)
 {
   // process already started in setup
   DProcess_ExitProc(&SpecifiedMsgProgress);
-  LONGS_EQUAL(false, DProcess_IsRunning(&SpecifiedMsgProgress));
+  EXPECT_FALSE(DProcess_IsRunning(&SpecifiedMsgProgress));
 
-  LONGS_EQUAL(false, SpecifiedMsgReceived);
+  EXPECT_FALSE(SpecifiedMsgReceived);
   SendMsgToTask(&SpecifiedMsgProgress, SYS_MSG_CONTINUE_PROCESS, NULL);
-  LONGS_EQUAL(false, SpecifiedMsgReceived);
+  EXPECT_FALSE(SpecifiedMsgReceived);
 }
 
-TEST(Process, PollIdleProgress)
+TEST_F(Process, PollIdleProgress)
 {
   DProcess_ExitProc(&PollMsgProgress);
   DProcess_Poll(&PollMsgProgress);
-  LONGS_EQUAL(false, PollMsgProgress.NeedPoll);
+  EXPECT_FALSE(PollMsgProgress.NeedPoll);
 }
 
-TEST(Process, PollProgress)
+TEST_F(Process, PollProgress)
 {
-  LONGS_EQUAL(false, PollMsgReceived);
+  EXPECT_FALSE(PollMsgReceived);
   DProcess_Poll(&PollMsgProgress);
   DProcess_Run();
   DTask_Run();
-  LONGS_EQUAL(true, PollMsgReceived);
+  EXPECT_TRUE(PollMsgReceived);
 }
 
-TEST(Process, StartProgress)
+TEST_F(Process, StartProgress)
 {
   // process already started in setup
-  LONGS_EQUAL(SYS_MSG_START_PROGRESS, AnyMsgs[0]);
-  LONGS_EQUAL(SYS_MSG_START_PROGRESS, SpecifiedMsgs[0]);
+  EXPECT_EQ(SYS_MSG_START_PROGRESS, AnyMsgs[0]);
+  EXPECT_EQ(SYS_MSG_START_PROGRESS, SpecifiedMsgs[0]);
 }
 
-TEST(Process, StartProgressMultipleTimes)
+TEST_F(Process, StartProgressMultipleTimes)
 {
   DProcess_Start(&AnyMsgProgress);
   DProcess_Start(&AnyMsgProgress);
-  LONGS_EQUAL(1, AnyMsgs.size());
-  LONGS_EQUAL(SYS_MSG_START_PROGRESS, AnyMsgs[0]);
+  EXPECT_EQ(1, AnyMsgs.size());
+  EXPECT_EQ(SYS_MSG_START_PROGRESS, AnyMsgs[0]);
 }
 
-TEST(Process, ReStartProgress)
+TEST_F(Process, ReStartProgress)
 {
   // process already started in setup
   DProcess_ReStart(&AnyMsgProgress);
-  LONGS_EQUAL(2, AnyMsgs.size());
-  LONGS_EQUAL(SYS_MSG_START_PROGRESS, AnyMsgs[0]);
-  LONGS_EQUAL(SYS_MSG_START_PROGRESS, AnyMsgs[1]);
+  EXPECT_EQ(2, AnyMsgs.size());
+  EXPECT_EQ(SYS_MSG_START_PROGRESS, AnyMsgs[0]);
+  EXPECT_EQ(SYS_MSG_START_PROGRESS, AnyMsgs[1]);
 }
 
-TEST(Process, ClearAllPendingMsg_WhenExitProgress)
+TEST_F(Process, ClearAllPendingMsg_WhenExitProgress)
 {
   DMsg_SendLater(&AnyMsgProgress, SYS_MSG_CONTINUE_PROCESS, NULL, MSG_MSEC(10));
   DProcess_ExitProc(&AnyMsgProgress);
@@ -177,30 +174,30 @@ TEST(Process, ClearAllPendingMsg_WhenExitProgress)
   // do not receive SYS_MSG_CONTINUE_PROCESS when restart the progress
   DProcess_Start(&AnyMsgProgress);
   RunMsgTimer(MSG_MSEC(10));
-  LONGS_EQUAL(1, AnyMsgs.size());
-  LONGS_EQUAL(SYS_MSG_START_PROGRESS, AnyMsgs[0]);
+  EXPECT_EQ(1, AnyMsgs.size());
+  EXPECT_EQ(SYS_MSG_START_PROGRESS, AnyMsgs[0]);
 }
 
-TEST(Process, ExitAllProcessWhenInit)
+TEST_F(Process, ExitAllProcessWhenInit)
 {
   DProcess_Init();
-  LONGS_EQUAL(false, DProcess_IsRunning(&AnyMsgProgress));
-  LONGS_EQUAL(false, DProcess_IsRunning(&SpecifiedMsgProgress));
-  LONGS_EQUAL(false, DProcess_IsRunning(&PollMsgProgress));
+  EXPECT_FALSE(DProcess_IsRunning(&AnyMsgProgress));
+  EXPECT_FALSE(DProcess_IsRunning(&SpecifiedMsgProgress));
+  EXPECT_FALSE(DProcess_IsRunning(&PollMsgProgress));
 }
 
-TEST(Process, ExitProcessInHandler)
+TEST_F(Process, ExitProcessInHandler)
 {
   SendMsgToTask(&ResetProgress, SYS_MSG_CONTINUE_PROCESS, NULL);
-  LONGS_EQUAL(false, DProcess_IsRunning(&ResetProgress));
+  EXPECT_FALSE(DProcess_IsRunning(&ResetProgress));
 
   DMsg_SendLater(&ResetProgress, SYS_MSG_CONTINUE_PROCESS, NULL, MSG_MSEC(10));
-  CHECK_FALSE(DMsg_IsMsgInProcess(&ResetProgress, SYS_MSG_CONTINUE_PROCESS));
+  EXPECT_FALSE(DMsg_IsMsgInProcess(&ResetProgress, SYS_MSG_CONTINUE_PROCESS));
 }
 
-TEST(Process, StartUnInitiliazedProcess)
+TEST_F(Process, StartUnInitiliazedProcess)
 {
   static DProcess_t Test;
   DProcess_Start(&Test);
-  LONGS_EQUAL(false, DProcess_IsRunning(&Test));
+  EXPECT_FALSE(DProcess_IsRunning(&Test));
 }

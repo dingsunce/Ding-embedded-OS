@@ -1,5 +1,5 @@
-
-KERNELDIR := /home/ding/linux-5.15.24
+# Changed from := to ?= so Yocto can override it
+KERNELDIR ?= /home/ding/linux-5.15.24
 CURRENT_PATH := $(shell pwd)
 
 MODULE_NAME = LINUX_DRIVER_AEM32_TEST
@@ -38,6 +38,4 @@ driver_test_src += \
 $(MODULE_NAME)-y += $(driver_test_src)
 
 obj-m := $(MODULE_NAME).o
-
-
 
